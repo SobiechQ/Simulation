@@ -50,7 +50,9 @@ public class Grid { //todo iterable z opcją modyfikacji?
                         continue;
                     moveable.computeVector(this.grid.getGriderator(i, j));
                     moved.add(moveable);
-
+                }
+                if (element instanceof Tnt tnt){
+                    tnt.nextFrame(this.grid.getGriderator(i, j));
                 }
             }
         if (frameCounter%15==0)

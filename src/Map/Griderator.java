@@ -5,6 +5,7 @@ import Elements.Api.Element;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
     * Griderator is a class that allows for the traversal of a 2D grid.
@@ -24,6 +25,10 @@ public abstract class Griderator {
         return this.current(this.x, this.y);
     }
     public abstract boolean isOutOfBounds(int x, int y);
+    public abstract Stream<Element> inRadius(int x, int y, int radius);
+    public Stream<Element> inRadius(int radius){
+        return this.inRadius(this.x, this.y, radius);
+    }
     public abstract void set(int x, int y, Element element);
     public void setCurrent(Element element){
         this.set(this.x, this.y, element);
@@ -43,6 +48,11 @@ public abstract class Griderator {
             @Override
             public boolean isOutOfBounds(int x, int y) {
                 return Griderator.this.isOutOfBounds(x, y);
+            }
+
+            @Override
+            public Stream<Element> inRadius(int x, int y, int radius) {
+                return Griderator.this.inRadius(x, y, radius);
             }
 
             @Override
@@ -70,6 +80,10 @@ public abstract class Griderator {
             public boolean isOutOfBounds(int x, int y) {
                 return Griderator.this.isOutOfBounds(x, y);
             }
+            @Override
+            public Stream<Element> inRadius(int x, int y, int radius) {
+                return Griderator.this.inRadius(x, y, radius);
+            }
 
             @Override
             public void set(int x, int y, Element element) {
@@ -96,6 +110,10 @@ public abstract class Griderator {
             public boolean isOutOfBounds(int x, int y) {
                 return Griderator.this.isOutOfBounds(x, y);
             }
+            @Override
+            public Stream<Element> inRadius(int x, int y, int radius) {
+                return Griderator.this.inRadius(x, y, radius);
+            }
 
             @Override
             public void set(int x, int y, Element element) {
@@ -121,6 +139,10 @@ public abstract class Griderator {
             @Override
             public boolean isOutOfBounds(int x, int y) {
                 return Griderator.this.isOutOfBounds(x, y);
+            }
+            @Override
+            public Stream<Element> inRadius(int x, int y, int radius) {
+                return Griderator.this.inRadius(x, y, radius);
             }
 
             @Override

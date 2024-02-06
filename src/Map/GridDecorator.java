@@ -5,6 +5,7 @@ import Elements.Api.Element;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class GridDecorator {
@@ -37,7 +38,7 @@ public class GridDecorator {
     public void unsetElement(int x, int y){
         this.setElement(x, y, new Air());
     }
-    public Stream<Element> getElements() {
+    public Stream<Element> stream() {
         return Arrays.stream(this.grid).flatMap(Arrays::stream);
     }
     public Griderator getGriderator(int x, int y){
@@ -50,6 +51,19 @@ public class GridDecorator {
             @Override
             public boolean isOutOfBounds(int x, int y) {
                 return GridDecorator.this.isOutOfBounds(x, y);
+            }
+
+            @Override
+            public Stream<Element> inRadius(int x, int y, int radius) {
+                Stream.Builder<Element> builder = Stream.builder();
+                for (int i = x - radius; i <= x + radius; i++) {
+                    for (int j = y - radius; j <= y + radius; j++) {
+                        if (i == x && j == y)
+                            continue;
+                        GridDecorator.this.getElement(i, j).ifPresent(builder);
+                    }
+                }
+                return builder.build();
             }
 
             @Override
