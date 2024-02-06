@@ -1,7 +1,8 @@
 package Elements;
 import Map.GridDecorator;
+import Map.Griderator;
 
 public interface Moveable {
-    Vector getVector();
-    void computeVector(GridDecorator gridDetector);
+    Vector getVelocity();
+    void computeVector(Griderator griderator);
 }

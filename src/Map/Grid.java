@@ -3,7 +3,9 @@ package Map;
 import Elements.*;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class Grid { //todo iterable z opcją modyfikacji?
@@ -29,23 +31,30 @@ public class Grid { //todo iterable z opcją modyfikacji?
                 this.grid.setElement(i, j, new Stone());
             }
         }
-//        this.grid.setElement(50,50, new Sand());
+        this.grid.setElement(50,50, new Sand());
     }
-
+    private int frameCounter = 0;
     public void nextFrame() {
-        int test = 0; //todo delete
+        Set<Element> moved = new HashSet<>();
+        frameCounter++;
         for (int i = this.gridSize - 1; i >= 0; i--)
             for (int j = gridSize; j >= 0; j--) {
                 Element element = this.grid.getElement(i, j).orElse(new Air());
                 if (element instanceof Moveable) {
-                    test++;
-                    System.out.println(i + ", " + j + " " + element.getClass());
-                    Moveable moveable = (Moveable) element; //todo przetestuj dla jednego kawałka piachu
-                    moveable.computeVector(this.grid.getGridDecoratorCentered(i, j));
+                    Loose moveable = (Loose) element; //todo przetestuj dla jednego kawałka piachu
+                    if (moved.contains(moveable))
+                        continue;
+                    moveable.computeVector(this.grid.getGriderator(i, j));
+                    moved.add(moveable);
 
                 }
             }
-        System.out.println(test); //todo delete
+        if (frameCounter%70==0)
+            for (int i=40; i<=90; i++){
+                for (int j=0; j<=2; j++){
+//                    this.grid.setElement(i, j, new Sand());
+                }
+            }
     }
     public Optional<Element> getElement(int x, int y) {
         return this.grid.getElement(x, y);
