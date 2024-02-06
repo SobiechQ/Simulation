@@ -1,4 +1,4 @@
-package Elements;
+package Elements.Api;
 
 public interface GeneratesParticles {
 }

@@ -1,10 +1,9 @@
 package Map;
 
 import Elements.Air;
-import Elements.Element;
+import Elements.Api.Element;
 
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Stream;
 

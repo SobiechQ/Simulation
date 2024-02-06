@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Vector {
     public enum Direction {
-        UP, DOWN, LEFT, RIGHT
+        UP, DOWN, LEFT, RIGHT, NONE
     }
     public double x;
     public double y;
@@ -35,6 +35,8 @@ public class Vector {
         this.y = y;
     }
     public Direction getDirection(){
+        if (this.x == 0 && this.y == 0)
+            return Direction.NONE;
         double degrees = this.getInDegrees();
         if (degrees >= -45 && degrees <= 45)
             return Direction.UP;

@@ -1,11 +1,10 @@
 package Map;
 
 import Elements.Air;
-import Elements.Element;
+import Elements.Api.Element;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
     * Griderator is a class that allows for the traversal of a 2D grid.

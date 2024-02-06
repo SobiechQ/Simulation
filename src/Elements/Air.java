@@ -1,10 +1,13 @@
 package Elements;
 
+import Elements.Api.Element;
+
 import java.awt.*;
 
-public class Air extends Element{
+public class Air extends Element {
     private Color color = Color.BLACK;
     public Air(){
+
 
     }
 

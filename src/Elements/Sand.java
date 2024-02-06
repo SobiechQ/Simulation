@@ -1,11 +1,9 @@
 package Elements;
 
-import Map.GridDecorator;
+import Elements.Api.Loose;
 import Map.Griderator;
 
 import java.awt.*;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 public class Sand extends Loose {
@@ -40,7 +38,8 @@ public class Sand extends Loose {
     @Override
     public void computeVector(Griderator griderator) {
 //        System.out.println(this.velocity.getDirection());
-        this.velocity.y = this.velocity.y -1;
+        if (griderator.getDown().isPresent() && griderator.getDown().get().current() instanceof Air)
+            this.velocity.y = this.velocity.y -1;
         this.computeVector(griderator, griderator, new Vector(this.velocity));
 //        System.out.println("==================================");
     }
@@ -64,11 +63,39 @@ public class Sand extends Loose {
                 this.computeVector(init, griderator, vector);
             }
             case DOWN -> {
-                if (griderator.getDown().isPresent() && griderator.getDown().get().current() instanceof Air) {
+                if (griderator.getDown().isPresent() && griderator.getDown().get().current() instanceof Air) { //below is air
                     vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
                     this.computeVector(init, griderator.getDown().get(), vector);
                     return;
                 }
+                if (griderator.getDown().isPresent()) { //below is something but not air
+                    if (Math.random() > 0.7 ){
+                        this.velocity.y = 0;
+                        vector.y = 0;
+                        this.computeVector(init, griderator, vector);
+                        return;
+                    }
+
+
+                    var downLeft = griderator.getDown().get().getLeft();
+                    var downRight = griderator.getDown().get().getRight();
+                    if (downLeft.isPresent() && downLeft.get().current() instanceof Air) {
+                        vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
+                        this.computeVector(init, downLeft.get(), vector);
+                        return;
+                    }
+                    if (downRight.isPresent() && downRight.get().current() instanceof Air) {
+                        vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
+                        this.computeVector(init, downRight.get(), vector);
+                        return;
+                    }
+
+
+
+
+                }
+
+                //below is end of the grid
                 vector.y = 0;
                 this.velocity.y = 0;
                 this.computeVector(init, griderator, vector);

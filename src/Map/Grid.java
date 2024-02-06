@@ -1,12 +1,13 @@
 package Map;
 
 import Elements.*;
+import Elements.Api.Element;
+import Elements.Api.Loose;
+import Elements.Api.Moveable;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class Grid { //todo iterable z opcją modyfikacji?
 
@@ -21,6 +22,8 @@ public class Grid { //todo iterable z opcją modyfikacji?
                 this.grid.setElement(i, j, new Sand());
             }
         }
+
+
         for (int i=20; i<=90; i++){
             for (int j=0; j<=5; j++){
                 this.grid.setElement(i, j, new Sand());
@@ -32,6 +35,7 @@ public class Grid { //todo iterable z opcją modyfikacji?
             }
         }
         this.grid.setElement(50,50, new Sand());
+        this.grid.setElement(70,70, new Tnt());
     }
     private int frameCounter = 0;
     public void nextFrame() {
@@ -49,10 +53,16 @@ public class Grid { //todo iterable z opcją modyfikacji?
 
                 }
             }
-        if (frameCounter%70==0)
+        if (frameCounter%15==0)
             for (int i=40; i<=90; i++){
-                for (int j=0; j<=2; j++){
-//                    this.grid.setElement(i, j, new Sand());
+                for (int j=0; j<=5; j++){
+                    this.grid.setElement(i, j, new Sand());
+                }
+            }
+        if (frameCounter%20==0)
+            for (int i=10; i<=30; i++){
+                for (int j=45; j<=75; j++){
+                    this.grid.unsetElement(i,j);
                 }
             }
     }
