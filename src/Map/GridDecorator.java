@@ -4,6 +4,7 @@ import Elements.Air;
 import Elements.Api.Element;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class GridDecorator {
     private final Link[][] grid;
@@ -36,6 +37,9 @@ public class GridDecorator {
     }
     public void unsetElement(int x, int y){
         this.setElement(x, y, new Air());
+    }
+    public Stream<Link> stream(){
+        return Stream.of(this.grid).flatMap(Stream::of).sorted((l1, l2) -> (int) (l2.getId() - l1.getId()));
     }
 
 

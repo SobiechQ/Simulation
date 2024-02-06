@@ -7,8 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GridFrame extends JFrame {
-    private final int gridSize = 100;
-    private final int elementSize = 8;
+    private final int gridSize = 150;
+    private final int elementSize = 5;
     private final Grid grid;
     private final JPanel canvas = new JPanel(){
 @Override
@@ -44,7 +44,7 @@ public class GridFrame extends JFrame {
                 canvas.repaint();
 
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(40);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

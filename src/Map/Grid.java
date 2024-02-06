@@ -25,7 +25,7 @@ public class Grid { //todo iterable z opcją modyfikacji?
 
 
         for (int i=20; i<=90; i++){
-            for (int j=0; j<=5; j++){
+            for (int j=0; j<=10; j++){
                 this.grid.setElement(i, j, new Sand());
             }
         }
@@ -35,7 +35,7 @@ public class Grid { //todo iterable z opcją modyfikacji?
             }
         }
         this.grid.setElement(50,50, new Sand());
-//        this.grid.setElement(70,70, new Tnt());
+        this.grid.setElement(35,140, new Tnt());
     }
     private int frameCounter = 0;
     public void nextFrame() {
@@ -51,17 +51,17 @@ public class Grid { //todo iterable z opcją modyfikacji?
                     moveable.computeVector(this.grid.getLink(i, j).get());
                     moved.add(moveable);
                 }
-//                if (element instanceof Tnt tnt){
-//                    tnt.nextFrame(this.grid.getLink(i, j).get());
-//                }
+                if (element instanceof Tnt tnt){
+                    tnt.nextFrame(this.grid.getLink(i, j).get());
+                }
             }
-        if (frameCounter%15==0)
-            for (int i=40; i<=90; i++){
+        if (frameCounter%70==0)
+            for (int i=40; i<=70; i++){
                 for (int j=0; j<=5; j++){
                     this.grid.setElement(i, j, new Sand());
                 }
             }
-        if (frameCounter%20==0)
+        if (frameCounter%60==0)
             for (int i=10; i<=30; i++){
                 for (int j=45; j<=75; j++){
 //                    this.grid.unsetElement(i,j);

@@ -1,6 +1,7 @@
 package Elements;
 
 import Elements.Api.Loose;
+import Map.Direction;
 import Map.Link;
 
 import java.awt.*;
@@ -25,7 +26,7 @@ public class Sand extends Loose {
     public Sand() {
         //random color
         this.color = COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get();
-        this.velocity = new Vector(0, 0);
+        this.velocity = new Vector();
     }
 
     @Override
@@ -58,38 +59,26 @@ public class Sand extends Loose {
         }
         switch (vector.getDirection()){
             case UP -> {
-                if (link.get(UP).isPresent() && link.get(UP).get().getElement() instanceof Air) {
-                    vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
-                    this.computeVector(init, link.get(UP).get(), vector);
+                if (this.isAbleUpOrDown(init, link, vector, UP))
                     return;
-                }
                 vector.y = 0;
                 this.velocity.y = 0;
                 this.computeVector(init, link, vector);
             }
             case DOWN -> {
-                if (link.get(DOWN).isPresent() && link.get(DOWN).get().getElement() instanceof Air) { //below is air
-                    vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
-                    this.computeVector(init, link.get(DOWN).get(), vector);
+                if (this.isAbleUpOrDown(init, link, vector, DOWN))
                     return;
-                }
                 if (link.get(DOWN).isPresent()) { //below is something but not air
-                    if (Math.random() > 0.7 ){
+                    if (Math.random() > 0.8 ){
                         this.velocity.y = 0;
                         vector.y = 0;
                         this.computeVector(init, link, vector);
                         return;
                     }
-                    if (link.get(DOWN, LEFT).isPresent() && link.get(DOWN, LEFT).get().getElement() instanceof Air) {
-                        vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
-                        this.computeVector(init, link.get(DOWN, LEFT).get(), vector);
+                    if (this.isAbleFallLeftOrRight(init, link, vector, LEFT))
                         return;
-                    }
-                    if (link.get(DOWN, RIGHT).isPresent() && link.get(DOWN, RIGHT).get().getElement() instanceof Air) {
-                        vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
-                        this.computeVector(init, link.get(DOWN, RIGHT).get(), vector);
+                    if (this.isAbleFallLeftOrRight(init, link, vector, RIGHT))
                         return;
-                    }
                 }
 
                 //below is end of the grid
@@ -98,21 +87,15 @@ public class Sand extends Loose {
                 this.computeVector(init, link, vector);
             }
             case LEFT -> {
-                if (link.get(LEFT).isPresent() && link.get(LEFT).get().getElement() instanceof Air) {
-                    vector.x = vector.x < 0 ? vector.x + 1 : vector.x - 1;
-                    this.computeVector(init, link.get(LEFT).get(), vector);
+                if (this.isAbleLeftOrRight(init, link, vector, LEFT))
                     return;
-                }
                 vector.x = 0;
                 this.velocity.x = 0;
                 this.computeVector(init, link, vector);
             }
             case RIGHT -> {
-                if (link.get(RIGHT).isPresent() && link.get(RIGHT).get().getElement() instanceof Air) {
-                    vector.x = vector.x < 0 ? vector.x + 1 : vector.x - 1;
-                    this.computeVector(init, link.get(RIGHT).get(), vector);
+                if (this.isAbleLeftOrRight(init, link, vector, RIGHT))
                     return;
-                }
                 vector.x = 0;
                 this.velocity.x = 0;
                 this.computeVector(init, link, vector);
@@ -120,9 +103,41 @@ public class Sand extends Loose {
         }
 
     }
+
+    private boolean isAbleLeftOrRight(Link init, Link link, Vector vector, Direction direction) {
+        if (link.get(direction).isPresent() && link.get(direction).get().getElement() instanceof Air) {
+            vector.x = vector.x < 0 ? vector.x + 1 : vector.x - 1;
+            this.computeVector(init, link.get(direction).get(), vector);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isAbleFallLeftOrRight(Link init, Link link, Vector vector, Direction direction) {
+        if (link.get(DOWN, direction).isPresent() && link.get(DOWN, direction).get().getElement() instanceof Air) {
+            vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
+            this.computeVector(init, link.get(DOWN, direction).get(), vector);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isAbleUpOrDown(Link init, Link link, Vector vector, Direction direction) {
+        if (link.get(direction).isPresent() && link.get(direction).get().getElement() instanceof Air) {
+            vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
+            this.computeVector(init, link.get(direction).get(), vector);
+            return true;
+        }
+        return false;
+    }
+
     public void log(String message){
         if (DEBUG)
             System.out.println(message);
+    }
+    public void setVelocity(double x, double y){
+        this.velocity.x = x;
+        this.velocity.y = y;
     }
 
 

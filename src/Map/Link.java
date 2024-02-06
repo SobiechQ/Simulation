@@ -7,6 +7,7 @@ import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.stream.Stream;
 
 public class Link {
     private long id;
@@ -60,9 +61,25 @@ public class Link {
     public void set(Element element) {
         this.element = element;
     }
+    public Stream<Link> stream(){
+        return this.gridDecorator.stream();
+    }
+    public double distance(Link link){
+        return Math.sqrt(Math.pow(this.x - link.x, 2) + Math.pow(this.y - link.y, 2));
+    }
 
     @Override
     public String toString() {
         return String.format("Element [%s] at [%s, %s]\nup [%s]\ndown [%s]\nleft [%s]\nright [%s]", this.element, this.x, this.y, this.get(Direction.UP).map(Link::getElement).orElse(null), this.get(Direction.DOWN).map(Link::getElement).orElse(null), this.get(Direction.LEFT).map(Link::getElement).orElse(null), this.get(Direction.RIGHT).map(Link::getElement).orElse(null));
+    }
+    public double deltaX(Link link){
+        return this.x - link.x;
+    }
+    public double deltaY(Link link){
+        return this.y - link.y;
+    }
+
+    public long getId() {
+        return id;
     }
 }
