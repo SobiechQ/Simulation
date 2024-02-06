@@ -1,11 +1,11 @@
 package Elements;
 
+import Map.Direction;
+
 import java.util.Objects;
 
 public class Vector {
-    public enum Direction {
-        UP, DOWN, LEFT, RIGHT, NONE
-    }
+
     public double x;
     public double y;
     public Vector(double x, double y){

@@ -1,9 +1,9 @@
 package Elements.Api;
 import Elements.Vector;
 import Map.GridDecorator;
-import Map.Griderator;
+import Map.Link;
 
 public interface Moveable {
     Vector getVelocity();
-    void computeVector(Griderator griderator);
+    void computeVector(Link link);
 }

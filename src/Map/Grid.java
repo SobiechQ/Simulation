@@ -35,7 +35,7 @@ public class Grid { //todo iterable z opcją modyfikacji?
             }
         }
         this.grid.setElement(50,50, new Sand());
-        this.grid.setElement(70,70, new Tnt());
+//        this.grid.setElement(70,70, new Tnt());
     }
     private int frameCounter = 0;
     public void nextFrame() {
@@ -48,12 +48,12 @@ public class Grid { //todo iterable z opcją modyfikacji?
                     Loose moveable = (Loose) element; //todo przetestuj dla jednego kawałka piachu
                     if (moved.contains(moveable))
                         continue;
-                    moveable.computeVector(this.grid.getGriderator(i, j));
+                    moveable.computeVector(this.grid.getLink(i, j).get());
                     moved.add(moveable);
                 }
-                if (element instanceof Tnt tnt){
-                    tnt.nextFrame(this.grid.getGriderator(i, j));
-                }
+//                if (element instanceof Tnt tnt){
+//                    tnt.nextFrame(this.grid.getLink(i, j).get());
+//                }
             }
         if (frameCounter%15==0)
             for (int i=40; i<=90; i++){
@@ -64,7 +64,7 @@ public class Grid { //todo iterable z opcją modyfikacji?
         if (frameCounter%20==0)
             for (int i=10; i<=30; i++){
                 for (int j=45; j<=75; j++){
-                    this.grid.unsetElement(i,j);
+//                    this.grid.unsetElement(i,j);
                 }
             }
     }

@@ -44,7 +44,7 @@ public class GridFrame extends JFrame {
                 canvas.repaint();
 
                 try {
-                    Thread.sleep(60);
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

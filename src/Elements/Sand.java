@@ -1,12 +1,15 @@
 package Elements;
 
 import Elements.Api.Loose;
-import Map.Griderator;
+import Map.Link;
 
 import java.awt.*;
 import java.util.Set;
 
+import static Map.Direction.*;
+
 public class Sand extends Loose {
+    private final static boolean DEBUG = false;
     private final static Set<Color> COLORS = Set.of(
             new Color(212, 203, 147),
             new Color(210, 200, 144),
@@ -22,7 +25,7 @@ public class Sand extends Loose {
     public Sand() {
         //random color
         this.color = COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get();
-        this.velocity = new Vector(5, 5);
+        this.velocity = new Vector(0, 0);
     }
 
     @Override
@@ -36,92 +39,90 @@ public class Sand extends Loose {
     }
 
     @Override
-    public void computeVector(Griderator griderator) {
-//        System.out.println(this.velocity.getDirection());
-        if (griderator.getDown().isPresent() && griderator.getDown().get().current() instanceof Air)
+    public void computeVector(Link link) {
+        this.log(this.velocity.getDirection().toString());
+        if (link.get(DOWN).isPresent() && link.get(DOWN).get().getElement() instanceof Air)
             this.velocity.y = this.velocity.y -1;
-        this.computeVector(griderator, griderator, new Vector(this.velocity));
-//        System.out.println("==================================");
+        this.computeVector(link, link, new Vector(this.velocity));
+        this.log("===========================");
     }
 
-    public void computeVector(Griderator init, Griderator griderator, Vector vector) {
-//        System.out.printf("init [%s]\ngriderator [%s]\nvector [%s]\n", init, griderator, vector);
+    public void computeVector(Link init, Link link, Vector vector) {
+        this.log("====step====");
+        this.log(String.format("init[%s]\n\nlink [%s]\n\nvector [%s]\nvelocity [%s]\n", init, link, vector, this.velocity));
+        this.log("====step====");
         if (Math.abs(vector.getX()) <= 0.5 && Math.abs(vector.getY()) <= 0.5){
-            init.unsetCurrent();
-            griderator.setCurrent(this);
+            init.clear();
+            link.set(this);
             return;
         }
         switch (vector.getDirection()){
             case UP -> {
-                if (griderator.getUp().isPresent() && griderator.getUp().get().current() instanceof Air) {
+                if (link.get(UP).isPresent() && link.get(UP).get().getElement() instanceof Air) {
                     vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
-                    this.computeVector(init, griderator.getUp().get(), vector);
+                    this.computeVector(init, link.get(UP).get(), vector);
                     return;
                 }
                 vector.y = 0;
                 this.velocity.y = 0;
-                this.computeVector(init, griderator, vector);
+                this.computeVector(init, link, vector);
             }
             case DOWN -> {
-                if (griderator.getDown().isPresent() && griderator.getDown().get().current() instanceof Air) { //below is air
+                if (link.get(DOWN).isPresent() && link.get(DOWN).get().getElement() instanceof Air) { //below is air
                     vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
-                    this.computeVector(init, griderator.getDown().get(), vector);
+                    this.computeVector(init, link.get(DOWN).get(), vector);
                     return;
                 }
-                if (griderator.getDown().isPresent()) { //below is something but not air
+                if (link.get(DOWN).isPresent()) { //below is something but not air
                     if (Math.random() > 0.7 ){
                         this.velocity.y = 0;
                         vector.y = 0;
-                        this.computeVector(init, griderator, vector);
+                        this.computeVector(init, link, vector);
                         return;
                     }
-
-
-                    var downLeft = griderator.getDown().get().getLeft();
-                    var downRight = griderator.getDown().get().getRight();
-                    if (downLeft.isPresent() && downLeft.get().current() instanceof Air) {
+                    if (link.get(DOWN, LEFT).isPresent() && link.get(DOWN, LEFT).get().getElement() instanceof Air) {
                         vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
-                        this.computeVector(init, downLeft.get(), vector);
+                        this.computeVector(init, link.get(DOWN, LEFT).get(), vector);
                         return;
                     }
-                    if (downRight.isPresent() && downRight.get().current() instanceof Air) {
+                    if (link.get(DOWN, RIGHT).isPresent() && link.get(DOWN, RIGHT).get().getElement() instanceof Air) {
                         vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
-                        this.computeVector(init, downRight.get(), vector);
+                        this.computeVector(init, link.get(DOWN, RIGHT).get(), vector);
                         return;
                     }
-
-
-
-
                 }
 
                 //below is end of the grid
                 vector.y = 0;
                 this.velocity.y = 0;
-                this.computeVector(init, griderator, vector);
+                this.computeVector(init, link, vector);
             }
             case LEFT -> {
-                if (griderator.getLeft().isPresent() && griderator.getLeft().get().current() instanceof Air) {
+                if (link.get(LEFT).isPresent() && link.get(LEFT).get().getElement() instanceof Air) {
                     vector.x = vector.x < 0 ? vector.x + 1 : vector.x - 1;
-                    this.computeVector(init, griderator.getLeft().get(), vector);
+                    this.computeVector(init, link.get(LEFT).get(), vector);
                     return;
                 }
                 vector.x = 0;
                 this.velocity.x = 0;
-                this.computeVector(init, griderator, vector);
+                this.computeVector(init, link, vector);
             }
             case RIGHT -> {
-                if (griderator.getRight().isPresent() && griderator.getRight().get().current() instanceof Air) {
+                if (link.get(RIGHT).isPresent() && link.get(RIGHT).get().getElement() instanceof Air) {
                     vector.x = vector.x < 0 ? vector.x + 1 : vector.x - 1;
-                    this.computeVector(init, griderator.getRight().get(), vector);
+                    this.computeVector(init, link.get(RIGHT).get(), vector);
                     return;
                 }
                 vector.x = 0;
                 this.velocity.x = 0;
-                this.computeVector(init, griderator, vector);
+                this.computeVector(init, link, vector);
             }
         }
 
+    }
+    public void log(String message){
+        if (DEBUG)
+            System.out.println(message);
     }
 
 
