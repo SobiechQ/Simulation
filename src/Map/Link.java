@@ -55,7 +55,7 @@ public class Link {
 
 
     public void clear() {
-        this.set(new Air());
+        this.set(new Air()); //todo unset
     }
 
     public void set(Element element) {

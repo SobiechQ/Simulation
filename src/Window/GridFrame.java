@@ -1,7 +1,6 @@
 package Window;
 
 import Map.Grid;
-import Elements.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,12 +9,12 @@ public class GridFrame extends JFrame {
     private final int gridSize = 150;
     private final int elementSize = 5;
     private final Grid grid;
-    private final JPanel canvas = new JPanel(){
+    private final JPanel panel = new JPanel(){
 @Override
         public void paint(Graphics g) {
             super.paint(g);
             for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
+                for (int j = 0; j < gridSize; j++) { //todo stream.
                     var optionalElement = grid.getElement(i, j);
                     if (optionalElement.isEmpty()) continue;
                     var element = optionalElement.get();
@@ -37,11 +36,11 @@ public class GridFrame extends JFrame {
         frame.setSize((int) Math.round(gridSize * elementSize + elementSize*1.5), gridSize * elementSize + elementSize + 28);
         frame.setResizable(false);
         frame.setVisible(true);
-        frame.add(canvas);
+        frame.add(panel);
 
         new Thread(()->{
             while (true){
-                canvas.repaint();
+                panel.repaint();
 
                 try {
                     Thread.sleep(40);

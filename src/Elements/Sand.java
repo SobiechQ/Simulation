@@ -49,6 +49,9 @@ public class Sand extends Loose {
     }
 
     public void computeVector(Link init, Link link, Vector vector) {
+        //todo mogą znikać ponieważ jest dodatkwa niewidoczna linia poniżej
+
+
         this.log("====step====");
         this.log(String.format("init[%s]\n\nlink [%s]\n\nvector [%s]\nvelocity [%s]\n", init, link, vector, this.velocity));
         this.log("====step====");
