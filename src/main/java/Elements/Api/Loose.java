@@ -71,7 +71,6 @@ public abstract class Loose extends Element implements Moveable {
                     if (this.isAbleFallLeftOrRight(init, link, vector, RIGHT))
                         return;
                 }
-
                 //below is end of the grid
                 vector.y = 0;
                 this.velocity.y = 0;

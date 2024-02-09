@@ -21,14 +21,9 @@ public class Menu extends JFrame {
         public Element newInstanceOf(){
             try {
                 return this.element.getConstructor(null).newInstance(null);
-            } catch (NoSuchMethodException e) {
+            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                     IllegalAccessException e) {
                 e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException(e);
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
             }
             return new Air();
         }

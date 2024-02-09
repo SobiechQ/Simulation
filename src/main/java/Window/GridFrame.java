@@ -1,6 +1,5 @@
 package Window;
 
-import Elements.Stone;
 import Elements.Tnt;
 import Map.GridManager;
 
@@ -12,7 +11,8 @@ import java.awt.event.MouseListener;
 import java.util.List;
 
 public class GridFrame extends JFrame {
-    private final int gridSize = 150;
+    private final int gridWidth = 300;
+    private final int gridHeight = 150;
     private final int elementSize = 5;
     private final GridManager gridManager;
     private final Menu menu = new Menu();
@@ -32,10 +32,10 @@ public class GridFrame extends JFrame {
         }
     };
     public GridFrame(){
-        this.gridManager = new GridManager(gridSize);
+        this.gridManager = new GridManager(gridWidth, gridHeight);
         JFrame frame = new JFrame("Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize((int) Math.round(gridSize * elementSize + elementSize*3.25), gridSize * elementSize + elementSize + 35);
+        frame.setSize((int) Math.round(gridWidth * elementSize + elementSize*3.25), gridHeight * elementSize + elementSize + 35);
         frame.setResizable(false);
         frame.setVisible(true);
         frame.add(this.panel);
@@ -63,7 +63,7 @@ public class GridFrame extends JFrame {
                 this.gridManager.nextFrame();
                 long end_time = System.nanoTime();
                 double difference = (end_time - start_time) / 1e6;
-//                System.out.println(difference);
+                System.out.println(difference);
             }
         }).start();
     }

@@ -13,10 +13,10 @@ import java.util.stream.Stream;
 public class Grid {
     private final Link[][] grid;
 
-    public Grid(int gridSize) {
-        this.grid = new Link[gridSize][gridSize];
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
+    public Grid(int width, int height) {
+        this.grid = new Link[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 this.grid[i][j] = new Link(j, i, this, new Air());
             }
         }
