@@ -1,6 +1,4 @@
-package Elements;
-
-import Map.Direction;
+package Map.Utils;
 
 import java.util.Objects;
 

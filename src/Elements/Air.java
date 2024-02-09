@@ -15,4 +15,9 @@ public class Air extends Element {
     public Color getColor() {
         return this.color;
     }
+
+    @Override
+    public void setColor(Color color) {
+        this.color = color;
+    }
 }

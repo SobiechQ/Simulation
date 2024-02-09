@@ -1,88 +1,78 @@
 package Map;
 
-import Elements.*;
+import Elements.Air;
 import Elements.Api.Element;
-import Elements.Api.Loose;
-import Elements.Api.Moveable;
+import Elements.Api.Refreshable;
 
-import java.util.HashSet;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class Grid { //todo iterable z opcją modyfikacji?
-
-    private final GridDecorator grid;
-    private final int gridSize;
+public class Grid {
+    private final Link[][] grid;
 
     public Grid(int gridSize) {
-        this.gridSize = gridSize;
-        this.grid = new GridDecorator(this.gridSize);
-        for (int i=30; i<=40; i++){
-            for (int j=40; j<=70; j++){
-                this.grid.set(i, j, new Sand());
+        this.grid = new Link[gridSize][gridSize];
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                this.grid[i][j] = new Link(j, i, this, new Air());
             }
         }
+        this.linksSorted = Arrays.stream(grid)
+                .flatMap(Arrays::stream)
+                .sorted((l1, l2) -> Math.toIntExact(l1.getId() - l2.getId()))
+                .collect(Collectors.toList());
+        this.linksReversed = Arrays.stream(grid)
+                .flatMap(Arrays::stream)
+                .sorted((l1, l2) -> Math.toIntExact(l2.getId() - l1.getId()))
+                .collect(Collectors.toList());
+        this.linksRandomized = Arrays.stream(grid)
+                .flatMap(Arrays::stream)
+                .sorted((l1, l2) -> Math.toIntExact(l1.getRandomId() - l2.getRandomId()))
+                .collect(Collectors.toList());
+    }
+
+    public Optional<Link> getLink(int x, int y) {
+        if (this.isOutOfBounds(x, y))
+            return Optional.empty();
+        return Optional.of(this.grid[y][x]);
+    }
+
+    public void set(int x, int y, Element element) {
+        if (this.isOutOfBounds(x, y))
+            return;
+        this.grid[y][x].set(element);
+    }
+
+    public boolean isOutOfBounds(int x, int y) {
+        return y < 0 || y >= this.grid.length || x < 0 || x >= this.grid[0].length;
+    }
+
+    public void clear(int x, int y) {
+        this.set(x, y, new Air());
+    }
+
+    private final List<Link> linksSorted;
+
+    public Stream<Link> stream() {
+        return linksSorted.stream();
+    }
+
+    private final List<Link> linksReversed;
+
+    public Stream<Link> stream(boolean reversed) {
+        if (!reversed)
+            return this.stream();
+        return this.linksReversed.stream();
+    }
+
+    private final List<Link> linksRandomized;
+
+    public Stream<Link> streamRandom() {
+        return linksRandomized.stream();
+    }
 
 
-        for (int i=20; i<=90; i++){
-            for (int j=0; j<=10; j++){
-                this.grid.set(i, j, new Sand());
-            }
-        }
-        for (int i=10; i<=30; i++){
-            for (int j=45; j<=75; j++){
-                this.grid.set(i, j, new Stone());
-            }
-        }
-        this.grid.set(50,50, new Sand());
-        this.grid.set(35,140, new Tnt());
-        this.grid.set(35,139, new Tnt());
-        this.grid.set(35,138, new Tnt());
-        this.grid.set(35,137, new Tnt());
-        this.grid.set(35,136, new Tnt());
-        this.grid.set(40,140, new Tnt());
-        this.grid.set(40,139, new Tnt());
-        this.grid.set(40,138, new Tnt());
-        this.grid.set(40,137, new Tnt());
-        this.grid.set(45,136, new Tnt());
-    }
-    private int frameCounter = 0;
-    public void nextFrame() {
-        Set<Element> moved = new HashSet<>();
-        frameCounter++;
-        for (int i = this.gridSize - 1; i >= 0; i--)
-            for (int j = gridSize; j >= 0; j--) { //funkcyjnie
-                Element element = this.grid.getElement(i, j).orElse(new Air());
-                if (element instanceof Moveable) {
-                    Loose moveable = (Loose) element; //todo przetestuj dla jednego kawałka piachu
-                    if (moved.contains(moveable))
-                        continue;
-                    moveable.computeVector(this.grid.getLink(i, j).get());
-                    moved.add(moveable);
-                }
-                if (element instanceof Tnt tnt){
-                    tnt.nextFrame(this.grid.getLink(i, j).get());
-                }
-            }
-        if (frameCounter%70==0)
-            for (int i=40; i<=70; i++){
-                for (int j=0; j<=5; j++){
-                    this.grid.set(i, j, new Sand()); //todo funkcyjnie
-                }
-            }
-        if (frameCounter%60==0)
-            for (int i=10; i<=30; i++){
-                for (int j=45; j<=75; j++){
-//                    this.grid.unsetElement(i,j);
-                }
-            }
-    }
-    public Optional<Element> getElement(int x, int y) { //todo remove. make stream
-        return this.grid.getElement(x, y);
-    }
 }
-
-
-
-
-
