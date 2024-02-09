@@ -57,18 +57,6 @@ public class GridManager {
         frameCounter++;
         this.grid.streamRandom()
                 .filter(link -> link.getElement() instanceof Refreshable)
-                .filter(link -> ((Refreshable)link.getElement()).getPriority() == 1 )
-                .forEach(link -> {
-                    if (!moved.contains(link.getElement())) {
-                        if (link.getElement() instanceof Refreshable refreshable){
-                            refreshable.refresh(link);
-                            moved.add(link.getElement());
-                        }
-                    }
-                });
-        this.grid.streamRandom()
-                .filter(link -> link.getElement() instanceof Refreshable)
-                .filter(link -> ((Refreshable)link.getElement()).getPriority() == 0 )
                 .forEach(link -> {
                     if (!moved.contains(link.getElement())) {
                         if (link.getElement() instanceof Refreshable refreshable){
@@ -78,10 +66,10 @@ public class GridManager {
                     }
                 });
 
-        if (frameCounter%70==0)
+        if (frameCounter%10==0 && frameCounter < 500)
             for (int i=40; i<=70; i++){
                 for (int j=0; j<=5; j++){
-//                    this.grid.set(i, j, new Sand()); //todo funkcyjnie
+                    this.grid.set(i, j, new Sand()); //todo funkcyjnie
                 }
             }
         if (frameCounter%60==0)

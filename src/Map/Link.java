@@ -59,6 +59,8 @@ public class Link {
     }
 
     public void clear() {
+        if (this.getElement() instanceof Air)
+            return;
         this.set(new Air());
     }
 

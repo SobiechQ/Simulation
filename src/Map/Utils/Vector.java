@@ -24,9 +24,18 @@ public class Vector {
     public void setX(double x) {
         this.x = x;
     }
-
+    public void addX(double x) {
+        this.x += x;
+    }
     public double getY() {
         return y;
+    }
+    public void addY(double y) {
+        this.y+=y;
+    }
+    public void addVector(double x, double y){
+        this.addX(x);
+        this.addY(y);
     }
 
     public void setY(double y) {

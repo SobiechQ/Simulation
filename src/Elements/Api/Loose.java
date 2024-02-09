@@ -32,6 +32,7 @@ public abstract class Loose extends Element implements Moveable {
     }
 
     public void move(Link init, Link link, Vector vector) {
+        double bounceIndex = 0.8;
         if (this.debug) {
             System.out.println(link);
             System.out.println(this.getVelocity());
@@ -47,6 +48,8 @@ public abstract class Loose extends Element implements Moveable {
             case UP -> {
                 if (this.isAbleUpOrDown(init, link, vector, UP))
                     return;
+                if (link.isInstanceOf(Moveable.class, UP))
+                    ((Moveable)link.get(UP).get().getElement()).getVelocity().setY(this.velocity.y* bounceIndex);
                 vector.y = 0;
                 this.velocity.y = 0;
                 this.move(init, link, vector);
@@ -55,6 +58,8 @@ public abstract class Loose extends Element implements Moveable {
                 if (this.isAbleUpOrDown(init, link, vector, DOWN))
                     return;
                 if (link.get(DOWN).isPresent()) { //below is something but not air
+                    if (link.isInstanceOf(Moveable.class, DOWN))
+                        ((Moveable)link.get(DOWN).get().getElement()).getVelocity().setY(this.velocity.y* bounceIndex);
                     if (Math.random() > this.stickness() ){
                         this.velocity.y = 0;
                         vector.y = 0;
@@ -75,6 +80,8 @@ public abstract class Loose extends Element implements Moveable {
             case LEFT -> {
                 if (this.isAbleLeftOrRight(init, link, vector, LEFT))
                     return;
+                if (link.isInstanceOf(Moveable.class, LEFT))
+                    ((Moveable)link.get(LEFT).get().getElement()).getVelocity().setX(this.velocity.x* bounceIndex);
                 vector.x = 0;
                 this.velocity.x = 0;
                 this.move(init, link, vector);
@@ -82,6 +89,8 @@ public abstract class Loose extends Element implements Moveable {
             case RIGHT -> {
                 if (this.isAbleLeftOrRight(init, link, vector, RIGHT))
                     return;
+                if (link.isInstanceOf(Moveable.class, RIGHT))
+                    ((Moveable)link.get(RIGHT).get().getElement()).getVelocity().setX(this.velocity.x* bounceIndex);
                 vector.x = 0;
                 this.velocity.x = 0;
                 this.move(init, link, vector);

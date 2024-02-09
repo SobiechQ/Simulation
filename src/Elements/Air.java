@@ -3,21 +3,18 @@ package Elements;
 import Elements.Api.Element;
 
 import java.awt.*;
+import java.util.Set;
 
 public class Air extends Element {
-    private Color color = Color.BLACK;
+    private final static Set<Color> COLORS = Set.of(
+            new Color(0, 0, 0),
+            new Color(3, 3, 3),
+            new Color(5, 5, 5),
+            new Color(7, 7, 7),
+            new Color(9, 9, 9)
+    );
+
     public Air(){
-
-
-    }
-
-    @Override
-    public Color getColor() {
-        return this.color;
-    }
-
-    @Override
-    public void setColor(Color color) {
-        this.color = color;
+        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
     }
 }

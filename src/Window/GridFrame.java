@@ -36,7 +36,6 @@ public class GridFrame extends JFrame {
         new Thread(()->{
             while (true){
                 panel.repaint();
-
                 try {
                     Thread.sleep(40);
                 } catch (InterruptedException e) {

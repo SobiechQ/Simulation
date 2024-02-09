@@ -20,37 +20,20 @@ public class Sand extends Loose {
             new Color(177, 169, 115),
             new Color(231, 219, 177)
     );
-    private Color color;
-//    private final Vector velocity;
 
     public Sand() {
-        //random color
-        this.color = COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get();
+        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
     }
 
-    @Override
-    public Color getColor() {
-        return this.color;
-    }
+
 
     @Override
     protected double gravity() {
-        return 0.5;
+        return 0.2;
     }
 
     @Override
     protected double stickness() {
         return 0.8;
-    }
-
-    @Override
-    public int getPriority() { //todo jako enum
-        return 1;
-    }
-    @Override
-    public void setColor(Color color) { //todo przeniesc do api
-        if (this.getDebug())
-            return;
-        this.color = color;
     }
 }
