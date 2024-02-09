@@ -71,7 +71,10 @@ public class Link {
         return this.grid.stream();
     }
     public double distance(Link link){
-        return Math.sqrt(Math.pow(this.x - link.x, 2) + Math.pow(this.y - link.y, 2));
+        return this.distance(link.getX(), link.getY());
+    }
+    public double distance(int x, int y){
+        return Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2));
     }
 
     @Override

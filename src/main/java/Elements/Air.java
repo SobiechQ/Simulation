@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.Set;
 
 public class Air extends Element {
+
     private final static Set<Color> COLORS = Set.of(
             new Color(0, 0, 0),
             new Color(3, 3, 3),

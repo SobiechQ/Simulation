@@ -85,6 +85,9 @@ public class GridManager {
     public Stream<Link> stream(boolean reversed) {
         return this.grid.stream(reversed);
     }
+    public Grid getGrid(){
+        return this.grid;
+    }
 }
 
 
