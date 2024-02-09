@@ -46,7 +46,7 @@ public abstract class Loose extends Element implements Moveable {
         }
         switch (vector.getDirection()){
             case UP -> {
-                if (this.isAbleUpOrDown(init, link, vector, UP))
+                if (this.moveYAxis(init, link, vector, UP))
                     return;
                 if (link.isInstanceOf(Moveable.class, UP))
                     ((Moveable)link.get(UP).get().getElement()).getVelocity().setY(this.velocity.y* bounceIndex);
@@ -55,7 +55,7 @@ public abstract class Loose extends Element implements Moveable {
                 this.move(init, link, vector);
             }
             case DOWN -> {
-                if (this.isAbleUpOrDown(init, link, vector, DOWN))
+                if (this.moveYAxis(init, link, vector, DOWN))
                     return;
                 if (link.get(DOWN).isPresent()) { //below is something but not air
                     if (link.isInstanceOf(Moveable.class, DOWN))
@@ -66,9 +66,9 @@ public abstract class Loose extends Element implements Moveable {
                         this.move(init, link, vector);
                         return;
                     }
-                    if (this.isAbleFallLeftOrRight(init, link, vector, LEFT))
+                    if (this.moveDiagonalDown(init, link, vector, LEFT))
                         return;
-                    if (this.isAbleFallLeftOrRight(init, link, vector, RIGHT))
+                    if (this.moveDiagonalDown(init, link, vector, RIGHT))
                         return;
                 }
                 //below is end of the grid
@@ -77,7 +77,7 @@ public abstract class Loose extends Element implements Moveable {
                 this.move(init, link, vector);
             }
             case LEFT -> {
-                if (this.isAbleLeftOrRight(init, link, vector, LEFT))
+                if (this.moveXAxis(init, link, vector, LEFT))
                     return;
                 if (link.isInstanceOf(Moveable.class, LEFT))
                     ((Moveable)link.get(LEFT).get().getElement()).getVelocity().setX(this.velocity.x* bounceIndex);
@@ -86,7 +86,7 @@ public abstract class Loose extends Element implements Moveable {
                 this.move(init, link, vector);
             }
             case RIGHT -> {
-                if (this.isAbleLeftOrRight(init, link, vector, RIGHT))
+                if (this.moveXAxis(init, link, vector, RIGHT))
                     return;
                 if (link.isInstanceOf(Moveable.class, RIGHT))
                     ((Moveable)link.get(RIGHT).get().getElement()).getVelocity().setX(this.velocity.x* bounceIndex);
@@ -97,7 +97,7 @@ public abstract class Loose extends Element implements Moveable {
         }
     }
 
-    private boolean isAbleLeftOrRight(Link init, Link link, Vector vector, Direction direction) {
+    private boolean moveXAxis(Link init, Link link, Vector vector, Direction direction) {
         if (link.isInstanceOf(Air.class, direction)) {
             vector.x = vector.x < 0 ? vector.x + 1 : vector.x - 1;
             this.move(init, link.get(direction).get(), vector);
@@ -106,7 +106,7 @@ public abstract class Loose extends Element implements Moveable {
         return false;
     }
 
-    private boolean isAbleFallLeftOrRight(Link init, Link link, Vector vector, Direction direction) {
+    private boolean moveDiagonalDown(Link init, Link link, Vector vector, Direction direction) {
         if (link.isInstanceOf(Air.class, DOWN, direction)) {
             vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
             this.move(init, link.get(DOWN, direction).get(), vector);
@@ -115,7 +115,7 @@ public abstract class Loose extends Element implements Moveable {
         return false;
     }
 
-    private boolean isAbleUpOrDown(Link init, Link link, Vector vector, Direction direction) {
+    private boolean moveYAxis(Link init, Link link, Vector vector, Direction direction) {
         if (link.isInstanceOf(Air.class, direction)) {
             vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
             this.move(init, link.get(direction).get(), vector);
@@ -126,6 +126,6 @@ public abstract class Loose extends Element implements Moveable {
 
     @Override
     public Vector getVelocity() {
-        return velocity;
+        return this.velocity;
     }
 }
