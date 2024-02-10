@@ -1,12 +1,12 @@
 package Elements;
 import Elements.Api.Loose;
-import Elements.Api.Particleable;
-import Elements.Particles.SandParticle;
+
+import Elements.Particles.ExplotionParticle;
 import Map.Link;
 
 import java.awt.*;
 
-public class MagicSand extends Loose implements Particleable {
+public class MagicSand extends Loose{
     private static float hsvValue = 0;
     public MagicSand(){
         MagicSand.hsvValue += 0.00005F;
@@ -23,16 +23,6 @@ public class MagicSand extends Loose implements Particleable {
         return 0.8;
     }
 
-    @Override
-    public void generateParticles(Link link) {
-        link.stream()
-                .filter(l -> l.distance(link) < 5)
-                .forEach(l -> {
-                    if (l.getElement() instanceof Air){
-                        l.set(new SandParticle(this.getColor()));
-                    }
-                } );
-    }
 
     @Override
     public void refresh(Link l) {

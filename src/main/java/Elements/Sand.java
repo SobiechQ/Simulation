@@ -1,18 +1,13 @@
 package Elements;
 
 import Elements.Api.Loose;
-import Elements.Api.Particleable;
-import Elements.Particles.SandParticle;
-import Map.Utils.Direction;
+import Elements.Particles.ExplotionParticle;
 import Map.Link;
-import Map.Utils.Vector;
 
 import java.awt.*;
 import java.util.Set;
 
-import static Map.Utils.Direction.*;
-
-public class Sand extends Loose implements Particleable {
+public class Sand extends Loose {
     private final static Set<Color> COLORS = Set.of(
             new Color(212, 203, 147),
             new Color(210, 200, 144),
@@ -39,16 +34,6 @@ public class Sand extends Loose implements Particleable {
         return 0.95;
     }
 
-    @Override
-    public void generateParticles(Link link) {
-        link.stream()
-                .filter(l -> l.distance(link) < 5)
-                .forEach(l -> {
-                    if (l.getElement() instanceof Air){
-                        l.set(new SandParticle(this.getColor()));
-                    }
-                } );
-    }
 
     @Override
     public void refresh(Link l) {

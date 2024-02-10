@@ -27,7 +27,8 @@ public abstract class Loose extends Element implements Moveable {
     @Override
     public void move(Link link) {
         if (link.isInstanceOf(Air.class, DOWN))
-            this.velocity.y = this.velocity.y - this.gravity() ;
+            this.velocity.y = this.velocity.y - this.gravity();
+
         this.move(link, link, new Vector(this.velocity));
     }
 
@@ -58,8 +59,17 @@ public abstract class Loose extends Element implements Moveable {
                 if (this.moveYAxis(init, link, vector, DOWN))
                     return;
                 if (link.get(DOWN).isPresent()) { //below is something but not air
+//                    if (link.isInstanceOf(Particle.class, DOWN)){
+//                        init.swap(link.get(DOWN).get());
+////                        vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
+//                        this.move(init, link.get(DOWN).get(), vector);
+//                    }
+
                     if (link.isInstanceOf(Moveable.class, DOWN))
                         ((Moveable)link.get(DOWN).get().getElement()).getVelocity().setY(this.velocity.y* bounceIndex);
+
+
+
                     if (Math.random() > this.stickness() ){
                         this.velocity.y = 0;
                         vector.y = 0;

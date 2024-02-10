@@ -67,6 +67,13 @@ public class Link {
     public void set(Element element) {
         this.element = element;
     }
+    public void swap(Link link) {
+        var toSwap = link.getElement();
+        link.clear();
+        link.set(this.getElement());
+        this.clear();
+        this.set(toSwap);
+    }
     public Stream<Link> stream(){
         return this.grid.stream();
     }

@@ -1,5 +1,6 @@
 package Elements;
 import Elements.Api.*;
+import Elements.Particles.ExplotionParticle;
 import Map.Link;
 
 import java.awt.*;
@@ -36,19 +37,25 @@ public class Tnt extends Solid implements Refreshable {
 
     private final static int EXPLOSION_RADIUS = 40;
     public void explode(Link link){
-        link.stream().filter(l -> link.distance(l) < (double) Tnt.EXPLOSION_RADIUS /4).forEach( l -> {
-            if (Math.random() > 0.98)
-                if (l.getElement() instanceof Particleable particleable)
-                    particleable.generateParticles(l);
+        final int calculatedExposionRadius = (((
+                (int) link.stream()
+                .filter(l -> link.distance(l) < (double) Tnt.EXPLOSION_RADIUS /4)
+                .filter(l->l.isInstanceOf(Tnt.class))
+                .count() + 20)/20)*EXPLOSION_RADIUS
+        );
+
+        link.stream().filter(l -> link.distance(l) < (double) calculatedExposionRadius /4).forEach(l -> {
             l.clear();
+            if (Math.random() > 0.7)
+                l.set(new ExplotionParticle());
         });
         link.stream()
-                .filter(l -> link.distance(l) < Tnt.EXPLOSION_RADIUS)
+                .filter(l -> link.distance(l) < calculatedExposionRadius)
                 .forEach(l -> {
             if (l.getElement() instanceof Moveable moveable){
                 if (!(l.getElement() instanceof Particle)) {
-                    double deltaX = link.deltaX(l) / (link.distance(l) * 0.2);
-                    double deltaY = link.deltaY(l) / (link.distance(l) * 0.2);
+                    double deltaX = link.deltaX(l) / (link.distance(l) * 0.1);
+                    double deltaY = link.deltaY(l) / (link.distance(l) * 0.1);
                     if (Double.isInfinite(moveable.getVelocity().getX() + deltaX) || Double.isInfinite(moveable.getVelocity().getY() + deltaY)) {
                         throw new RuntimeException(String.format("Element: [%s] tnt link: [%s]\n movable link: [%s] deltaX: [%s] deltaY: [%s]\ntnt:", l.getElement(), link, l, deltaX, deltaY));
                     }
