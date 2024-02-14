@@ -4,6 +4,7 @@ import Elements.Air;
 import Elements.Api.Element;
 import Map.Utils.Direction;
 
+import java.awt.*;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,6 @@ public class Link {
                 .filter(link -> clazz.isInstance(link.getElement()))
                 .isPresent();
     }
-
     public Element getElement() {
         return element;
     }
@@ -107,4 +107,8 @@ public class Link {
     public int getRandomId() {
         return randomId;
     }
+
+
+
+
 }

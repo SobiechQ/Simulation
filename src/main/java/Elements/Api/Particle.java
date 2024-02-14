@@ -11,12 +11,15 @@ import static Map.Utils.Direction.*;
 import static Map.Utils.Direction.UP;
 
 public abstract class Particle extends Element implements Moveable{
-    private final Vector velocity = new Vector((Math.random()*2 - 1), 1);
+    private final Vector velocity;
     private final boolean debug = false;
     private double timeToLive;
     private final double maxTimeToLive = (int) (Math.random()*40 + 10);
 
     public Particle() {
+        double xVelocity = -1d + Math.random()*2d;
+        double yVelocity = 0.7 +  Math.random()*1.1d;
+        this.velocity = new Vector(xVelocity, yVelocity);
         this.timeToLive = maxTimeToLive;
     }
     @Override

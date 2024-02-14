@@ -9,15 +9,11 @@ import Map.Link;
 import java.awt.*;
 import java.util.Set;
 
-public class TestObj extends Element implements Refreshable {
+public class TestObj extends Element {
 
 
 
 
     private int refreshCount = 0;
 
-    @Override
-    public void refresh(Link l) {
-
-    }
 }
