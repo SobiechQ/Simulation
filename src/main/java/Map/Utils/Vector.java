@@ -20,6 +20,10 @@ public class Vector {
     public double getX() {
         return x;
     }
+    public void clear(){
+        this.x = 0;
+        this.y = 0;
+    }
 
     public void setX(double x) {
         this.x = x;
@@ -42,7 +46,7 @@ public class Vector {
         this.y = y;
     }
     public Direction getDirection(){
-        if (this.x == 0 && this.y == 0)
+        if (Math.abs(this.x) == 0  && Math.abs(this.y) == 0)
             return Direction.NONE;
         double degrees = this.getInDegrees();
         if (degrees >= -45 && degrees <= 45)

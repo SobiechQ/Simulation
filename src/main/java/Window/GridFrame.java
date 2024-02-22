@@ -64,7 +64,7 @@ public class GridFrame extends JFrame {
                 this.gridManager.nextFrame();
                 long end_time = System.nanoTime();
                 double difference = (end_time - start_time) / 1e6;
-                System.out.println(difference);
+//                System.out.println(difference);
             }
         }).start();
     }

@@ -29,6 +29,13 @@ public abstract class Loose extends Element implements Moveable {
         if (link.isInstanceOf(Air.class, DOWN))
             this.velocity.y = this.velocity.y - this.gravity();
 
+        if (link.isInstanceOf(Fluid.class, DOWN)){
+            var tmp = link.get(DOWN).get().getElement();
+            link.set(tmp);
+            link.get(DOWN).get().set(this);
+            this.move(link.get(DOWN).get(), link.get(DOWN).get(), new Vector(this.velocity));
+            return;
+        }
         this.move(link, link, new Vector(this.velocity));
     }
 

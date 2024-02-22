@@ -31,7 +31,7 @@ public class Sand extends Loose {
 
     @Override
     protected double stickness() {
-        return 0.95;
+        return 0.85;
     }
 
 
