@@ -67,6 +67,16 @@ public class Link {
     public void set(Element element) {
         this.element = element;
     }
+
+    /**
+     * @return true if modified link on given directions
+     */
+    public boolean set(Element element, Direction... directions){
+        var get = this.get(directions);
+        get.ifPresent(link -> link.set(element));
+        return get.isPresent();
+    }
+
     public void swap(Link link) {
         var toSwap = link.getElement();
         link.clear();
