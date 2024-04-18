@@ -14,11 +14,12 @@ public abstract class Particle extends Element implements Moveable{
     private final Vector velocity;
     private final boolean debug = false;
     private double timeToLive;
-    private final double maxTimeToLive = (int) (Math.random()*40 + 10);
+    private final double maxTimeToLive;
 
-    public Particle() {
-        double xVelocity = -1d + Math.random()*2d;
-        double yVelocity = 0.7 +  Math.random()*1.1d;
+    public Particle(double xMin, double xMax, double yMin, double yMax, double timeToLiveMin, double timeToLiveMax) {
+        double xVelocity = xMin + Math.random()*(xMax - xMin);
+        double yVelocity = yMin + Math.random()*(yMax - yMin);
+        this.maxTimeToLive = (int) (timeToLiveMin + Math.random()*(timeToLiveMax - timeToLiveMin));
         this.velocity = new Vector(xVelocity, yVelocity);
         this.timeToLive = maxTimeToLive;
     }

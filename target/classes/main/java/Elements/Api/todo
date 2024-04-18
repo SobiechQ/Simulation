@@ -1,3 +1,5 @@
+update listener zamiast chodzenia po wszystkim i castowania
+
 swap in link class
 if sand in move finds particle - swap
 if water finds sand - swap
