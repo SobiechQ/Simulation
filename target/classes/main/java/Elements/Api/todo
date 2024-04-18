@@ -1,0 +1,10 @@
+swap in link class
+if sand in move finds particle - swap
+if water finds sand - swap
+abstract sand particle
+brightness - może po multithread?
+multithread
+
+wood, fireable
+particles
+water and fluids
