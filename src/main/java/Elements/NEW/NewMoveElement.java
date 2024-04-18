@@ -1,24 +1,29 @@
 package Elements.NEW;
+import Elements.Air;
 import Elements.Api.*;
 import Map.Link;
+import Map.Utils.Vector;
 
 import static Map.Utils.Direction.RIGHT;
 
-public class NewMoveElement extends Element implements Refreshable {
-
-
-    public NewVector newVector = new NewVector();
+public class NewMoveElement extends Element implements NewMoveable {
+    private final Vector velocity = new Vector();
+    public NewMoveElement(){
+        velocity.setSpeed(0.1);
+        System.out.println("NewMoveElement created");
+    }
     @Override
-    public void refresh(Link l) {
+    public Vector getVelocity() {
+        return this.velocity;
+    }
 
-        if (newVector.smallStep < 1) {
-            this.newVector.smallStep += this.newVector.speed;
-            return;
-        }
-        newVector.smallStep -=1;
-        if (l.set(this, RIGHT))
-            l.clear();
-
-
+    @Override
+    public Link move(Link link) {
+        var old = link.get(RIGHT);
+        if (old.isEmpty())
+            return link;
+        link.set(old.get().getElement());
+        link.set(this, RIGHT);
+        return old.get();
     }
 }

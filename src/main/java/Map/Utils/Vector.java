@@ -6,15 +6,23 @@ public class Vector {
 
     public double x;
     public double y;
-    public Vector(double x, double y){
-        this.x = x;
-        this.y = y;
-    }
+    private double speed;
+    private double step;
+
     public Vector(){
         this(0,0);
     }
     public Vector(Vector vector){
-        this(vector.x, vector.y);
+        this(vector.x, vector.y, vector.speed, vector.step);
+    }
+    public Vector(double x, double y){
+        this(x, y, 0, 0);
+    }
+    public Vector(double x, double y, double speed, double step) {
+        this.x = x;
+        this.y = y;
+        this.speed = speed;
+        this.step = step;
     }
 
     public double getX() {
@@ -23,6 +31,8 @@ public class Vector {
     public void clear(){
         this.x = 0;
         this.y = 0;
+        this.speed = 0;
+        this.step = 0;
     }
 
     public void setX(double x) {
@@ -76,6 +86,24 @@ public class Vector {
     @Override
     public String toString() {
         return String.format("[%s, %s]", this.x, this.y);
+    }
+
+    public double getSpeed() {
+        return this.speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+    public boolean step() {
+        System.out.println(this.step + ", " + this.speed);
+        if (this.step >= 1){
+            this.step -= 1;
+            return true;
+        }
+        this.step+=this.speed;
+        System.out.println("==================");
+        return false;
     }
 }
 
