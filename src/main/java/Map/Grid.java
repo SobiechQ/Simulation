@@ -2,7 +2,6 @@ package Map;
 
 import Elements.Air;
 import Elements.Api.Element;
-import Elements.Api.Refreshable;
 
 import java.util.Arrays;
 import java.util.List;

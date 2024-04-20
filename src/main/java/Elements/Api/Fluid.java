@@ -1,6 +1,7 @@
 package Elements.Api;
 
 import Elements.Air;
+import Elements.NEW.NewMoveable;
 import Map.Link;
 import Map.Utils.Direction;
 import Map.Utils.Vector;
@@ -8,12 +9,12 @@ import Map.Utils.Vector;
 import java.awt.*;
 
 import static Map.Utils.Direction.*;
-import static Map.Utils.Direction.DOWN;
 
-public abstract class Fluid extends Element implements Moveable {
+public abstract class Fluid extends Element implements NewMoveable {
     protected abstract double gravity();
 
     private boolean debug = false;
+    private final double stickness = 2; //todo abstract
 
     private final Vector velocity = new Vector();
 
@@ -27,87 +28,68 @@ public abstract class Fluid extends Element implements Moveable {
     }
 
     @Override
-    public void move(Link link) {
-        boolean isLeftAir = link.isInstanceOf(Air.class, LEFT);
-        boolean isRightAir = link.isInstanceOf(Air.class, RIGHT);
-        boolean isBelowAir = link.isInstanceOf(Air.class, DOWN);
-        if (!isBelowAir) {
-            if (Math.abs(this.velocity.x) != 1 && isLeftAir && isRightAir)
-                this.velocity.x = Math.random() > 0.5 ? 1 : -1;
-            else if (this.velocity.x != 1 && isLeftAir) {
-                this.velocity.x = -1;
-            } else if (this.velocity.x != -1 && isRightAir) {
-                this.velocity.x = 1;
-            }
-        }
-
-
-        this.velocity.y -= this.gravity();
-        this.move(link, link, new Vector(this.velocity));
-    }
-
-    public void move(Link init, Link link, Vector vector) {
-        if (Math.abs(vector.x) < 1 && Math.abs(vector.y) < 1){
-            init.clear();
-            link.set(this);
-            return;
-        }
-
-        switch (vector.getDirection()) {
+    public Link move(Link link, Vector stepVelocity) {
+        return switch (stepVelocity.getDirection()) {
             case UP -> {
                 if (link.isInstanceOf(Air.class, UP)) {
-                    vector.y--;
-                    link = link.get(UP).get();
-                } else {
-                    vector.y = 0;
-                    this.velocity.y = 0;
+                    stepVelocity.y--;
+                    yield link.swap(UP);
                 }
-                this.move(init, link, vector);
+                stepVelocity.y = 0;
+                this.velocity.y = 0;
+                yield link;
             }
             case DOWN -> {
-                if (link.isInstanceOf(Air.class, DOWN)) {
-                    vector.y++;
-                    link = link.get(DOWN).get();
-                } else {
-                    vector.y = 0;
-                    this.velocity.y = 0;
+                if (link.isInstanceOf(Air.class, DOWN)){
+                    stepVelocity.y += 1;
+                    yield link.swap(DOWN);
                 }
-                this.move(init, link, vector);
+                if (link.isInstanceOf(Air.class, LEFT) && link.isInstanceOf(Air.class, RIGHT)){
+                    boolean left = stepVelocity.x < 0;
+                    if (stepVelocity.x == 0)
+                        left = Math.random() >= 0.5;
+                    this.velocity.x = (left ? -1 : 1) * this.stickness;
+                    stepVelocity.y = 0;
+                    yield link;
+                }
+                if (link.isInstanceOf(Air.class, LEFT)){
+                    this.velocity.x = -this.stickness;
+                    stepVelocity.y=0;
+                    yield link;
+                }
+                if (link.isInstanceOf(Air.class, RIGHT)){
+                    this.velocity.x = this.stickness;
+                    stepVelocity.y=0;
+                    yield link;
+                }
+                stepVelocity.y = 0;
+                yield link;
             }
             case LEFT -> {
                 if (link.isInstanceOf(Air.class, LEFT)) {
-                    vector.x++;
-                    link = link.get(LEFT).get();
-                } else {
-                    vector.x = 0;
-                    this.velocity.x = 0;
+                    stepVelocity.x++;
+                    yield link.swap(LEFT);
                 }
-                this.move(init, link, vector);
+                stepVelocity.x = 0;
+                this.velocity.x = 0;
+                yield link;
             }
             case RIGHT -> {
                 if (link.isInstanceOf(Air.class, RIGHT)) {
-                    vector.x--;
-                    link = link.get(RIGHT).get();
-                } else {
-                    vector.x = 0;
-                    this.velocity.x = 0;
+                    stepVelocity.x--;
+                    yield link.swap(RIGHT);
                 }
-                this.move(init, link, vector);
+                stepVelocity.x = 0;
+                this.velocity.x = 0;
+                yield link;
             }
-        }
+            case NONE -> link;
+        };
     }
 
-    private void linkSwitch(Link init, Link link, Vector vector, Direction direction) {
-        switch (direction) {
-            case UP -> vector.y--;
-            case DOWN -> vector.y++;
-            case LEFT -> vector.x--;
-            case RIGHT -> vector.x++;
-        }
-        var copy = link.getElement();
-        init.clear();
-        link.clear();
-        link.set(copy);
+    @Override
+    public void updateGravity(Link link) {
+        if (link.isInstanceOf(Air.class, DOWN)) this.velocity.y -= this.gravity();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package Elements.Api;
 
 import Elements.Air;
+import Elements.NEW.NewMoveable;
 import Map.Link;
 import Map.Utils.Direction;
 import Map.Utils.Vector;
@@ -8,15 +9,13 @@ import Map.Utils.Vector;
 import java.awt.*;
 
 import static Map.Utils.Direction.*;
-import static Map.Utils.Direction.UP;
 
-public abstract class Particle extends Element implements Moveable{
+public abstract class Particle extends Element implements NewMoveable {
     private final Vector velocity;
-    private final boolean debug = false;
-    private double timeToLive;
-    private final double maxTimeToLive;
+    private int timeToLive;
+    private final int maxTimeToLive;
 
-    public Particle(double xMin, double xMax, double yMin, double yMax, double timeToLiveMin, double timeToLiveMax) {
+    public Particle(double xMin, double xMax, double yMin, double yMax, int timeToLiveMin, int timeToLiveMax) {
         double xVelocity = xMin + Math.random()*(xMax - xMin);
         double yVelocity = yMin + Math.random()*(yMax - yMin);
         this.maxTimeToLive = (int) (timeToLiveMin + Math.random()*(timeToLiveMax - timeToLiveMin));
@@ -28,75 +27,83 @@ public abstract class Particle extends Element implements Moveable{
         return this.velocity;
     }
 
-    @Override
-    public void move(Link link) {
-        if (this.timeToLive-- <= 0) {
-            link.clear();
-            return;
-        }
-        this.move(link, link, new Vector(this.velocity));
-    }
 
+    //todo fadeable that stores colors so trhey dont have to be created and destroyed every time
     private double getFade(){
-        return this.timeToLive/this.maxTimeToLive;
+        return (double) this.timeToLive / this.maxTimeToLive;
     }
     @Override
     public Color getColor() {
-        return new Color((int) (super.getColor().getRed() * this.getFade()), (int) (super.getColor().getGreen() * this.getFade()), (int) (super.getColor().getBlue() * getFade()));
+        return new Color(this.getFadedRed(),this.getFadedGreen(), this.getFadedBlue());
+    }
+    private int getFadedRed() {
+        final var red = super.getColor().getRed() * this.getFade();
+        return red < 0 ? 0 : (int) (red > 255 ? 255 : red);
+    }
+    private int getFadedGreen() {
+        final var green = super.getColor().getGreen() * this.getFade();
+        return green < 0 ? 0 : (int) (green > 255 ? 255 : green);
+    }
+    private int getFadedBlue() {
+        final var blue = super.getColor().getBlue() * this.getFade();
+        return blue < 0 ? 0 : (int) (blue > 255 ? 255 : blue);
     }
 
-    public void move(Link init, Link link, Vector vector) {
-        if (this.debug) {
-            System.out.println(link);
-            System.out.println(this.getVelocity());
-            System.out.println(vector);
-            System.out.println("==========");
+    @Override
+    public Link move(Link link, Vector stepVelocity) {
+        if (this.timeToLive <= 0) {
+            link.clear();
+            stepVelocity.clear();
+            this.velocity.clear();
+            return link;
         }
-        if (Math.abs(vector.getX()) <= 0.5 && Math.abs(vector.getY()) <= 0.5){
-            init.clear();
-            link.set(this);
-            return;
-        }
-        switch (vector.getDirection()){
+
+        return switch (stepVelocity.getDirection()){
             case UP -> {
-                if (this.moveYAxis(init, link, vector, UP))
-                    return;
-                if (link.get(UP).isPresent()) { //above is something but not air
-                    if (this.moveDiagonalUp(init, link, vector, LEFT))
-                        return;
-                    this.moveDiagonalUp(init, link, vector, RIGHT);
+                if (link.isInstanceOf(Air.class, UP)){
+                    stepVelocity.y -= 1;
+                    yield link.swap(UP);
                 }
+                if (link.isInstanceOf(Air.class, LEFT) && link.isInstanceOf(Air.class, RIGHT)){ //todo!!! może przecież być tylko z jednej opcja poruszania się
+                    boolean left = stepVelocity.x < 0;
+                    if (stepVelocity.x == 0)
+                        left = Math.random() >= 0.5;
+                    stepVelocity.y = 0;
+                    yield left ? link.swap(LEFT) : link.swap(RIGHT);
+                }
+                stepVelocity.y = 0;
+                yield link;
             }
-            case DOWN -> this.moveYAxis(init, link, vector, DOWN);
-            case LEFT -> this.moveXAxis(init, link, vector, LEFT);
-            case RIGHT -> this.moveXAxis(init, link, vector, RIGHT);
-        }
+            case DOWN -> {
+                if (link.isInstanceOf(Air.class, DOWN)){
+                    stepVelocity.y += 1;
+                    yield link.swap(DOWN);
+                }
+                stepVelocity.y = 0;
+                yield link;
+            }
+            case LEFT -> {
+                if (link.isInstanceOf(Air.class, LEFT)){
+                    stepVelocity.x += 1;
+                    yield link.swap(LEFT);
+                }
+                stepVelocity.x = 0;
+                yield link;
+            }
+            case RIGHT -> {
+                if (link.isInstanceOf(Air.class, RIGHT)){
+                    stepVelocity.x -= 1;
+                    yield link.swap(RIGHT);
+                }
+                stepVelocity.x = 0;
+                yield link;
+            }
+            case NONE -> link;
+        };
     }
 
-    private boolean moveXAxis(Link init, Link link, Vector vector, Direction direction) {
-        if (link.isInstanceOf(Air.class, direction)) {
-            vector.x = vector.x < 0 ? vector.x + 1 : vector.x - 1;
-            this.move(init, link.get(direction).get(), vector);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean moveDiagonalUp(Link init, Link link, Vector vector, Direction direction) {
-        if (link.isInstanceOf(Air.class, UP, direction)) {
-            vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
-            this.move(init, link.get(UP, direction).get(), vector);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean moveYAxis(Link init, Link link, Vector vector, Direction direction) {
-        if (link.isInstanceOf(Air.class, direction)) {
-            vector.y = vector.y < 0 ? vector.y + 1 : vector.y - 1;
-            this.move(init, link.get(direction).get(), vector);
-            return true;
-        }
-        return false;
+    @Override
+    public void updateGravity(Link link) {
+        this.timeToLive--;
     }
 }

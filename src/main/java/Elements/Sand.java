@@ -1,13 +1,12 @@
 package Elements;
 
-import Elements.Api.Loose;
-import Elements.Particles.ExplotionParticle;
+import Elements.Api.NewLoose;
 import Map.Link;
 
 import java.awt.*;
 import java.util.Set;
 
-public class Sand extends Loose {
+public class Sand extends NewLoose {
     private final static Set<Color> COLORS = Set.of(
             new Color(212, 203, 147),
             new Color(210, 200, 144),
@@ -31,7 +30,7 @@ public class Sand extends Loose {
 
     @Override
     protected double stickness() {
-        return 0.85;
+        return 0.01;
     }
 
 

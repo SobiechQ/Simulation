@@ -1,14 +1,11 @@
 package Window;
 
-import Elements.Tnt;
 import Map.GridManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.List;
 
 public class GridFrame extends JFrame {
     private final int gridWidth = 300;

@@ -1,12 +1,11 @@
 package Elements;
-import Elements.Api.Loose;
 
-import Elements.Particles.ExplotionParticle;
+import Elements.Api.NewLoose;
 import Map.Link;
 
 import java.awt.*;
 
-public class MagicSand extends Loose{
+public class MagicSand extends NewLoose {
     private static float hsvValue = 0;
     public MagicSand(){
         MagicSand.hsvValue += 0.00005F;
@@ -20,7 +19,7 @@ public class MagicSand extends Loose{
 
     @Override
     protected double stickness() {
-        return 0.8;
+        return 0.01;
     }
 
 

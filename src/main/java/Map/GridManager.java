@@ -1,14 +1,9 @@
 package Map;
 
-import Elements.*;
 import Elements.Api.Element;
-import Elements.Api.Loose;
-import Elements.Api.Moveable;
 import Elements.Api.Refreshable;
 
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 

@@ -4,7 +4,6 @@ import Elements.Air;
 import Elements.Api.Element;
 import Map.Utils.Direction;
 
-import java.awt.*;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Optional;
@@ -77,12 +76,14 @@ public class Link {
         return get.isPresent();
     }
 
-    public void swap(Link link) {
-        var toSwap = link.getElement();
-        link.clear();
-        link.set(this.getElement());
-        this.clear();
-        this.set(toSwap);
+    public Link swap(Direction... directions) {
+        final var linkPointer = this.get(directions);
+        if (linkPointer.isEmpty())
+            return this;
+        final var moveElement = this.getElement();
+        this.set(linkPointer.get().getElement());
+        linkPointer.get().set(moveElement);
+        return linkPointer.get();
     }
     public Stream<Link> stream(){
         return this.grid.stream();

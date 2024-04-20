@@ -1,6 +1,7 @@
 package Elements.Api;
-import Map.Utils.Vector;
+
 import Map.Link;
+import Map.Utils.Vector;
 
 public interface Moveable extends Refreshable {
     @Override

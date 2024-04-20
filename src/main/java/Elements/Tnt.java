@@ -1,12 +1,14 @@
 package Elements;
-import Elements.Api.*;
+
+import Elements.Api.Particle;
+import Elements.Api.Refreshable;
+import Elements.Api.Solid;
+import Elements.NEW.NewMoveable;
 import Elements.Particles.ExplotionParticle;
 import Map.Link;
 
 import java.awt.*;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class Tnt extends Solid implements Refreshable {
     private final static List<Color> COLORS = List.of(Color.RED, Color.ORANGE);
@@ -52,7 +54,7 @@ public class Tnt extends Solid implements Refreshable {
         link.stream()
                 .filter(l -> link.distance(l) < calculatedExposionRadius)
                 .forEach(l -> {
-            if (l.getElement() instanceof Moveable moveable){
+            if (l.getElement() instanceof NewMoveable moveable){
                 if (!(l.getElement() instanceof Particle)) {
                     double deltaX = link.deltaX(l) / (link.distance(l) * 0.1);
                     double deltaY = link.deltaY(l) / (link.distance(l) * 0.1);
