@@ -1,12 +1,12 @@
 package Elements;
 
-import Elements.Api.NewLoose;
+import Elements.Api.Loose;
 import Map.Link;
 
 import java.awt.*;
 import java.util.Set;
 
-public class Sand extends NewLoose {
+public class Sand extends Loose {
     private final static Set<Color> COLORS = Set.of(
             new Color(212, 203, 147),
             new Color(210, 200, 144),
@@ -35,7 +35,7 @@ public class Sand extends NewLoose {
 
 
     @Override
-    public void refresh(Link l) {
-        super.refresh(l);
+    public void refresh(Link link) {
+        super.refresh(link);
     }
 }

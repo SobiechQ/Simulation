@@ -41,7 +41,7 @@ public class Wood extends Element implements Flameable {
     }
 
     @Override
-    public void refresh(Link l) {
+    public void refresh(Link link) {
 
     }
 }

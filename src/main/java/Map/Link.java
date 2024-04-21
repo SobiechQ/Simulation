@@ -81,12 +81,20 @@ public class Link {
         if (linkPointer.isEmpty())
             return this;
         final var moveElement = this.getElement();
-        this.set(linkPointer.get().getElement());
+
+        if (linkPointer.get().isInstanceOf(Air.class))
+            this.clear();
+        else
+            this.set(linkPointer.get().getElement());
+
         linkPointer.get().set(moveElement);
         return linkPointer.get();
     }
     public Stream<Link> stream(){
         return this.grid.stream();
+    }
+    public Stream<Link> stream(double radius){
+        return this.stream().filter(link -> link.distance(this) <= radius);
     }
     public double distance(Link link){
         return this.distance(link.getX(), link.getY());

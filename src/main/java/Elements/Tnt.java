@@ -3,7 +3,7 @@ package Elements;
 import Elements.Api.Particle;
 import Elements.Api.Refreshable;
 import Elements.Api.Solid;
-import Elements.NEW.NewMoveable;
+import Elements.Api.Moveable;
 import Elements.Particles.ExplotionParticle;
 import Map.Link;
 
@@ -54,7 +54,7 @@ public class Tnt extends Solid implements Refreshable {
         link.stream()
                 .filter(l -> link.distance(l) < calculatedExposionRadius)
                 .forEach(l -> {
-            if (l.getElement() instanceof NewMoveable moveable){
+            if (l.getElement() instanceof Moveable moveable){
                 if (!(l.getElement() instanceof Particle)) {
                     double deltaX = link.deltaX(l) / (link.distance(l) * 0.1);
                     double deltaY = link.deltaY(l) / (link.distance(l) * 0.1);

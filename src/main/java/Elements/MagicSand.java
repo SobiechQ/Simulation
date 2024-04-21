@@ -1,11 +1,11 @@
 package Elements;
 
-import Elements.Api.NewLoose;
+import Elements.Api.Loose;
 import Map.Link;
 
 import java.awt.*;
 
-public class MagicSand extends NewLoose {
+public class MagicSand extends Loose {
     private static float hsvValue = 0;
     public MagicSand(){
         MagicSand.hsvValue += 0.00005F;
@@ -24,7 +24,7 @@ public class MagicSand extends NewLoose {
 
 
     @Override
-    public void refresh(Link l) {
-        super.refresh(l);
+    public void refresh(Link link) {
+        super.refresh(link);
     }
 }

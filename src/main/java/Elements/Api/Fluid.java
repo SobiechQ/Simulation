@@ -1,31 +1,17 @@
 package Elements.Api;
 
 import Elements.Air;
-import Elements.NEW.NewMoveable;
 import Map.Link;
-import Map.Utils.Direction;
 import Map.Utils.Vector;
-
-import java.awt.*;
 
 import static Map.Utils.Direction.*;
 
-public abstract class Fluid extends Element implements NewMoveable {
-    protected abstract double gravity();
-
-    private boolean debug = false;
-    private final double stickness = 2; //todo abstract
+public abstract class Fluid extends Element implements Moveable {
+    protected abstract double getGravity();
+    protected abstract double getStickness(); 
 
     private final Vector velocity = new Vector();
 
-    public void setDebug() {
-        this.setColor(Color.RED);
-        this.debug = true;
-    }
-
-    public boolean getDebug() {
-        return this.debug;
-    }
 
     @Override
     public Link move(Link link, Vector stepVelocity) {
@@ -48,17 +34,17 @@ public abstract class Fluid extends Element implements NewMoveable {
                     boolean left = stepVelocity.x < 0;
                     if (stepVelocity.x == 0)
                         left = Math.random() >= 0.5;
-                    this.velocity.x = (left ? -1 : 1) * this.stickness;
+                    this.velocity.x = (left ? -1 : 1) * this.getStickness();
                     stepVelocity.y = 0;
                     yield link;
                 }
                 if (link.isInstanceOf(Air.class, LEFT)){
-                    this.velocity.x = -this.stickness;
+                    this.velocity.x = -this.getStickness();
                     stepVelocity.y=0;
                     yield link;
                 }
                 if (link.isInstanceOf(Air.class, RIGHT)){
-                    this.velocity.x = this.stickness;
+                    this.velocity.x = this.getStickness();
                     stepVelocity.y=0;
                     yield link;
                 }
@@ -89,7 +75,8 @@ public abstract class Fluid extends Element implements NewMoveable {
 
     @Override
     public void updateGravity(Link link) {
-        if (link.isInstanceOf(Air.class, DOWN)) this.velocity.y -= this.gravity();
+        if (link.isInstanceOf(Air.class, DOWN)) this.velocity.y -= this.getGravity();
+        if (link.isInstanceOf(Fluid.class, DOWN)) this.velocity.y -= this.getGravity()/4;
     }
 
     @Override

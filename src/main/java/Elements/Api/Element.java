@@ -2,7 +2,7 @@ package Elements.Api;
 
 import java.awt.*;
 
-public abstract class Element{
+public abstract class Element {
     private Color color = Color.MAGENTA;
 
     public Element() {

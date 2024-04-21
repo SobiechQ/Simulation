@@ -16,7 +16,12 @@ public class Water extends Fluid {
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
     }
     @Override
-    protected double gravity() {
+    protected double getGravity() {
         return 0.4;
+    }
+
+    @Override
+    protected double getStickness() {
+        return 2;
     }
 }

@@ -1,20 +1,17 @@
 package Elements.Api;
 
 import Elements.Air;
-import Elements.Api.Element;
-import Elements.NEW.NewMoveable;
 import Map.Link;
 import Map.Utils.Vector;
 
 import static Map.Utils.Direction.*;
 
-public abstract class NewLoose extends Element implements NewMoveable {
+public abstract class Loose extends Element implements Moveable {
     protected abstract double gravity();
     protected abstract double stickness();
     private final Vector velocity = new Vector();
-    public NewLoose(){
-        this.velocity.x = 0;
-        this.velocity.y = 2;
+    public Loose(){
+
     }
 
     @Override
@@ -31,18 +28,22 @@ public abstract class NewLoose extends Element implements NewMoveable {
             }
             case DOWN -> {
                 if (!link.isInstanceOf(Air.class, DOWN)) {
+                    if (link.isInstanceOf(Fluid.class, DOWN) || link.isInstanceOf(Particle.class, DOWN)){
+                        stepVelocity.y += 1;
+                        yield link.swap(DOWN);
+                    }
                     if (Math.random() > this.stickness()) {
-                        if (link.isInstanceOf(Air.class, DOWN, LEFT) && link.isInstanceOf(Air.class, DOWN, RIGHT)) {
+                        if (link.isInstanceOf(Air.class, DOWN, LEFT) && link.isInstanceOf(Air.class, DOWN, RIGHT) && link.isInstanceOf(Air.class, LEFT) && link.isInstanceOf(Air.class, RIGHT)) {
                             stepVelocity.y += 1;
                             if (Math.random() > 0.5)
                                 yield link.swap(LEFT);
                             yield link.swap(RIGHT);
                         }
-                        if (link.isInstanceOf(Air.class, DOWN, LEFT)) {
+                        if (link.isInstanceOf(Air.class, DOWN, LEFT) && link.isInstanceOf(Air.class, LEFT)) {
                             stepVelocity.y += 1;
                             yield link.swap(LEFT);
                         }
-                        if (link.isInstanceOf(Air.class, DOWN, RIGHT)) {
+                        if (link.isInstanceOf(Air.class, DOWN, RIGHT) && link.isInstanceOf(Air.class, RIGHT)) {
                             stepVelocity.y += 1;
                             yield link.swap(RIGHT);
                         }
@@ -85,8 +86,10 @@ public abstract class NewLoose extends Element implements NewMoveable {
 
     @Override
     public void updateGravity(Link link) {
-        if (link.isInstanceOf(Air.class, DOWN))
+        if (link.isInstanceOf(Air.class, DOWN) || link.isInstanceOf(Particle.class, DOWN))
             this.velocity.y -= this.gravity();
+        if (link.isInstanceOf(Fluid.class, DOWN))
+            this.velocity.y -= this.gravity()/4;
     }
 
     @Override

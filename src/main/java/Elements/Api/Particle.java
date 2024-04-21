@@ -1,16 +1,14 @@
 package Elements.Api;
 
 import Elements.Air;
-import Elements.NEW.NewMoveable;
 import Map.Link;
-import Map.Utils.Direction;
 import Map.Utils.Vector;
 
 import java.awt.*;
 
 import static Map.Utils.Direction.*;
 
-public abstract class Particle extends Element implements NewMoveable {
+public abstract class Particle extends Element implements Moveable {
     private final Vector velocity;
     private int timeToLive;
     private final int maxTimeToLive;
@@ -70,6 +68,14 @@ public abstract class Particle extends Element implements NewMoveable {
                         left = Math.random() >= 0.5;
                     stepVelocity.y = 0;
                     yield left ? link.swap(LEFT) : link.swap(RIGHT);
+                }
+                if (link.isInstanceOf(Air.class, LEFT)){
+                    stepVelocity.y = 0;
+                    yield link.swap(LEFT);
+                }
+                if (link.isInstanceOf(Air.class, RIGHT)){
+                    stepVelocity.y = 0;
+                    yield link.swap(RIGHT);
                 }
                 stepVelocity.y = 0;
                 yield link;
