@@ -1,10 +1,9 @@
 package Elements;
 
-import Elements.Api.Element;
+import Elements.Api.Core.Element;
 import Elements.Api.Moveable;
 import Elements.Api.Particle;
-import Elements.Api.Refreshable;
-import Elements.Particles.ExplotionParticle;
+import Elements.Api.Core.Refreshable;
 import Map.Link;
 
 import java.awt.*;

@@ -1,4 +1,4 @@
-package Elements.Api;
+package Elements.Api.Core;
 
 import Map.Link;
 

@@ -1,6 +1,7 @@
 package Elements.Api;
 
 import Elements.Air;
+import Elements.Api.Core.Refreshable;
 import Map.Link;
 
 public interface ParticleGenerator extends Refreshable {

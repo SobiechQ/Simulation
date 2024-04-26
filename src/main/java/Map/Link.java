@@ -1,7 +1,7 @@
 package Map;
 
 import Elements.Air;
-import Elements.Api.Element;
+import Elements.Api.Core.Element;
 import Map.Utils.Direction;
 
 import java.util.ArrayDeque;

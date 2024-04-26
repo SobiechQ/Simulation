@@ -1,6 +1,6 @@
 package Elements;
 
-import Elements.Api.Element;
+import Elements.Api.Core.Element;
 
 import java.awt.*;
 import java.util.Set;

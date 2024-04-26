@@ -8,8 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GridFrame extends JFrame {
-    private final int gridWidth = 300;
-    private final int gridHeight = 150;
+    private final int gridWidth = 50;
+    private final int gridHeight = 100;
     private final int elementSize = 5;
     private final GridManager gridManager;
     private final Menu menu = new Menu();
@@ -53,7 +53,7 @@ public class GridFrame extends JFrame {
                 panel.repaint();
 
                 try {
-                    Thread.sleep(40);
+                    Thread.sleep(60);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

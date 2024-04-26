@@ -1,6 +1,7 @@
 package Elements.Api;
 
 import Elements.Air;
+import Elements.Api.Core.Element;
 import Map.Link;
 import Map.Utils.Vector;
 
@@ -26,7 +27,7 @@ public abstract class Fluid extends Element implements Moveable {
                 yield link;
             }
             case DOWN -> {
-                if (link.isInstanceOf(Air.class, DOWN)){
+                if (link.isInstanceOf(Air.class, DOWN) || link.isInstanceOf(Particle.class, DOWN)){
                     stepVelocity.y += 1;
                     yield link.swap(DOWN);
                 }
@@ -75,7 +76,7 @@ public abstract class Fluid extends Element implements Moveable {
 
     @Override
     public void updateGravity(Link link) {
-        if (link.isInstanceOf(Air.class, DOWN)) this.velocity.y -= this.getGravity();
+        if (link.isInstanceOf(Air.class, DOWN) || link.isInstanceOf(Particle.class, DOWN)) this.velocity.y -= this.getGravity();
         if (link.isInstanceOf(Fluid.class, DOWN)) this.velocity.y -= this.getGravity()/4;
     }
 

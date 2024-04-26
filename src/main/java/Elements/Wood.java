@@ -1,6 +1,6 @@
 package Elements;
 
-import Elements.Api.Element;
+import Elements.Api.Core.Element;
 import Elements.Api.Flameable;
 import Map.Link;
 
@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.Set;
 
 public class Wood extends Element implements Flameable {
-    private boolean setOnFire = false;
+    private boolean isOnFire = false;
     private final static Set<Color> COLORS = Set.of(
             new Color(70, 57, 38),
             new Color(105, 84, 51),
@@ -26,18 +26,13 @@ public class Wood extends Element implements Flameable {
     }
 
     @Override
-    public void setOnFire() {
-        this.setOnFire = true;
+    public void setIsOnFire(boolean isOnFire) {
+        this.isOnFire = isOnFire;
     }
 
     @Override
-    public void extinguish() {
-        this.setOnFire = false;
-    }
-
-    @Override
-    public boolean isSetOnFire() {
-        return this.setOnFire;
+    public boolean isOnFire() {
+        return this.isOnFire;
     }
 
     @Override

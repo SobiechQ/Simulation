@@ -1,7 +1,7 @@
 package Elements;
 
 import Elements.Api.Particle;
-import Elements.Api.Refreshable;
+import Elements.Api.Core.Refreshable;
 import Elements.Api.Solid;
 import Elements.Api.Moveable;
 import Elements.Particles.ExplotionParticle;

@@ -1,7 +1,7 @@
 package Map;
 
-import Elements.Api.Element;
-import Elements.Api.Refreshable;
+import Elements.Api.Core.Element;
+import Elements.Api.Core.Refreshable;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,6 +1,7 @@
 package Elements.Api;
 
 import Elements.Air;
+import Elements.Api.Core.Element;
 import Map.Link;
 import Map.Utils.Vector;
 
