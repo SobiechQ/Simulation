@@ -1,6 +1,8 @@
 package Elements;
 
-import Elements.Api.Fluid;
+import Elements.Api.Core.Fluid;
+import Elements.Api.Flameable;
+import Map.Link;
 
 import java.awt.*;
 import java.util.Set;
@@ -16,7 +18,21 @@ public class Water extends Fluid {
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
     }
     @Override
-    protected double gravity() {
-        return 0.4;
+    protected double getGravity() {
+        return 0.2;
+    }
+
+    @Override
+    protected double getStickness() {
+        return 2;
+    }
+
+    @Override
+    public void refresh(Link link) {
+        link.surroundingLink(1).forEach(l->{
+            if (l.getElement() instanceof Flameable flameable)
+                flameable.extinguish(l);
+        });
+        super.refresh(link);
     }
 }

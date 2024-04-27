@@ -1,12 +1,14 @@
 package Elements;
-import Elements.Api.*;
+
+import Elements.Api.Core.Particle;
+import Elements.Api.Refreshable;
+import Elements.Api.Core.Solid;
+import Elements.Api.Moveable;
 import Elements.Particles.ExplotionParticle;
 import Map.Link;
 
 import java.awt.*;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class Tnt extends Solid implements Refreshable {
     private final static List<Color> COLORS = List.of(Color.RED, Color.ORANGE);

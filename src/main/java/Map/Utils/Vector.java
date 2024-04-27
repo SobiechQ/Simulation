@@ -6,23 +6,23 @@ public class Vector {
 
     public double x;
     public double y;
-    private double speed;
-    private double step;
+    public double stepX;
+    public double stepY;
 
     public Vector(){
         this(0,0);
     }
     public Vector(Vector vector){
-        this(vector.x, vector.y, vector.speed, vector.step);
+        this(vector.x, vector.y, vector.stepX, vector.stepY);
     }
     public Vector(double x, double y){
         this(x, y, 0, 0);
     }
-    public Vector(double x, double y, double speed, double step) {
+    public Vector(double x, double y, double stepX, double stepY) {
         this.x = x;
         this.y = y;
-        this.speed = speed;
-        this.step = step;
+        this.stepX = stepX;
+        this.stepY = stepY;
     }
 
     public double getX() {
@@ -31,8 +31,8 @@ public class Vector {
     public void clear(){
         this.x = 0;
         this.y = 0;
-        this.speed = 0;
-        this.step = 0;
+        this.stepX = 0;
+        this.stepY = 0;
     }
 
     public void setX(double x) {
@@ -88,22 +88,28 @@ public class Vector {
         return String.format("[%s, %s]", this.x, this.y);
     }
 
-    public double getSpeed() {
-        return this.speed;
+    public double getLength() {
+        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
     public boolean step() {
-        System.out.println(this.step + ", " + this.speed);
-        if (this.step >= 1){
-            this.step -= 1;
-            return true;
-        }
-        this.step+=this.speed;
-        System.out.println("==================");
-        return false;
+        return Math.abs(this.x) >= 1 || Math.abs(this.y) >= 1;
+    }
+
+    public double getStepX() {
+        return stepX;
+    }
+
+    public void setStepX(double stepX) {
+        this.stepX = stepX;
+    }
+
+    public double getStepY() {
+        return stepY;
+    }
+
+    public void setStepY(double stepY) {
+        this.stepY = stepY;
     }
 }
 

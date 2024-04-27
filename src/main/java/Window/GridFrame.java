@@ -1,41 +1,58 @@
 package Window;
 
-import Elements.Tnt;
+import Elements.Air;
+import Elements.Api.Core.Element;
+import Map.Chunk;
 import Map.GridManager;
+import Map.Link;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class GridFrame extends JFrame {
-    private final int gridWidth = 300;
-    private final int gridHeight = 150;
+    private final int gridChunkWidth = 20;
+    private final int gridChunkHeight = 12;
     private final int elementSize = 5;
     private final GridManager gridManager;
     private final Menu menu = new Menu();
-    private final JPanel panel = new JPanel(){
-@Override
+    private final JPanel panel = new JPanel() {
+        @Override
         public void paint(Graphics g) {
             super.paint(g);
-            gridManager.stream()
+            gridManager.linkStream()
                     .forEach(link -> {
                         g.setColor(link.getElement().getColor());
-                        g.fillRect(link.getX() * elementSize, link.getY() * elementSize, elementSize, elementSize);
+                        g.fillRect(gridManager.getXReal(link) * elementSize, gridManager.getYReal(link) * elementSize, elementSize, elementSize);
+                    });
+            gridManager.chunkStream()
+                    .forEach(chunk -> {
+                        g.setColor(new Color(255, 0, 255, 204));
+                        g.drawRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
+                        if (chunk.isWorking){
+                            g.setColor(new Color(255, 0, 255, 51));
+                            g.fillRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
+                        }
                     });
         }
+
         @Override
         public void update(Graphics g) {
             paint(g);
         }
     };
-    public GridFrame(){
-        this.gridManager = new GridManager(gridWidth, gridHeight);
+
+    public GridFrame() {
+        this.gridManager = new GridManager(gridChunkWidth, gridChunkHeight);
         JFrame frame = new JFrame("Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize((int) Math.round(gridWidth * elementSize + elementSize*3.25), gridHeight * elementSize + elementSize + 35);
+        frame.setSize((int) Math.round(gridChunkWidth * elementSize * Chunk.CHUNK_SIZE + elementSize * 3.25), gridChunkHeight * elementSize * Chunk.CHUNK_SIZE + elementSize + 35);
         frame.setResizable(false);
         frame.setVisible(true);
         frame.add(this.panel);
@@ -45,27 +62,39 @@ public class GridFrame extends JFrame {
                 super.mouseClicked(e);
                 int x = (e.getX() / elementSize) - 1;
                 int y = (e.getY() / elementSize) - 6;
-                gridManager.getGrid().stream()
+                gridManager.linkStream()
                         .filter(link -> link.distance(x, y) < GridFrame.this.menu.getCommandSize())
-                        .forEach(l-> l.set(GridFrame.this.menu.getCommandElement()));
+                        .forEach(l -> l.set(GridFrame.this.menu.getCommandElement()));
             }
         });
 
-        new Thread(()->{
-            while (true){
+
+        new Thread(() -> {
+            while (true) {
                 panel.repaint();
 
                 try {
-                    Thread.sleep(40);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                long start_time = System.nanoTime();
-                this.gridManager.nextFrame();
-                long end_time = System.nanoTime();
-                double difference = (end_time - start_time) / 1e6;
-//                System.out.println(difference);
+
             }
         }).start();
+        new ScheduledThreadPoolExecutor(1).scheduleAtFixedRate(() -> {
+                    var count = new HashMap<Element, Set<Link>>();
+                    GridFrame.this.gridManager.linkStream()
+                            .forEach(l -> {
+                                final var element = l.getElement();
+                                count.putIfAbsent(element, new HashSet<>());
+                                count.get(element).add(l);
+                            });
+                    count.entrySet()
+                            .stream()
+                            .filter(e -> e.getValue().size() != 1)
+                            .peek(System.out::println)
+                            .forEach(e -> e.getValue().forEach(l -> l.set(new Air())));
+                }, 1000, 1000, TimeUnit.MILLISECONDS
+        );
     }
 }

@@ -1,6 +1,6 @@
 package Elements;
 
-import Elements.Api.Solid;
+import Elements.Api.Core.Solid;
 
 import java.awt.*;
 import java.util.Set;
