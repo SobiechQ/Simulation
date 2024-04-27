@@ -4,6 +4,7 @@ import Elements.Api.*;
 import Elements.Api.Core.Particle;
 import Elements.Api.Core.Solid;
 import Elements.Particles.FireParticle;
+import Elements.Particles.SmokeParticle;
 
 public class Generator extends Solid implements ParticleGenerator{
 
@@ -23,6 +24,6 @@ public class Generator extends Solid implements ParticleGenerator{
 
     @Override
     public Particle getParticle() {
-        return new FireParticle();
+        return new SmokeParticle();
     }
 }

@@ -1,16 +1,24 @@
 package Window;
 
+import Elements.Air;
+import Elements.Api.Core.Element;
 import Map.Chunk;
 import Map.GridManager;
+import Map.Link;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class GridFrame extends JFrame {
-    private final int gridChunkWidth = 15;
-    private final int gridChunkHeight = 10;
+    private final int gridChunkWidth = 20;
+    private final int gridChunkHeight = 12;
     private final int elementSize = 5;
     private final GridManager gridManager;
     private final Menu menu = new Menu();
@@ -18,15 +26,19 @@ public class GridFrame extends JFrame {
         @Override
         public void paint(Graphics g) {
             super.paint(g);
-            gridManager.streamRandom()
+            gridManager.linkStream()
                     .forEach(link -> {
                         g.setColor(link.getElement().getColor());
                         g.fillRect(gridManager.getXReal(link) * elementSize, gridManager.getYReal(link) * elementSize, elementSize, elementSize);
                     });
             gridManager.chunkStream()
-                    .forEach(chunk->{
-                        g.setColor(Color.magenta);
+                    .forEach(chunk -> {
+                        g.setColor(new Color(255, 0, 255, 204));
                         g.drawRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
+                        if (chunk.isWorking){
+                            g.setColor(new Color(255, 0, 255, 51));
+                            g.fillRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
+                        }
                     });
         }
 
@@ -50,27 +62,39 @@ public class GridFrame extends JFrame {
                 super.mouseClicked(e);
                 int x = (e.getX() / elementSize) - 1;
                 int y = (e.getY() / elementSize) - 6;
-                gridManager.streamRandom()
+                gridManager.linkStream()
                         .filter(link -> link.distance(x, y) < GridFrame.this.menu.getCommandSize())
                         .forEach(l -> l.set(GridFrame.this.menu.getCommandElement()));
             }
         });
+
 
         new Thread(() -> {
             while (true) {
                 panel.repaint();
 
                 try {
-                    Thread.sleep(40);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                long start_time = System.nanoTime();
-                this.gridManager.nextFrame();
-                long end_time = System.nanoTime();
-                double difference = (end_time - start_time) / 1e6;
-                System.out.println(difference);
+
             }
         }).start();
+        new ScheduledThreadPoolExecutor(1).scheduleAtFixedRate(() -> {
+                    var count = new HashMap<Element, Set<Link>>();
+                    GridFrame.this.gridManager.linkStream()
+                            .forEach(l -> {
+                                final var element = l.getElement();
+                                count.putIfAbsent(element, new HashSet<>());
+                                count.get(element).add(l);
+                            });
+                    count.entrySet()
+                            .stream()
+                            .filter(e -> e.getValue().size() != 1)
+                            .peek(System.out::println)
+                            .forEach(e -> e.getValue().forEach(l -> l.set(new Air())));
+                }, 1000, 1000, TimeUnit.MILLISECONDS
+        );
     }
 }

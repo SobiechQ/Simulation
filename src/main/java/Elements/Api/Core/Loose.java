@@ -19,67 +19,65 @@ public abstract non-sealed class Loose extends Element implements Moveable {
     public Link move(Link link, Vector stepVelocity) {
         return switch (stepVelocity.getDirection()) {
             case UP -> {
-                if (!link.isInstanceOf(Air.class, UP)){
-                    stepVelocity.y = 0;
-                    this.velocity.y = 0;
-                    yield link;
+                if (link.isInstanceOf(Air.class, UP)) {
+                    stepVelocity.y -= 1;
+                    yield link.swap(UP);
                 }
-                stepVelocity.y -= 1;
-                yield link.swap(UP);
+                stepVelocity.y = 0;
+                this.velocity.y = 0;
+                yield link;
             }
             case DOWN -> {
-                if (!link.isInstanceOf(Air.class, DOWN)) {
-                    if (link.isInstanceOf(Fluid.class, DOWN) || link.isInstanceOf(Particle.class, DOWN)){
-                        stepVelocity.y += 1;
-                        yield link.swap(DOWN);
-                    }
-                    if (Math.random() > this.stickness()) {
-                        if (link.isInstanceOf(Air.class, DOWN, LEFT) && link.isInstanceOf(Air.class, DOWN, RIGHT) && link.isInstanceOf(Air.class, LEFT) && link.isInstanceOf(Air.class, RIGHT)) {
-                            stepVelocity.y += 1;
-                            if (Math.random() > 0.5)
-                                yield link.swap(LEFT);
-                            yield link.swap(RIGHT);
-                        }
-                        if (link.isInstanceOf(Air.class, DOWN, LEFT) && link.isInstanceOf(Air.class, LEFT)) {
-                            stepVelocity.y += 1;
-                            yield link.swap(LEFT);
-                        }
-                        if (link.isInstanceOf(Air.class, DOWN, RIGHT) && link.isInstanceOf(Air.class, RIGHT)) {
-                            stepVelocity.y += 1;
-                            yield link.swap(RIGHT);
-                        }
-                    }
-
-                    stepVelocity.y = 0;
-                    this.velocity.y = 0;
-                    yield link;
+                if (link.isInstanceOf(Air.class, DOWN)) {
+                    stepVelocity.y += 1;
+                    yield link.swap(DOWN);
                 }
-                stepVelocity.y += 1;
-                yield link.swap(DOWN);
+                if (link.isInstanceOf(Fluid.class, DOWN) || link.isInstanceOf(Particle.class, DOWN)) {
+                    stepVelocity.y += 1;
+                    yield link.swap(DOWN);
+                }
+                if (Math.random() > this.stickness()) {
+                    if (link.isInstanceOf(Air.class, DOWN, LEFT) && link.isInstanceOf(Air.class, DOWN, RIGHT) && link.isInstanceOf(Air.class, LEFT) && link.isInstanceOf(Air.class, RIGHT)) {
+                        stepVelocity.y += 1;
+                        if (Math.random() > 0.5)
+                            yield link.swap(LEFT);
+                        yield link.swap(RIGHT);
+                    }
+                    if (link.isInstanceOf(Air.class, DOWN, LEFT) && link.isInstanceOf(Air.class, LEFT)) {
+                        stepVelocity.y += 1;
+                        yield link.swap(LEFT);
+                    }
+                    if (link.isInstanceOf(Air.class, DOWN, RIGHT) && link.isInstanceOf(Air.class, RIGHT)) {
+                        stepVelocity.y += 1;
+                        yield link.swap(RIGHT);
+                    }
+                }
+
+                stepVelocity.y = 0;
+                this.velocity.y = 0;
+                yield link;
             }
             case LEFT -> {
-                if (!link.isInstanceOf(Air.class, LEFT)){
-                    stepVelocity.x = 0;
-                    this.velocity.x = 0;
-                    yield link;
+                if (link.isInstanceOf(Air.class, LEFT)) {
+                    if (!link.isInstanceOf(Air.class, DOWN))
+                        this.velocity.x = 0;
+                    stepVelocity.x += 1;
+                    yield link.swap(LEFT);
                 }
-                if (!link.isInstanceOf(Air.class, DOWN)){
-                    this.velocity.x = 0;
-                }
-                stepVelocity.x += 1;
-                yield link.swap(LEFT);
+                stepVelocity.x = 0;
+                this.velocity.x = 0;
+                yield link;
             }
             case RIGHT -> {
-                if (!link.isInstanceOf(Air.class, RIGHT)){
-                    stepVelocity.x = 0;
-                    this.velocity.x = 0;
-                    yield link;
+                if (link.isInstanceOf(Air.class, RIGHT)) {
+                    if (!link.isInstanceOf(Air.class, DOWN))
+                        this.velocity.x = 0;
+                    stepVelocity.x -= 1;
+                    yield link.swap(RIGHT);
                 }
-                if (!link.isInstanceOf(Air.class, DOWN)){
-                    this.velocity.x = 0;
-                }
-                stepVelocity.x -= 1;
-                yield link.swap(RIGHT);
+                stepVelocity.x = 0;
+                this.velocity.x = 0;
+                yield link;
             }
             case NONE -> link;
         };

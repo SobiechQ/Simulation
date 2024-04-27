@@ -6,7 +6,7 @@ import Map.Link;
 import java.awt.*;
 
 public class MagicSand extends Loose {
-    private static float hsvValue = 0;
+    private volatile static float hsvValue = 0;
     public MagicSand(){
         MagicSand.hsvValue += 0.00005F;
         this.setColor(new Color(Color.HSBtoRGB(hsvValue, 1, 1)));
@@ -14,7 +14,7 @@ public class MagicSand extends Loose {
 
     @Override
     protected double gravity() {
-        return 0.5;
+        return 0.2;
     }
 
     @Override
