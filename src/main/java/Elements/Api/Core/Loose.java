@@ -1,13 +1,13 @@
-package Elements.Api;
+package Elements.Api.Core;
 
 import Elements.Air;
-import Elements.Api.Core.Element;
+import Elements.Api.Moveable;
 import Map.Link;
 import Map.Utils.Vector;
 
 import static Map.Utils.Direction.*;
 
-public abstract class Loose extends Element implements Moveable {
+public abstract non-sealed class Loose extends Element implements Moveable {
     protected abstract double gravity();
     protected abstract double stickness();
     private final Vector velocity = new Vector();

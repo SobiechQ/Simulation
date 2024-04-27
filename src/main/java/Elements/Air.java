@@ -1,11 +1,12 @@
 package Elements;
 
 import Elements.Api.Core.Element;
+import Elements.Api.Core.Solid;
 
 import java.awt.*;
 import java.util.Set;
 
-public class Air extends Element {
+public class Air extends Solid {
 
     private final static Set<Color> COLORS = Set.of(
             new Color(0, 0, 0),

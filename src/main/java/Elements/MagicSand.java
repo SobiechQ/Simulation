@@ -1,6 +1,6 @@
 package Elements;
 
-import Elements.Api.Loose;
+import Elements.Api.Core.Loose;
 import Map.Link;
 
 import java.awt.*;

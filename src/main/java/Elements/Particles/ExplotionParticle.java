@@ -1,6 +1,6 @@
 package Elements.Particles;
 
-import Elements.Api.Particle;
+import Elements.Api.Core.Particle;
 
 import java.awt.*;
 import java.util.Set;

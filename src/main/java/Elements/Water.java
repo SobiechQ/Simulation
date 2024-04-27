@@ -1,6 +1,6 @@
 package Elements;
 
-import Elements.Api.Fluid;
+import Elements.Api.Core.Fluid;
 
 import java.awt.*;
 import java.util.Set;

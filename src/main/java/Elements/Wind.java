@@ -1,15 +1,15 @@
 package Elements;
 
-import Elements.Api.Core.Element;
+import Elements.Api.Core.Solid;
 import Elements.Api.Moveable;
-import Elements.Api.Particle;
-import Elements.Api.Core.Refreshable;
+import Elements.Api.Core.Particle;
+import Elements.Api.Refreshable;
 import Map.Link;
 
 import java.awt.*;
 import java.util.List;
 
-public class Wind extends Element implements Refreshable {
+public class Wind extends Solid implements Refreshable {
     private final static java.util.List<Color> COLORS = List.of(Color.BLUE, Color.WHITE);
     public Wind(){
         this.setColor(COLORS.getFirst());

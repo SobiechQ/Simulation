@@ -1,11 +1,11 @@
 package Elements;
 
 import Elements.Api.*;
-import Elements.Api.Core.Element;
+import Elements.Api.Core.Particle;
+import Elements.Api.Core.Solid;
 import Elements.Particles.FireParticle;
-import Elements.Particles.SmokeParticle;
 
-public class Generator extends Element implements ParticleGenerator{
+public class Generator extends Solid implements ParticleGenerator{
 
     public Generator() {
 

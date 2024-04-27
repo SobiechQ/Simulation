@@ -1,13 +1,14 @@
 package Elements;
 
 import Elements.Api.Core.Element;
+import Elements.Api.Core.Solid;
 import Elements.Api.Flameable;
 import Map.Link;
 
 import java.awt.*;
 import java.util.Set;
 
-public class Wood extends Element implements Flameable {
+public class Wood extends Solid implements Flameable {
     private boolean isOnFire = false;
     private final static Set<Color> COLORS = Set.of(
             new Color(70, 57, 38),

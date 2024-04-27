@@ -1,0 +1,66 @@
+package Map;
+
+import Elements.Air;
+import Elements.Api.Core.Element;
+import Elements.Stone;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class Chunk {
+    public final static int CHUNK_SIZE = 16;
+    private final Link[][] grid;
+    private final int chunkX;
+    private final int chunkY;
+    private final GridManager gridManager;
+
+    public Chunk(GridManager gridManager, int chunkX, int chunkY) {
+        this.chunkX = chunkX;
+        this.chunkY = chunkY;
+        this.gridManager =  gridManager;
+        this.grid = new Link[CHUNK_SIZE][CHUNK_SIZE];
+        for (int i = 0; i < CHUNK_SIZE; i++) {
+            for (int j = 0; j < CHUNK_SIZE; j++) {
+//                if ((chunkX % 2 == 0 && chunkY % 2 == 1) ||  (chunkX % 4 == 1 && chunkY % 4 == 0)){
+//                    this.grid[i][j] = new Link(j, i, this, new Stone());
+//                    continue;
+//                }
+                this.grid[i][j] = new Link(j, i, this);
+            }
+        }
+    }
+    public GridManager getGridManager() {
+        return this.gridManager;
+    }
+
+    public int getChunkX() {
+        return chunkX;
+    }
+
+    public int getChunkY() {
+        return chunkY;
+    }
+    public Optional<Link> getLinkLocal(int localX, int localY){
+        if (localY < 0 || localY >= this.grid.length || localX < 0 || localX >= this.grid[localY].length)
+            return Optional.empty();
+        return Optional.of(grid[localY][localX]);
+    }
+    public Stream<Link> streamLocal(){
+        return Arrays.stream(this.grid)
+                .flatMap(Arrays::stream);
+    }
+    public Set<Chunk> surroundingChunks(int squareSize){
+        if (squareSize < 0)
+            throw new IllegalArgumentException("Square size cant be less then 0");
+        final Set<Chunk> chunks = new HashSet<>();
+        for (int i = -squareSize; i <= squareSize; i++) {
+            for (int j = -squareSize; j <= squareSize; j++) {
+                this.gridManager
+                        .getChunk(this.chunkX + j, this.chunkY + i)
+                        .ifPresent(chunks::add);
+            }
+        }
+        return chunks;
+    }
+}

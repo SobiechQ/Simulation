@@ -1,7 +1,8 @@
-package Elements.Api;
+package Elements.Api.Core;
 
 import Elements.Air;
 import Elements.Api.Core.Element;
+import Elements.Api.Moveable;
 import Map.Link;
 import Map.Utils.Vector;
 
@@ -9,7 +10,7 @@ import java.awt.*;
 
 import static Map.Utils.Direction.*;
 
-public abstract class Particle extends Element implements Moveable {
+public abstract non-sealed class Particle extends Element implements Moveable {
     private final Vector velocity;
     private int timeToLive;
     private final int maxTimeToLive;

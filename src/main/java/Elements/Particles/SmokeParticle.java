@@ -1,6 +1,6 @@
 package Elements.Particles;
 
-import Elements.Api.Particle;
+import Elements.Api.Core.Particle;
 
 import java.awt.*;
 import java.util.Set;
@@ -16,7 +16,7 @@ public class SmokeParticle extends Particle {
             new Color(58, 58, 58, 255)
     );
     public SmokeParticle() {
-        super(-0.2, 0.2, 0.2, 0.4, 60, 300);
+        super(-0.2, 0.2, 0.2, 0.4, 200, 500);
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
     }
 }
