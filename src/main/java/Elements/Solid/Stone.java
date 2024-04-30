@@ -1,6 +1,7 @@
 package Elements.Solid;
 
 import Elements.Api.Core.Solid;
+import Map.Link;
 
 import java.awt.*;
 import java.util.Set;
@@ -13,5 +14,8 @@ public class Stone extends Solid {
             new Color(116, 116, 116));
     public Stone(){
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
+    }
+    public Stone(Link link){
+        this();
     }
 }

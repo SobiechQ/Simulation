@@ -15,6 +15,7 @@ public abstract non-sealed class Particle extends Element implements Moveable {
     private final int maxTimeToLive;
 
     public Particle(double xMin, double xMax, double yMin, double yMax, int timeToLiveMin, int timeToLiveMax) {
+        super();
         double xVelocity = xMin + Math.random()*(xMax - xMin);
         double yVelocity = yMin + Math.random()*(yMax - yMin);
         this.maxTimeToLive = (int) (timeToLiveMin + Math.random()*(timeToLiveMax - timeToLiveMin));

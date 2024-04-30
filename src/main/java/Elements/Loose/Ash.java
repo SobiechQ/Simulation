@@ -1,6 +1,7 @@
 package Elements.Loose;
 
 import Elements.Api.Core.Loose;
+import Map.Link;
 
 import java.awt.*;
 import java.util.Set;
@@ -15,10 +16,13 @@ public class Ash extends Loose {
             new Color(128, 128, 128),
             new Color(63, 63, 63)
     );
+    public Ash(Link link){
+        this();
+    }
     public Ash(){
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
-
     }
+
     @Override
     protected double gravity() {
         return 0.01;

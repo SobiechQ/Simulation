@@ -17,6 +17,9 @@ public class ExplotionParticle extends Particle {
             new Color(203, 130, 0),
             new Color(245, 26, 68)
     );
+    public ExplotionParticle(Link link){
+        this();
+    }
     public ExplotionParticle(){
         super(-1, 1, 0.7, 2, 10, 40);
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());

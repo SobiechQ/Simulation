@@ -17,7 +17,10 @@ public class Sand extends Loose {
             new Color(231, 219, 177)
     );
 
-    public Sand() {
+    public Sand(Link link) {
+        this();
+    }
+    public Sand(){
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
     }
 

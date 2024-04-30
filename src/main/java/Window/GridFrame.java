@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -64,7 +65,16 @@ public class GridFrame extends JFrame {
                 int y = (e.getY() / elementSize) - 6;
                 gridManager.linkStream()
                         .filter(link -> link.distance(x, y) < GridFrame.this.menu.getCommandSize())
-                        .forEach(l -> l.set(GridFrame.this.menu.getCommandElement()));
+                        .forEach(l -> {
+                            try {
+                                l.set(
+                                        GridFrame.this.menu.getCommandElementClass().getConstructor(Link.class).newInstance(l)
+                                );
+                            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                                     IllegalAccessException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        });
             }
         });
 

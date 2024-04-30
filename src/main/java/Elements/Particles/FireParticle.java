@@ -17,8 +17,11 @@ public class FireParticle extends Particle {
             new Color(203, 130, 0),
             new Color(250, 102, 57)
     );
+    public FireParticle(Link link){
+        this();
+    }
     public FireParticle() {
-        super(-0.3, 0.3, 1, 4, 5, 15);
+        super( -0.3, 0.3, 1, 4, 5, 15);
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
     }
 

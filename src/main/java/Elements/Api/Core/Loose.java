@@ -8,12 +8,17 @@ import Map.Utils.Vector;
 import static Map.Utils.Direction.*;
 
 public abstract non-sealed class Loose extends Element implements Moveable {
+    public Loose(Link link) {
+        super(link);
+    }
+    public Loose() {
+
+    }
+
     protected abstract double gravity();
     protected abstract double stickness();
     private final Vector velocity = new Vector();
-    public Loose(){
 
-    }
 
     @Override
     public Link move(Link link, Vector stepVelocity) {

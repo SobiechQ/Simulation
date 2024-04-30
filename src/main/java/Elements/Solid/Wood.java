@@ -52,7 +52,10 @@ public class Wood extends Solid implements Flameable {
             new Color(250, 102, 57)
     );
 
-    public Wood() {
+    public Wood(Link link) {
+        this();
+    }
+    public Wood(){
         this.initialColor = COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get();
         this.setColor(this.initialColor);
         this.isOnFire = false;
@@ -95,7 +98,7 @@ public class Wood extends Solid implements Flameable {
         this.particleGenerator.refresh(link);
         if (this.timeToLive-- <= 0)
             if (Math.random()>0.7)
-                link.set(new Ash());
+                link.set(new Ash(link));
             else
                 link.clear();
 

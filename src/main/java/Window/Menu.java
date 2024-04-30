@@ -18,14 +18,8 @@ public class Menu extends JFrame {
         public String toString() {
             return this.element.getSimpleName();
         }
-        public Element newInstanceOf(){
-            try {
-                return this.element.getConstructor(null).newInstance(null);
-            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
-                     IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            return new Air();
+        public Class<? extends Element> newInstanceOf(){
+            return this.element;
         }
     }
     private final JComboBox<ComboBoxRecord> jComboBox = new JComboBox<>();
@@ -55,8 +49,8 @@ public class Menu extends JFrame {
     public int getCommandSize(){
         return (int) this.jSpinner.getValue();
     }
-    public Element getCommandElement(){
-        return ((ComboBoxRecord) Objects.requireNonNull(this.jComboBox.getSelectedItem())).newInstanceOf();
+    public Class<? extends Element> getCommandElementClass(){
+        return ((ComboBoxRecord) Objects.requireNonNull(jComboBox.getSelectedItem())).newInstanceOf();
     }
 
 

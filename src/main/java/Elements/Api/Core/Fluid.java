@@ -8,6 +8,13 @@ import Map.Utils.Vector;
 import static Map.Utils.Direction.*;
 
 public abstract non-sealed class Fluid extends Element implements Moveable {
+    public Fluid(Link link) {
+        super(link);
+    }
+    public Fluid() {
+
+    }
+
     protected abstract double getGravity();
     protected abstract double getStickness(); 
 

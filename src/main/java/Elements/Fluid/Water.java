@@ -17,6 +17,9 @@ public class Water extends Fluid {
     public Water(){
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
     }
+    public Water(Link link){
+        this();
+    }
     @Override
     protected double getGravity() {
         return 0.2;

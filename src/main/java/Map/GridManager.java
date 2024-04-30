@@ -31,33 +31,6 @@ public class GridManager {
         this.chunkStream().forEach(c-> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
 
 
-//        for (int i = 100; i < 130; i++) {
-//            for (int j = 0; j < 200; j++) {
-//                this.getLink(j, i).ifPresent(l->l.set(new Water()));
-//            }
-//        }
-//        for (int i = 30; i < 80; i++) {
-//            for (int j = 0; j < 300; j++) {
-//                this.getLink(j, i).ifPresent(l->l.set(new MagicSand()));
-//            }
-//        }
-//        for (int i = 90; i < 110; i++) {
-//            for (int j = 0; j < 300; j++) {
-//                if (Math.random()>0.95)
-//                    this.getLink(j, i).ifPresent(l->l.set(new Tnt()));
-//            }
-//        }
-//        for (int i = 10; i < 30; i++) {
-//            for (int j = 0; j < 300; j++) {
-//                if (Math.random()>0.95)
-//                    this.getLink(j, i).ifPresent(l->l.set(new Generator()));
-//            }
-//        }
-//        this.linkStream()
-//                .forEach(l->{
-//                    if (Math.random()>0.99)
-//                        l.set(new Generator());
-//                });
 
     }
 

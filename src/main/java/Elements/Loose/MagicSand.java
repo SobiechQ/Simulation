@@ -7,6 +7,9 @@ import java.awt.*;
 
 public class MagicSand extends Loose {
     private volatile static float hsvValue = 0;
+    public MagicSand(Link link){
+        this();
+    }
     public MagicSand(){
         MagicSand.hsvValue += 0.00005F;
         this.setColor(new Color(Color.HSBtoRGB(hsvValue, 1, 1)));

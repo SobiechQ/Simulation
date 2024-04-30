@@ -12,6 +12,9 @@ import java.util.List;
 
 public class Tnt extends Solid implements Refreshable {
     private final static List<Color> COLORS = List.of(Color.RED, Color.ORANGE);
+    public Tnt(Link link){
+        this();
+    }
     public Tnt(){
         this.setColor(COLORS.getFirst());
     }
@@ -49,7 +52,7 @@ public class Tnt extends Solid implements Refreshable {
         link.stream().filter(l -> link.distance(l) < (double) calculatedExposionRadius /4).forEach(l -> {
             l.clear();
             if (Math.random() > 0.7)
-                l.set(new ExplotionParticle());
+                l.set(new ExplotionParticle(l));
         });
         link.stream()
                 .filter(l -> link.distance(l) < calculatedExposionRadius)
