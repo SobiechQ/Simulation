@@ -1,9 +1,10 @@
-package Elements;
+package Elements.Solid;
 
 import Elements.Api.Core.Particle;
 import Elements.Api.Core.Solid;
 import Elements.Api.Flameable;
 import Elements.Api.ParticleGenerator;
+import Elements.Loose.Ash;
 import Elements.Particles.FireParticle;
 import Elements.Particles.SmokeParticle;
 import Map.Link;
@@ -28,7 +29,7 @@ public class Wood extends Solid implements Flameable {
 
         @Override
         public Particle getParticle() {
-            return Math.random() > 0.2 ? new FireParticle() : new SmokeParticle();
+            return Math.random() > 0.1 ? new FireParticle() : new SmokeParticle();
         }
     };
     private final static Set<Color> COLORS = Set.of(

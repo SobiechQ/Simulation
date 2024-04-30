@@ -1,4 +1,4 @@
-package Elements;
+package Elements.Solid;
 
 import Elements.Api.*;
 import Elements.Api.Core.Particle;

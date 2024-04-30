@@ -1,6 +1,6 @@
 package Map;
 
-import Elements.Air;
+import Elements.Solid.Air;
 import Elements.Api.Core.Element;
 import Map.Utils.Direction;
 

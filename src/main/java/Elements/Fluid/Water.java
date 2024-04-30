@@ -1,4 +1,4 @@
-package Elements;
+package Elements.Fluid;
 
 import Elements.Api.Core.Fluid;
 import Elements.Api.Flameable;

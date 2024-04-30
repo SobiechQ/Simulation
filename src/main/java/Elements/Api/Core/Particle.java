@@ -1,7 +1,6 @@
 package Elements.Api.Core;
 
-import Elements.Air;
-import Elements.Api.Core.Element;
+import Elements.Solid.Air;
 import Elements.Api.Moveable;
 import Map.Link;
 import Map.Utils.Vector;

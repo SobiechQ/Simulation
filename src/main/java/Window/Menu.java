@@ -1,6 +1,6 @@
 package Window;
 
-import Elements.Air;
+import Elements.Solid.Air;
 import Elements.Api.Core.Element;
 import org.reflections.Reflections;
 

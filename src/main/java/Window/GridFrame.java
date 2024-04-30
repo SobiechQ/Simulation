@@ -1,6 +1,6 @@
 package Window;
 
-import Elements.Air;
+import Elements.Solid.Air;
 import Elements.Api.Core.Element;
 import Map.Chunk;
 import Map.GridManager;
@@ -31,15 +31,15 @@ public class GridFrame extends JFrame {
                         g.setColor(link.getElement().getColor());
                         g.fillRect(gridManager.getXReal(link) * elementSize, gridManager.getYReal(link) * elementSize, elementSize, elementSize);
                     });
-            gridManager.chunkStream()
-                    .forEach(chunk -> {
-                        g.setColor(new Color(255, 0, 255, 204));
-                        g.drawRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
-                        if (chunk.isWorking){
-                            g.setColor(new Color(255, 0, 255, 51));
-                            g.fillRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
-                        }
-                    });
+//            gridManager.chunkStream()
+//                    .forEach(chunk -> {
+//                        g.setColor(new Color(255, 0, 255, 204));
+//                        g.drawRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
+//                        if (chunk.isWorking){
+//                            g.setColor(new Color(255, 0, 255, 51));
+//                            g.fillRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
+//                        }
+//                    });
         }
 
         @Override

@@ -1,4 +1,4 @@
-package Elements;
+package Elements.Loose;
 
 import Elements.Api.Core.Loose;
 import Map.Link;

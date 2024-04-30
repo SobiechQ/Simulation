@@ -1,4 +1,4 @@
-package Elements;
+package Elements.Solid;
 
 import Elements.Api.Core.Solid;
 import Elements.Api.Moveable;

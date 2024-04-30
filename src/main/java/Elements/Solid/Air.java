@@ -1,4 +1,4 @@
-package Elements;
+package Elements.Solid;
 
 import Elements.Api.Core.Element;
 import Elements.Api.Core.Solid;

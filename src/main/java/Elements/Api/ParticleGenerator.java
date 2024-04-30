@@ -1,6 +1,6 @@
 package Elements.Api;
 
-import Elements.Air;
+import Elements.Solid.Air;
 import Elements.Api.Core.Particle;
 import Map.Chunk;
 import Map.Link;

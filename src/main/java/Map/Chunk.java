@@ -1,6 +1,6 @@
 package Map;
 
-import Elements.Air;
+import Elements.Solid.Air;
 import Elements.Api.Refreshable;
 
 import java.util.*;
@@ -77,7 +77,7 @@ public class Chunk implements Runnable{
     public void run() {
         this.isWorking = true;
 //        try {
-//            Thread.sleep(200);
+//            Thread.sleep((long) (50+Math.random()*300));
 //        } catch (InterruptedException e) {
 //            throw new RuntimeException(e);
 //        }
