@@ -8,6 +8,7 @@ import Elements.Loose.Ash;
 import Elements.Particles.FireParticle;
 import Elements.Particles.SmokeParticle;
 import Map.Link;
+import Perlin.Noice;
 
 import java.awt.*;
 import java.util.Set;
@@ -51,9 +52,18 @@ public class Wood extends Solid implements Flameable {
             new Color(203, 130, 0),
             new Color(250, 102, 57)
     );
-
+    public final static Noice noice = new Noice(50);
     public Wood(Link link) {
         this();
+//        System.out.println(noice.getValue(link.getXReal(), link.getYReal()));
+
+        var red = noice.getValue(link.getXReal(), link.getYReal()) * 255;
+        red = red < 0 ? 0 : red >= 255 ? 255 : red;
+
+        var green = noice.getValue(link.getXReal(), link.getYReal());
+
+
+        this.setColor(new Color((int) red, 0, 0));
     }
     public Wood(){
         this.initialColor = COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get();

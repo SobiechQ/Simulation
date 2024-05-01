@@ -2,6 +2,7 @@ package Window;
 
 import Elements.Solid.Air;
 import Elements.Api.Core.Element;
+import Elements.Solid.Wood;
 import Map.Chunk;
 import Map.GridManager;
 import Map.Link;
@@ -32,15 +33,26 @@ public class GridFrame extends JFrame {
                         g.setColor(link.getElement().getColor());
                         g.fillRect(gridManager.getXReal(link) * elementSize, gridManager.getYReal(link) * elementSize, elementSize, elementSize);
                     });
-//            gridManager.chunkStream()
-//                    .forEach(chunk -> {
-//                        g.setColor(new Color(255, 0, 255, 204));
-//                        g.drawRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
+            gridManager.chunkStream()
+                    .forEach(chunk -> {
+                        g.setColor(new Color(255, 0, 255, 204));
+                        g.drawRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
 //                        if (chunk.isWorking){
 //                            g.setColor(new Color(255, 0, 255, 51));
 //                            g.fillRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
 //                        }
-//                    });
+                    });
+            for (int i = 0; i < Wood.noice.vectors.length; i++) {
+                for (int j = 0; j < Wood.noice.vectors[i].length; j++) {
+                    g.setColor(Color.GREEN);
+                    g.drawLine(
+                            j*elementSize*Chunk.CHUNK_SIZE,
+                            i*elementSize*Chunk.CHUNK_SIZE,
+                            (int) (j*elementSize*Chunk.CHUNK_SIZE + Wood.noice.vectors[i][j].getX() * elementSize /2),
+                            (int) (i*elementSize*Chunk.CHUNK_SIZE + Wood.noice.vectors[i][j].getY() * elementSize /2)
+                    );
+                }
+            }
         }
 
         @Override

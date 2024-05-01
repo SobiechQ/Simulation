@@ -2,6 +2,8 @@ package Map;
 
 
 
+import Elements.Solid.Wood;
+
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.ToDoubleFunction;
@@ -29,9 +31,7 @@ public class GridManager {
         }
         this.chunkThreads = new ScheduledThreadPoolExecutor(8);
         this.chunkStream().forEach(c-> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
-
-
-
+        randomOrderLinks.forEach(l->l.set(new Wood(l)));
     }
 
     public synchronized Optional<Link> getLink(int x, int y) {

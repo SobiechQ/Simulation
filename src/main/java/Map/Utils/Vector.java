@@ -9,26 +9,33 @@ public class Vector {
     public double stepX;
     public double stepY;
 
-    public Vector(){
-        this(0,0);
+    public Vector() {
+        this(0, 0);
     }
-    public Vector(Vector vector){
+
+    public Vector(Vector vector) {
         this(vector.x, vector.y, vector.stepX, vector.stepY);
     }
-    public Vector(double x, double y){
+
+    public Vector(double x, double y) {
         this(x, y, 0, 0);
     }
+
     public Vector(double x, double y, double stepX, double stepY) {
         this.x = x;
         this.y = y;
         this.stepX = stepX;
         this.stepY = stepY;
     }
+    public double dotProduct(Vector vector){
+        return this.x * vector.x + this.y * vector.y;
+    }
 
     public double getX() {
         return x;
     }
-    public void clear(){
+
+    public void clear() {
         this.x = 0;
         this.y = 0;
         this.stepX = 0;
@@ -38,16 +45,20 @@ public class Vector {
     public void setX(double x) {
         this.x = x;
     }
+
     public void addX(double x) {
         this.x += x;
     }
+
     public double getY() {
         return y;
     }
+
     public void addY(double y) {
-        this.y+=y;
+        this.y += y;
     }
-    public void addVector(double x, double y){
+
+    public void addVector(double x, double y) {
         this.addX(x);
         this.addY(y);
     }
@@ -55,8 +66,9 @@ public class Vector {
     public void setY(double y) {
         this.y = y;
     }
-    public Direction getDirection(){
-        if (Math.abs(this.x) == 0  && Math.abs(this.y) == 0)
+
+    public Direction getDirection() {
+        if (Math.abs(this.x) == 0 && Math.abs(this.y) == 0)
             return Direction.NONE;
         double degrees = this.getInDegrees();
         if (degrees >= -45 && degrees <= 45)
@@ -67,9 +79,11 @@ public class Vector {
             return Direction.DOWN;
         return Direction.LEFT;
     }
-    public double getInDegrees(){
+
+    public double getInDegrees() {
         return Math.toDegrees(Math.atan2(this.x, this.y));
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -111,6 +125,19 @@ public class Vector {
     public void setStepY(double stepY) {
         this.stepY = stepY;
     }
+
+    /**
+     * @return Vector with x,y values random. Both values are in range of <-1, 1>
+     */
+    public static Vector getRandomVector() {
+        return new Vector(-1 + Math.random() * 2, -1 + Math.random() * 2);
+    }
+
+    public void multiplyBoth(double value) {
+        this.x *= value;
+        this.y *= value;
+    }
+
 }
 
 
