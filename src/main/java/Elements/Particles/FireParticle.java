@@ -31,7 +31,7 @@ public class FireParticle extends Particle {
                 .forEach(l->{
                     if (l.getElement() instanceof Flameable flameable){
                         if (Math.random() > 0.99)
-                            flameable.setIsOnFire(true);
+                            flameable.setOnFire(true);
                     }
                 });
         super.refresh(link);

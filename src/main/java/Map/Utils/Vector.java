@@ -13,7 +13,7 @@ public class Vector {
         this(0, 0);
     }
 
-    public Vector(Vector vector) {
+    public Vector(Vector vector) { //todo cloneable?
         this(vector.x, vector.y, vector.stepX, vector.stepY);
     }
 

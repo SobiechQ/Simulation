@@ -2,6 +2,7 @@ package Map;
 
 
 
+import Elements.Solid.PerlinTest;
 import Elements.Solid.Wood;
 
 import java.util.*;
@@ -29,7 +30,7 @@ public class GridManager {
                 this.randomOrderChunks.add(newChunk);
             }
         }
-        this.chunkThreads = new ScheduledThreadPoolExecutor(8);
+        this.chunkThreads = new ScheduledThreadPoolExecutor(32);
         this.chunkStream().forEach(c-> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
 //        randomOrderLinks.forEach(l->l.set(new Wood(l)));
     }

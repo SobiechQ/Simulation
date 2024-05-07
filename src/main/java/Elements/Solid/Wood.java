@@ -12,7 +12,6 @@ import Perlin.Noice;
 
 import java.awt.*;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class Wood extends Solid implements Flameable {
@@ -51,9 +50,9 @@ public class Wood extends Solid implements Flameable {
             new Color(31, 26, 15)
     );
 
-    public final static Noice noice1 = new Noice(8, 0.6, 0);
-    public final static Noice noice2 = new Noice(8, 0.6, 0);
-    public final static Noice noice3 = new Noice(8, 0.6, -3);
+    public final static Noice noice1 = new Noice(8, 4, -2, 4);
+    public final static Noice noice2 = new Noice(8, 4, -1, 4);
+    public final static Noice noice3 = new Noice(8, 4, -1, 4);
     public Wood(Link link) {
         this();
         final var color1 = this.blend(COLORS.get(0), COLORS.get(1), noice1.getValue(link.getXReal(), link.getYReal()));
@@ -82,7 +81,7 @@ public class Wood extends Solid implements Flameable {
     }
 
     @Override
-    public void setIsOnFire(boolean isOnFire) {
+    public void setOnFire(boolean isOnFire) {
         this.isOnFire = isOnFire;
     }
 
@@ -112,8 +111,8 @@ public class Wood extends Solid implements Flameable {
             this.setColor(ON_FIRE_COLORS.stream().skip((int) (ON_FIRE_COLORS.size() * Math.random())).findFirst().get());
         if (Math.random() > 0.99)
             link.surroundingLink(1).forEach(l->{
-                if (l.getElement() instanceof Flameable flameable)
-                    flameable.setIsOnFire(true);
+                if (Math.random() > Wood.noice1.getValue(l) && l.getElement() instanceof Flameable flameable)
+                    flameable.setOnFire(true);
             });
         this.particleGenerator.refresh(link);
         if (this.timeToLive-- <= 0)

@@ -4,7 +4,7 @@ import Elements.Solid.Air;
 import Elements.Api.Core.Particle;
 import Map.Chunk;
 import Map.Link;
-
+//todo intensity jest nie optymalne. Może nie refreshable tylko po prostu generate?
 public interface ParticleGenerator extends Refreshable {
     double getParticleIntensity();
 

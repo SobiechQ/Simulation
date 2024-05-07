@@ -7,19 +7,55 @@ import Map.Utils.Vector;
 
 import static Map.Utils.Direction.*;
 
+/**
+ * Loose is the base class for all loose elements in the simulation.
+ * It represents objects that on every refresh can move in the grid.
+ * Loose elements are elements that tend to fall and form piles.
+ * They are heavier than {@link Air}, {@link Particle}, {@link Fluid} thus they move through them changing their position.
+ * They are lighter than {@link Solid} elements, and cant pass through them.
+ * Loose elements are affected by gravity and stickness that determines speed of their movement.
+ *
+ * @see Moveable
+ * @see Elements.Loose.Sand
+ */
 public abstract non-sealed class Loose extends Element implements Moveable {
-    public Loose(Link link) {
-        super(link);
-    }
+    private final Vector velocity = new Vector();
+    /**
+     * Inherited constructor from {@link Element#Element()}
+     *
+     * @see Element
+     */
     public Loose() {
 
     }
 
-    protected abstract double gravity();
-    protected abstract double stickness();
-    private final Vector velocity = new Vector();
+    /**
+     * Inherited constructor from {@link Element#Element()}
+     *
+     * @see Element
+     */
+    public Loose(Link link) {
+        super(link);
+    }
+    /**
+     * Represents final value that is added to the velocity of the fluid in the y direction on every refresh
+     * Allowing every implementation to speed up differently
+     *
+     * @return final gravity value. It is suggested to always return same parameter.
+     */
+    protected abstract double getGravity();
+    /**
+     * Represents final value that determines how fast the fluid flows and fills the space.
+     * Returned value has to be in range [0, 1], where 0 means no stickness and 1 means full stickness.
+     * This allows to create implementations of fluids that are more or less sticky.
+     *
+     * @return final stickness value. It is required to always return same parameter.
+     */
+    protected abstract double getStickness();
 
-
+    /**
+     * Behavior of Loose move is described in {@link Loose Loose} class. {@inheritDoc}
+     */
     @Override
     public Link move(Link link, Vector stepVelocity) {
         return switch (stepVelocity.getDirection()) {
@@ -41,7 +77,7 @@ public abstract non-sealed class Loose extends Element implements Moveable {
                     stepVelocity.y += 1;
                     yield link.swap(DOWN);
                 }
-                if (Math.random() > this.stickness()) {
+                if (Math.random() > this.getStickness()) {
                     if (link.isInstanceOf(Air.class, DOWN, LEFT) && link.isInstanceOf(Air.class, DOWN, RIGHT) && link.isInstanceOf(Air.class, LEFT) && link.isInstanceOf(Air.class, RIGHT)) {
                         stepVelocity.y += 1;
                         if (Math.random() > 0.5)
@@ -87,15 +123,23 @@ public abstract non-sealed class Loose extends Element implements Moveable {
             case NONE -> link;
         };
     }
-
+    /**
+     * For every refresh loose is affected by gravity.
+     * If below the loose is {@link Air} or {@link Particle} it accelerates downwards.
+     * If below the loose is {@link Fluid} it accelerates downwards with 1/4 of the gravity speed.
+     * {@inheritDoc}
+     */
     @Override
     public void updateGravity(Link link) {
         if (link.isInstanceOf(Air.class, DOWN) || link.isInstanceOf(Particle.class, DOWN))
-            this.velocity.y -= this.gravity();
+            this.velocity.y -= this.getGravity();
         if (link.isInstanceOf(Fluid.class, DOWN))
-            this.velocity.y -= this.gravity()/4;
+            this.velocity.y -= this.getGravity()/4;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Vector getVelocity() {
         return this.velocity;

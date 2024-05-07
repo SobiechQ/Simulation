@@ -27,12 +27,12 @@ public class Sand extends Loose {
 
 
     @Override
-    protected double gravity() {
+    protected double getGravity() {
         return 0.4;
     }
 
     @Override
-    protected double stickness() {
+    protected double getStickness() {
         return 0.01;
     }
 

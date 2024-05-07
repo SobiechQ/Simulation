@@ -1,14 +1,12 @@
-update listener zamiast chodzenia po wszystkim i castowania
 
-swap in link class
-if sand in move finds particle - swap
-if water finds sand - swap
-abstract sand particle
-brightness - może po multithread?
-multithread
-
-wood, fireable
-particles
-water and fluids
-
+refleksja powinna wołać konstruktor z link domyślnie a jak go nie ma to pusty
 REFRESHABLE powinno dodawać do seta do refreshowania
+więcej fluidów które reagują ze sobą
+(water and lava can create steam)
+
+linki i chunki bardziej pasują do kolejnki niż do listy
+
+magic sand może używać perlina
+
+this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
+

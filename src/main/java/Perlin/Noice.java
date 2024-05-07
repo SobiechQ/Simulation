@@ -1,34 +1,47 @@
 package Perlin;
 
+import Map.Link;
 import Map.Utils.Vector;
 
 public class Noice {
 
-    private final Permutation permutation;
+    private final PermutationTable permutationTable;
     private final int resolution;
     private final double mapingIndex;
     private final double delta;
+    private final Noice octave;
+    private final double amplitute;
+    public Noice(int resolution, double mapingIndex, double delta, int octaves){
+        this(resolution, mapingIndex, delta, octaves, 1);
+    }
 
-    public Noice(int resolution, double mapingIndex, double delta) {
+    private Noice(int resolution, double mapingIndex, double delta, int octaves, double amplitude) {
         this.delta = delta;
         this.mapingIndex = mapingIndex;
         this.resolution = resolution;
-        this.permutation = new Permutation();
+        this.permutationTable = new PermutationTable();
+        this.amplitute = amplitude;
+
+        if (octaves > 1) this.octave = new Noice(resolution/2, mapingIndex, delta, octaves - 1, amplitude / 2);
+        else this.octave = null;
     }
 
     private Noice() {
-        this(16, 0.01, 0);
+        this(16, 0.01, 0, 1, 1);
+    }
+    public double getValue(Link link) {
+        return this.getValue(link.getXReal(), link.getYReal());
     }
 
     public double getValue(int x, int y) {
-        return this.calculateGrid(
-                this.permutation.getPermutation(x / resolution, y / resolution),
-                this.permutation.getPermutation(x / resolution + 1, y / resolution),
-                this.permutation.getPermutation(x / resolution, y / resolution + 1),
-                this.permutation.getPermutation(x / resolution + 1, y / resolution + 1),
-                x % resolution,
-                y % resolution
-        );
+        if (this.octave == null) return this.calculateGrid(x, y) * this.amplitute;
+        return (this.calculateGrid(x, y) * this.amplitute +
+                this.octave.getValue(x, y) * this.octave.amplitute) /
+                (this.amplitute + this.octave.amplitute);
+    }
+
+    private double calculateGrid(int x, int y) {
+        return this.calculateGrid(this.permutationTable.getPermutation(x / resolution, y / resolution), this.permutationTable.getPermutation(x / resolution + 1, y / resolution), this.permutationTable.getPermutation(x / resolution, y / resolution + 1), this.permutationTable.getPermutation(x / resolution + 1, y / resolution + 1), x % resolution, y % resolution);
     }
 
     private double calculateGrid(Vector topLeft, Vector topRight, Vector bottomLeft, Vector bottomRight, int localX, int localY) {
@@ -46,12 +59,7 @@ public class Noice {
         final var dotBottomRight = bottomRight.dotProduct(pointVectorBottomRight);
 
 
-        return this.mapResultToRange(this.linearInterpolation(
-                this.linearInterpolation(dotBottomLeft, dotTopLeft, this.easeCurve(1 - (double) localY / resolution)),
-                this.linearInterpolation(dotBottomRight, dotTopRight, this.easeCurve(1 - (double) localY / resolution)),
-                this.easeCurve((double) localX / resolution)
-
-        ) + this.delta);
+        return this.mapResultToRange(this.linearInterpolation(this.linearInterpolation(dotBottomLeft, dotTopLeft, this.easeCurve(1 - (double) localY / resolution)), this.linearInterpolation(dotBottomRight, dotTopRight, this.easeCurve(1 - (double) localY / resolution)), this.easeCurve((double) localX / resolution)) + this.delta);
 
     }
 
@@ -62,14 +70,12 @@ public class Noice {
     //todo unmaped getter?
 
     private double linearInterpolation(double a1, double a2, double t) {
-        if (t < 0 || t > 1)
-            throw new IllegalArgumentException("t must be in range <0; 1>");
+        if (t < 0 || t > 1) throw new IllegalArgumentException("t must be in range <0; 1>");
         return a1 + t * (a2 - a1);
     }
 
     private double easeCurve(double t) {
-        if (t < 0 || t > 1)
-            throw new IllegalArgumentException("t must be in range <0; 1>");
+        if (t < 0 || t > 1) throw new IllegalArgumentException("t must be in range <0; 1>");
         return 6 * Math.pow(t, 5) - 15 * Math.pow(t, 4) + 10 * Math.pow(t, 3);
     }
 }

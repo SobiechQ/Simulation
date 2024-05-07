@@ -2,17 +2,17 @@ package Perlin;
 
 import Map.Utils.Vector;
 
-class Permutation {
+class PermutationTable {
     private final static int INITIAL_SIZE = 10;
     private final static double EXPAND_INDEX = 1.5;
     private Vector[][] permutations;
-    public Permutation(int initialSize) {
+    public PermutationTable(int initialSize) {
         this.permutations = new Vector[initialSize][initialSize];
         for (int i = 0; i < this.permutations.length; i++)
             for (int j = 0; j < this.permutations[i].length; j++)
                 this.permutations[i][j] = Vector.getRandomVector();
     }
-    public Permutation() {
+    public PermutationTable() {
         this(INITIAL_SIZE);
     }
     public Vector getPermutation(int x, int y) {
