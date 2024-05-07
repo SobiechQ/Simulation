@@ -67,7 +67,7 @@ public abstract non-sealed class Loose extends Element implements Moveable {
         return switch (stepVelocity.getDirection()) {
             case UP -> {
                 if (link.isInstanceOf(Air.class, UP)) {
-                    stepVelocity.y -= 1;
+                    stepVelocity.y --;
                     yield link.swap(UP);
                 }
                 stepVelocity.y = 0;

@@ -102,6 +102,7 @@ public abstract non-sealed class Fluid extends Element implements Moveable {
                     yield link;
                 }
                 stepVelocity.y = 0;
+                this.velocity.y = 0;
                 yield link;
             }
             case LEFT -> {

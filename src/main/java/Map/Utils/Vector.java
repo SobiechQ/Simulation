@@ -64,7 +64,7 @@ public class Vector {
         this.addY(y);
     }
 
-    public boolean step() {
+    public boolean isStepApplicable() {
         return Math.abs(this.x) >= 1 || Math.abs(this.y) >= 1;
     }
 

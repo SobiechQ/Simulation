@@ -26,7 +26,7 @@ public interface Moveable extends Refreshable { //todo update documentation afte
         final var stepVelocity = this.getVelocity().getStepVector().orElse(new Vector(0, 0));
         stepVelocity.addX(this.getVelocity().getX());
         stepVelocity.addY(this.getVelocity().getY());
-        while (stepVelocity.step())
+        while (stepVelocity.isStepApplicable())
             nextLink = this.move(nextLink, stepVelocity);
     }
 

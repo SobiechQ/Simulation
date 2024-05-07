@@ -86,9 +86,9 @@ public class Chunk implements Runnable{
             double difference = (endTime - this.startTime) / 1e6;
             System.out.println(difference);
             this.startTime = System.nanoTime();
-            System.out.println("Elements: " + this.gridManager.linkStream()
-                    .filter(l -> !(l.getElement() instanceof Air))
-                    .count());
+//            System.out.println("Elements: " + this.gridManager.linkStream()
+//                    .filter(l -> !(l.getElement() instanceof Air))
+//                    .count());
         }
 
         this.streamLocal()

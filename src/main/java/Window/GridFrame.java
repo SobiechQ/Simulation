@@ -11,12 +11,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.reflect.Parameter;
+import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.ToIntFunction;
 
 public class GridFrame extends JFrame {
     private final int gridChunkWidth = 20;
@@ -75,16 +76,22 @@ public class GridFrame extends JFrame {
                 super.mouseClicked(e);
                 int x = (e.getX() / elementSize) - 1;
                 int y = (e.getY() / elementSize) - 6;
+
+                @SuppressWarnings("unchecked")
+                final Constructor<? extends Element> constructor =
+                        Arrays.stream(GridFrame.this.menu.getCommandElementClass().getConstructors())
+                                .map(c -> (Constructor<? extends Element>) c)
+                                .filter(c -> Arrays.equals(c.getParameterTypes(), new Class[]{Link.class}) || Arrays.equals(c.getParameterTypes(), new Class[]{}))
+                                .max(Comparator.comparingInt(Constructor::getParameterCount))
+                                .orElseThrow(() -> new RuntimeException("No constructor found"));
+
                 gridManager.linkStream()
                         .filter(link -> link.distance(x, y) < GridFrame.this.menu.getCommandSize())
                         .forEach(l -> {
                             try {
-                                l.set(
-                                        GridFrame.this.menu.getCommandElementClass().getConstructor(Link.class).newInstance(l)
-                                );
-                            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
-                                     IllegalAccessException ex) {
-                                throw new RuntimeException(ex);
+                                l.set(constructor.getParameterCount() == 0 ? constructor.newInstance() : constructor.newInstance(l));
+                            } catch (InvocationTargetException | InstantiationException | IllegalAccessException _) {
+                                throw new RuntimeException();
                             }
                         });
             }

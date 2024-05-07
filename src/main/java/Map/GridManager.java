@@ -2,6 +2,8 @@ package Map;
 
 
 
+import Elements.Fluid.Water;
+import Elements.Loose.Sand;
 import Elements.Solid.PerlinTest;
 import Elements.Solid.Wood;
 
@@ -30,12 +32,12 @@ public class GridManager {
                 this.randomOrderChunks.add(newChunk);
             }
         }
-        this.chunkThreads = new ScheduledThreadPoolExecutor(32);
+        this.chunkThreads = new ScheduledThreadPoolExecutor(8);
         this.chunkStream().forEach(c-> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
-//        randomOrderLinks.forEach(l->l.set(new Wood(l)));
+//        randomOrderLinks.forEach(l->l.set(new Water()));
     }
 
-    public synchronized Optional<Link> getLink(int x, int y) {
+    public Optional<Link> getLink(int x, int y) {
         final int chunkX = x / Chunk.CHUNK_SIZE;
         final int chunkY = y / Chunk.CHUNK_SIZE;
         final int localX = x % Chunk.CHUNK_SIZE;
