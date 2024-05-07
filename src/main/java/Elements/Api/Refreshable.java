@@ -1,6 +1,7 @@
 package Elements.Api;
 
 import Map.Link;
+import lombok.NonNull;
 
 /**
  * Refreshable is an functional interface that allows an element to perform actions with position awareness on every tick.
@@ -17,6 +18,6 @@ public interface Refreshable {
      * @see Refreshable
      * @param link the link that the element is refreshed on for the current tick. It allowes to perform actions with position awareness.
      */
-    void refresh(Link link);
+    void refresh(@NonNull Link link);
 
 }

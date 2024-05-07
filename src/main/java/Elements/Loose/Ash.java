@@ -20,7 +20,7 @@ public class Ash extends Loose {
         this();
     }
     public Ash(){
-        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
+        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
     }
 
     @Override

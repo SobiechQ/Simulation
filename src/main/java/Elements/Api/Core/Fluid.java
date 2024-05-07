@@ -4,6 +4,7 @@ import Elements.Solid.Air;
 import Elements.Api.Moveable;
 import Map.Link;
 import Map.Utils.Vector;
+import lombok.NonNull;
 
 import static Map.Utils.Direction.*;
 
@@ -35,10 +36,9 @@ public abstract non-sealed class Fluid extends Element implements Moveable {
      *
      * @see Element
      */
-    public Fluid(Link link) {
+    public Fluid(@NonNull Link link) {
         super(link);
     }
-
     //todo test czy faktycznie 0 no stickness i 1 full stickness
 
     /**
@@ -48,6 +48,7 @@ public abstract non-sealed class Fluid extends Element implements Moveable {
      * @return final gravity value. It is suggested to always return same parameter.
      */
     protected abstract double getGravity();
+
 
     //todo tu jest nieprawda, bo nie musi być [0,1]
 
@@ -66,7 +67,7 @@ public abstract non-sealed class Fluid extends Element implements Moveable {
      * {@inheritDoc}
      */
     @Override
-    public Link move(Link link, Vector stepVelocity) {
+    public Link move(@NonNull Link link, @NonNull Vector stepVelocity) {
         return switch (stepVelocity.getDirection()) {
             case UP -> {
                 if (link.isInstanceOf(Air.class, UP)) {
@@ -131,7 +132,7 @@ public abstract non-sealed class Fluid extends Element implements Moveable {
      * {@inheritDoc}
      */
     @Override
-    public void updateGravity(Link link) {
+    public void updateGravity(@NonNull Link link) {
         if (link.isInstanceOf(Air.class, DOWN) || link.isInstanceOf(Particle.class, DOWN))
             this.velocity.y -= this.getGravity();
         if (link.isInstanceOf(Fluid.class, DOWN)) this.velocity.y -= this.getGravity() / 4;

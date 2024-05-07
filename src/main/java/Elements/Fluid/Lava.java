@@ -10,6 +10,7 @@ import Elements.Particles.SmokeParticle;
 import Elements.Solid.Air;
 import Elements.Solid.Stone;
 import Map.Link;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.util.Set;
@@ -17,22 +18,7 @@ import java.util.Set;
 import static Map.Utils.Direction.UP;
 
 public class Lava extends Fluid implements Refreshable {
-    private final ParticleGenerator generator = new ParticleGenerator() {
-        @Override
-        public double getParticleIntensity() {
-            return 1;
-        }
-
-        @Override
-        public double getParticleRadius() {
-            return 2;
-        }
-
-        @Override
-        public Particle getParticle() {
-            return Math.random() > 0.02 ? new FireParticle() : new SmokeParticle();
-        }
-    };
+    private final ParticleGenerator generator;
     private final static Set<Color> COLORS = Set.of(
             new Color(246, 225, 107),
             new Color(215, 93, 18),
@@ -44,6 +30,22 @@ public class Lava extends Fluid implements Refreshable {
     public Lava(Link link){
         super(link);
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
+        this.generator = new ParticleGenerator() {
+            @Override
+            public double getParticleIntensity() {
+                return 1;
+            }
+
+            @Override
+            public double getParticleRadius() {
+                return 2;
+            }
+
+            @Override
+            public Particle getParticle() {
+                return Math.random() > 0.02 ? new FireParticle() : new SmokeParticle();
+            }
+        };
     }
 
     @Override
@@ -57,7 +59,7 @@ public class Lava extends Fluid implements Refreshable {
     }
 
     @Override
-    public void refresh(Link link) {
+    public void refresh(@NonNull Link link) {
         super.refresh(link);
         if (Math.random() > 0.95)
             generator.refresh(link);
@@ -78,3 +80,4 @@ public class Lava extends Fluid implements Refreshable {
 
     }
 }
+

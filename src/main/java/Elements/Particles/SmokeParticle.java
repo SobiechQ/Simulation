@@ -21,6 +21,6 @@ public class SmokeParticle extends Particle {
     }
     public SmokeParticle() {
         super(-0.2, 0.2, 0.2, 0.4, 200, 500);
-        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
+        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
     }
 }

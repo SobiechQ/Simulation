@@ -3,6 +3,7 @@ package Elements.Fluid;
 import Elements.Api.Core.Fluid;
 import Elements.Api.Flameable;
 import Map.Link;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.util.Set;
@@ -15,10 +16,7 @@ public class Water extends Fluid {
             new Color(38, 91, 255)
     );
     public Water(){
-        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
-    }
-    public Water(Link link){
-        this();
+        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
     }
     @Override
     protected double getGravity() {
@@ -31,7 +29,7 @@ public class Water extends Fluid {
     }
 
     @Override
-    public void refresh(Link link) {
+    public void refresh(@NonNull Link link) {
         link.surroundingLink(1).forEach(l->{
             if (l.getElement() instanceof Flameable flameable)
                 flameable.extinguish(l);

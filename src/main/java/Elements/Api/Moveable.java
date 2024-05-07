@@ -3,12 +3,13 @@ package Elements.Api;
 import Map.Link;
 import Map.Utils.Direction;
 import Map.Utils.Vector;
+import lombok.NonNull;
 
 /**
- * Moveable is an interface that allows elements to move in the simulation.
+ * Movable is an interface that allows elements to move in the simulation.
  * It provides required {@link Vector velocity} for calculations.
  */
-public interface Moveable extends Refreshable {
+public interface Moveable extends Refreshable { //todo update documentation after refactoring stepVector
     /**
      * On every refresh tick Moveable elements might move in the grid zero or more times.
      * That is determined by the length of the {@link Vector velocity vector} and by its "steps".
@@ -19,19 +20,14 @@ public interface Moveable extends Refreshable {
      * @param link the link that the element is refreshed on for the current tick. It allowes to perform actions with position awareness.
      */
     @Override
-    default void refresh(Link link) {
-
+    default void refresh(@NonNull Link link) {
         this.updateGravity(link);
         var nextLink = link;
-        final var stepVelocity = new Vector(this.getVelocity());
-        stepVelocity.x += this.getVelocity().stepX;
-        stepVelocity.y += this.getVelocity().stepY;
-        this.getVelocity().stepX = 0;
-        this.getVelocity().stepY = 0;
+        final var stepVelocity = this.getVelocity().getStepVector().orElse(new Vector(0, 0));
+        stepVelocity.addX(this.getVelocity().getX());
+        stepVelocity.addY(this.getVelocity().getY());
         while (stepVelocity.step())
             nextLink = this.move(nextLink, stepVelocity);
-        this.getVelocity().stepX += stepVelocity.x;
-        this.getVelocity().stepY += stepVelocity.y;
     }
 
     /**
@@ -50,7 +46,7 @@ public interface Moveable extends Refreshable {
      * @see Moveable#refresh(Link)
      * @see Link
      */
-    void updateGravity(Link link);
+    void updateGravity(@NonNull Link link);
 
     //todo add code example of returning moved to link
 
@@ -71,5 +67,5 @@ public interface Moveable extends Refreshable {
      * @see Direction
      * @see Link#swap(Direction...)
      */
-    Link move(Link link, Vector stepVelocity);
+    Link move(@NonNull Link link,@NonNull Vector stepVelocity);
 }

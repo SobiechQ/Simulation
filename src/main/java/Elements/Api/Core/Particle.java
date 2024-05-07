@@ -4,15 +4,23 @@ import Elements.Solid.Air;
 import Elements.Api.Moveable;
 import Map.Link;
 import Map.Utils.Vector;
-
+import lombok.NonNull;
 import java.awt.*;
-
 import static Map.Utils.Direction.*;
-
+/**
+ * Particle is the base class for all particles in the simulation.
+ * It represents objects that on every refresh can move in the grid.
+ * Particle elements are elements that tend to move up and fill the space.
+ * They have predefined time to live, after which they disappear.
+ * They are lighter than {@link Solid}, {@link Loose}, {@link Fluid} elements, and cant pass through them.
+ *
+ * @see Moveable
+ * @see Elements.Particles.SmokeParticle
+ */
 public abstract non-sealed class Particle extends Element implements Moveable {
     private final Vector velocity;
-    private int timeToLive;
     private final int maxTimeToLive;
+    private int timeToLive;
 
     public Particle(double xMin, double xMax, double yMin, double yMax, int timeToLiveMin, int timeToLiveMax) {
         super();
@@ -28,29 +36,29 @@ public abstract non-sealed class Particle extends Element implements Moveable {
     }
 
 
-    //todo fadeable that stores colors so trhey dont have to be created and destroyed every time
-    private double getFade(){
-        return (double) this.timeToLive / this.maxTimeToLive;
-    }
     @Override
     public Color getColor() {
         return new Color(this.getFadedRed(),this.getFadedGreen(), this.getFadedBlue());
     }
+    //todo fadeable that stores colors so trhey dont have to be created and destroyed every time
+    private double getFadeIndex(){
+        return (double) this.timeToLive / this.maxTimeToLive;
+    }
     private int getFadedRed() {
-        final var red = super.getColor().getRed() * this.getFade();
+        final var red = super.getColor().getRed() * this.getFadeIndex();
         return red < 0 ? 0 : (int) (red > 255 ? 255 : red);
     }
     private int getFadedGreen() {
-        final var green = super.getColor().getGreen() * this.getFade();
+        final var green = super.getColor().getGreen() * this.getFadeIndex();
         return green < 0 ? 0 : (int) (green > 255 ? 255 : green);
     }
     private int getFadedBlue() {
-        final var blue = super.getColor().getBlue() * this.getFade();
+        final var blue = super.getColor().getBlue() * this.getFadeIndex();
         return blue < 0 ? 0 : (int) (blue > 255 ? 255 : blue);
     }
 
     @Override
-    public Link move(Link link, Vector stepVelocity) {
+    public Link move(@NonNull Link link, @NonNull Vector stepVelocity) {
         if (this.timeToLive <= 0) {
             link.clear();
             stepVelocity.clear();
@@ -64,7 +72,7 @@ public abstract non-sealed class Particle extends Element implements Moveable {
                     stepVelocity.y -= 1;
                     yield link.swap(UP);
                 }
-                if (link.isInstanceOf(Air.class, LEFT) && link.isInstanceOf(Air.class, RIGHT)){ //todo!!! może przecież być tylko z jednej opcja poruszania się
+                if (link.isInstanceOf(Air.class, LEFT) && link.isInstanceOf(Air.class, RIGHT)){
                     boolean left = stepVelocity.x < 0;
                     if (stepVelocity.x == 0)
                         left = Math.random() >= 0.5;
@@ -111,7 +119,7 @@ public abstract non-sealed class Particle extends Element implements Moveable {
     }
 
     @Override
-    public void updateGravity(Link link) {
+    public void updateGravity(@NonNull Link link) {
         this.timeToLive--;
     }
 }

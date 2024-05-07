@@ -21,6 +21,6 @@ public class Air extends Solid {
         this();
     }
     public Air(){
-        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
+        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
     }
 }

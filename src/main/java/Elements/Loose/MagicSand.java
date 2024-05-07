@@ -2,11 +2,12 @@ package Elements.Loose;
 
 import Elements.Api.Core.Loose;
 import Map.Link;
+import lombok.NonNull;
 
 import java.awt.*;
 
 public class MagicSand extends Loose {
-    private volatile static float hsvValue = 0;
+    private static float hsvValue = 0;
     public MagicSand(Link link){
         this();
     }
@@ -27,7 +28,7 @@ public class MagicSand extends Loose {
 
 
     @Override
-    public void refresh(Link link) {
+    public void refresh(@NonNull Link link) {
         super.refresh(link);
     }
 }

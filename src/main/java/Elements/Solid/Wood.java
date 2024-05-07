@@ -8,7 +8,8 @@ import Elements.Loose.Ash;
 import Elements.Particles.FireParticle;
 import Elements.Particles.SmokeParticle;
 import Map.Link;
-import Perlin.Noice;
+import Noice.Perlin;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.util.List;
@@ -24,7 +25,7 @@ public class Wood extends Solid implements Flameable {
             new Color(203, 130, 0),
             new Color(250, 102, 57)
     );
-    private boolean isOnFire = false;
+    private boolean isOnFire;
     private int timeToLive = (int) (350 + Math.random() * 100);
     private final Color initialColor;
     private final ParticleGenerator particleGenerator = new ParticleGenerator() {
@@ -50,18 +51,19 @@ public class Wood extends Solid implements Flameable {
             new Color(31, 26, 15)
     );
 
-    public final static Noice noice1 = new Noice(8, 4, -2, 4);
-    public final static Noice noice2 = new Noice(8, 4, -1, 4);
-    public final static Noice noice3 = new Noice(8, 4, -1, 4);
+    public final static Perlin PERLIN_1 = new Perlin(8, 4, -2, 4);
+    public final static Perlin PERLIN_2 = new Perlin(8, 4, -1, 4);
+    public final static Perlin PERLIN_3 = new Perlin(8, 4, -1, 4);
     public Wood(Link link) {
-        this();
-        final var color1 = this.blend(COLORS.get(0), COLORS.get(1), noice1.getValue(link.getXReal(), link.getYReal()));
-        final var color2 = this.blend(COLORS.get(1), COLORS.get(2), noice2.getValue(link.getXReal(), link.getYReal())); //todo getter by link
-        final var color3 = this.blend(color1, color2, noice3.getValue(link.getXReal(), link.getYReal()));
+        final var color1 = this.blend(COLORS.get(0), COLORS.get(1), PERLIN_1.getValue(link.getXReal(), link.getYReal()));
+        final var color2 = this.blend(COLORS.get(1), COLORS.get(2), PERLIN_2.getValue(link.getXReal(), link.getYReal())); //todo getter by link
+        final var color3 = this.blend(color1, color2, PERLIN_3.getValue(link.getXReal(), link.getYReal()));
         this.setColor(color3);
+        this.initialColor = color3;
 
-        this.timeToLive -= (int) (250 * noice2.getValue(link.getXReal(), link.getYReal()));
-        this.timeToLive += (int) (50 * noice1.getValue(link.getXReal(), link.getYReal()));
+        this.timeToLive -= (int) (250 * PERLIN_2.getValue(link.getXReal(), link.getYReal()));
+        this.timeToLive += (int) (50 * PERLIN_1.getValue(link.getXReal(), link.getYReal()));
+        this.isOnFire = false;
     }
     private Color blend(Color c1, Color c2, double ratio) {
         final double ir = 1.0 - ratio;
@@ -70,14 +72,6 @@ public class Wood extends Solid implements Flameable {
                 (int) (c1.getGreen() * ratio + c2.getGreen() * ir),
                 (int) (c1.getBlue() * ratio + c2.getBlue() * ir)
         );
-    }
-    private int perlinToColor(double x){
-        return x*255 > 255 ? 255 : x*255 < 0 ? 0 : (int) (x*255);
-    }
-    public Wood(){
-        this.initialColor = COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get();
-        this.setColor(this.initialColor);
-        this.isOnFire = false;
     }
 
     @Override
@@ -104,14 +98,14 @@ public class Wood extends Solid implements Flameable {
     }
 
     @Override
-    public void refresh(Link link) {
+    public void refresh(@NonNull Link link) {
         if (!this.isOnFire())
             return;
         if (Math.random() > 0.98)
             this.setColor(ON_FIRE_COLORS.stream().skip((int) (ON_FIRE_COLORS.size() * Math.random())).findFirst().get());
         if (Math.random() > 0.99)
             link.surroundingLink(1).forEach(l->{
-                if (Math.random() > Wood.noice1.getValue(l) && l.getElement() instanceof Flameable flameable)
+                if (Math.random() > Wood.PERLIN_1.getValue(l) && l.getElement() instanceof Flameable flameable)
                     flameable.setOnFire(true);
             });
         this.particleGenerator.refresh(link);

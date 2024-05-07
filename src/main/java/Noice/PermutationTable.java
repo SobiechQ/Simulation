@@ -1,4 +1,4 @@
-package Perlin;
+package Noice;
 
 import Map.Utils.Vector;
 

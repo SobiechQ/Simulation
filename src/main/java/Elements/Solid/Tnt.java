@@ -6,6 +6,7 @@ import Elements.Api.Core.Solid;
 import Elements.Api.Moveable;
 import Elements.Particles.ExplotionParticle;
 import Map.Link;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Tnt extends Solid implements Refreshable {
     }
     private int refreshCount = 0;
     @Override
-    public void refresh(Link link) {
+    public void refresh(@NonNull Link link) {
         refreshCount++;
         if (this.refreshCount == 100){
             this.refreshCount = 0;

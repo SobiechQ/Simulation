@@ -1,76 +1,51 @@
 package Map.Utils;
 
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
+@EqualsAndHashCode
 public class Vector {
 
+    @Getter
+    @Setter
     public double x;
+    @Getter
+    @Setter
     public double y;
-    public double stepX;
-    public double stepY;
+    @Nullable
+    private final Vector stepVector;
+
+    /**
+     * @return Vector with x,y values random. Both values are in range of <-1, 1>
+     */
+    public static Vector getRandomVector() {
+        return new Vector(-1 + Math.random() * 2, -1 + Math.random() * 2);
+    }
 
     public Vector() {
         this(0, 0);
     }
 
-    public Vector(Vector vector) { //todo cloneable?
-        this(vector.x, vector.y, vector.stepX, vector.stepY);
-    }
-
     public Vector(double x, double y) {
-        this(x, y, 0, 0);
-    }
-
-    public Vector(double x, double y, double stepX, double stepY) {
-        this.x = x;
-        this.y = y;
-        this.stepX = stepX;
-        this.stepY = stepY;
+        this(x, y, new Vector(0, 0, null));
     }
     public double dotProduct(Vector vector){
         return this.x * vector.x + this.y * vector.y;
     }
 
-    public double getX() {
-        return x;
-    }
-
-    public void clear() {
-        this.x = 0;
-        this.y = 0;
-        this.stepX = 0;
-        this.stepY = 0;
-    }
-
-    public void setX(double x) {
+    private Vector(double x, double y, @Nullable Vector stepVector) {
         this.x = x;
-    }
-
-    public void addX(double x) {
-        this.x += x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void addY(double y) {
-        this.y += y;
-    }
-
-    public void addVector(double x, double y) {
-        this.addX(x);
-        this.addY(y);
-    }
-
-    public void setY(double y) {
         this.y = y;
+        this.stepVector = stepVector;
     }
 
     public Direction getDirection() {
         if (Math.abs(this.x) == 0 && Math.abs(this.y) == 0)
             return Direction.NONE;
-        double degrees = this.getInDegrees();
+        double degrees = this.getDegrees();
         if (degrees >= -45 && degrees <= 45)
             return Direction.UP;
         if (degrees > 45 && degrees < 135)
@@ -80,62 +55,45 @@ public class Vector {
         return Direction.LEFT;
     }
 
-    public double getInDegrees() {
+    public double getDegrees() {
         return Math.toDegrees(Math.atan2(this.x, this.y));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vector vector = (Vector) o;
-        return Double.compare(x, vector.x) == 0 && Double.compare(y, vector.y) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("[%s, %s]", this.x, this.y);
-    }
-
-    public double getLength() {
-        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    public void addVector(double x, double y) {
+        this.addX(x);
+        this.addY(y);
     }
 
     public boolean step() {
         return Math.abs(this.x) >= 1 || Math.abs(this.y) >= 1;
     }
 
-    public double getStepX() {
-        return stepX;
+    public double getLength() {
+        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
 
-    public void setStepX(double stepX) {
-        this.stepX = stepX;
+
+    public Optional<Vector> getStepVector() {
+        return Optional.ofNullable(this.stepVector);
     }
 
-    public double getStepY() {
-        return stepY;
+    public void clear() {
+        this.x = 0;
+        this.y = 0;
+        this.getStepVector().ifPresent(Vector::clear);
     }
 
-    public void setStepY(double stepY) {
-        this.stepY = stepY;
+    public void addX(double x) {
+        this.x += x;
     }
 
-    /**
-     * @return Vector with x,y values random. Both values are in range of <-1, 1>
-     */
-    public static Vector getRandomVector() {
-        return new Vector(-1 + Math.random() * 2, -1 + Math.random() * 2);
+    public void addY(double y) {
+        this.y += y;
     }
 
-    public void multiplyBoth(double value) {
-        this.x *= value;
-        this.y *= value;
+    @Override
+    public String toString() {
+        return String.format("[%s, %s]", this.x, this.y);
     }
 
 }

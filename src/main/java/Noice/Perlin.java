@@ -1,35 +1,36 @@
-package Perlin;
+package Noice;
 
 import Map.Link;
 import Map.Utils.Vector;
+import lombok.NonNull;
 
-public class Noice {
+import javax.annotation.Nullable;
+
+public class Perlin {
 
     private final PermutationTable permutationTable;
     private final int resolution;
     private final double mapingIndex;
     private final double delta;
-    private final Noice octave;
     private final double amplitute;
-    public Noice(int resolution, double mapingIndex, double delta, int octaves){
+    @Nullable
+    private final Perlin octave;
+
+    public Perlin(int resolution, double mapingIndex, double delta, int octaves){
         this(resolution, mapingIndex, delta, octaves, 1);
     }
-
-    private Noice(int resolution, double mapingIndex, double delta, int octaves, double amplitude) {
+    private Perlin(int resolution, double mapingIndex, double delta, int octaves, double amplitude) {
         this.delta = delta;
         this.mapingIndex = mapingIndex;
         this.resolution = resolution;
         this.permutationTable = new PermutationTable();
         this.amplitute = amplitude;
 
-        if (octaves > 1) this.octave = new Noice(resolution/2, mapingIndex, delta, octaves - 1, amplitude / 2);
+        if (octaves > 1) this.octave = new Perlin(resolution/2, mapingIndex, delta, octaves - 1, amplitude / 2);
         else this.octave = null;
     }
 
-    private Noice() {
-        this(16, 0.01, 0, 1, 1);
-    }
-    public double getValue(Link link) {
+    public double getValue(@NonNull Link link) {
         return this.getValue(link.getXReal(), link.getYReal());
     }
 

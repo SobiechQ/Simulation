@@ -2,6 +2,7 @@ package Elements.Loose;
 
 import Elements.Api.Core.Loose;
 import Map.Link;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class Sand extends Loose {
         this();
     }
     public Sand(){
-        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
+        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
     }
 
 
@@ -38,7 +39,7 @@ public class Sand extends Loose {
 
 
     @Override
-    public void refresh(Link link) {
+    public void refresh(@NonNull Link link) {
         super.refresh(link);
     }
 }

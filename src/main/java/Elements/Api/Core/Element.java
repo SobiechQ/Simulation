@@ -1,6 +1,7 @@
 package Elements.Api.Core;
 
 import Map.Link;
+import lombok.NonNull;
 
 import java.awt.Color;
 
@@ -39,7 +40,7 @@ public abstract sealed class Element permits Loose, Fluid, Solid, Particle {
      * @param link the link that the element is created on
      * @see Map.Link
      */
-    public Element(Link link) {
+    public Element(@NonNull Link link) {
 
     }
 
@@ -57,7 +58,7 @@ public abstract sealed class Element permits Loose, Fluid, Solid, Particle {
      *
      * @param color the color to set
      */
-    public void setColor(Color color) {
+    public void setColor(@NonNull Color color) {
         this.color = color;
     }
 

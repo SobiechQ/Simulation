@@ -13,7 +13,7 @@ public class Stone extends Solid {
             new Color(128, 128, 128),
             new Color(116, 116, 116));
     public Stone(){
-        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().get());
+        this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
     }
     public Stone(Link link){
         this();
