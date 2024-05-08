@@ -25,7 +25,7 @@ public class Water extends Fluid {
 
     @Override
     protected double getStickness() {
-        return 2;
+        return 1;
     }
 
     @Override

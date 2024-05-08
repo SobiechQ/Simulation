@@ -32,9 +32,9 @@ public class GridManager {
                 this.randomOrderChunks.add(newChunk);
             }
         }
-        this.chunkThreads = new ScheduledThreadPoolExecutor(8);
+        this.chunkThreads = new ScheduledThreadPoolExecutor(16);
         this.chunkStream().forEach(c-> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
-//        randomOrderLinks.forEach(l->l.set(new Water()));
+        randomOrderLinks.forEach(l->l.setElement(new Water()));
     }
 
     public Optional<Link> getLink(int x, int y) {

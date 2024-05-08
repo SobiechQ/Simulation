@@ -5,6 +5,8 @@ import Elements.Api.Core.Element;
 import Map.Utils.Direction;
 
 import java.util.*;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Stream;
 
 public class Link {
@@ -13,6 +15,7 @@ public class Link {
     private final Chunk chunk;
     private Element element;
     private final double randomOrderSeed;
+    private final ReadWriteLock lock = new ReentrantReadWriteLock(true);
 
     public Link(int xLocal, int yLocal, Chunk chunk) {
         this(xLocal, yLocal, chunk, new Air());
@@ -27,7 +30,7 @@ public class Link {
     }
 
     public double getRandomOrderSeed() {
-        return randomOrderSeed;
+        return this.randomOrderSeed;
     }
 
     public Optional<Link> get(Direction... directions) {
@@ -92,27 +95,37 @@ public class Link {
     }
 
     public Element getElement() {
-        return element;
+        lock.readLock().lock();
+        try {
+            return this.element;
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     public void clear() {
-        this.set(new Air());
+        this.setElement(new Air());
     }
 
-    public void set(Element element) {
-        if (element instanceof Air){
-            this.element = new Air();
-            return;
+    public void setElement(Element element) {
+        lock.writeLock().lock();
+        try {
+            if (element instanceof Air) {
+                this.element = new Air();
+                return;
+            }
+            this.element = element;
+        } finally {
+            lock.writeLock().unlock();
         }
-        this.element = element;
     }
 
     /**
      * @return true if modified link on given directions
      */
-    public boolean set(Element element, Direction... directions) {
+    public boolean setElement(Element element, Direction... directions) {
         var get = this.get(directions);
-        get.ifPresent(link -> link.set(element));
+        get.ifPresent(link -> link.setElement(element));
         return get.isPresent();
     }
 
@@ -126,9 +139,9 @@ public class Link {
         if (linkPointer.get().isInstanceOf(Air.class)) //todo for removal
             this.clear();
         else
-            this.set(linkPointer.get().getElement());
+            this.setElement(linkPointer.get().getElement());
 
-        linkPointer.get().set(moveElement);
+        linkPointer.get().setElement(moveElement);
 
 
 

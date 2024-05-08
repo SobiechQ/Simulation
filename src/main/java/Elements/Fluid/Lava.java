@@ -69,11 +69,11 @@ public class Lava extends Fluid implements Refreshable {
                     if (l.getElement() instanceof Flameable flameable)
                         flameable.setOnFire(true);
                     if (l.getElement() instanceof Water) {
-                        l.set(new Stone(l));
-                        link.set(new Stone(link));
+                        l.setElement(new Stone(l));
+                        link.setElement(new Stone(link));
                         l.get(UP).ifPresent(up->{
                             if (up.getElement() instanceof Air)
-                                up.set(new SmokeParticle()); //todo steam
+                                up.setElement(new SmokeParticle()); //todo steam
                         });
                     }
                 });

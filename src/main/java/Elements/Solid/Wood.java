@@ -111,7 +111,7 @@ public class Wood extends Solid implements Flameable {
         this.particleGenerator.refresh(link);
         if (this.timeToLive-- <= 0)
             if (Math.random()>0.9)
-                link.set(new Ash(link));
+                link.setElement(new Ash(link));
             else
                 link.clear();
 

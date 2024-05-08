@@ -31,7 +31,7 @@ public interface ParticleGenerator extends Refreshable {
                 .filter(l -> l.distance(link) <= this.getParticleRadius())
                 .forEach(l -> {
                     if (Math.random() <= this.getParticleIntensity() && l.getElement() instanceof Air)
-                        l.set(this.getParticle());
+                        l.setElement(this.getParticle());
                 });
 
     }

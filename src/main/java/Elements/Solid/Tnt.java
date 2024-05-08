@@ -53,7 +53,7 @@ public class Tnt extends Solid implements Refreshable {
         link.stream().filter(l -> link.distance(l) < (double) calculatedExposionRadius /4).forEach(l -> {
             l.clear();
             if (Math.random() > 0.7)
-                l.set(new ExplotionParticle(l));
+                l.setElement(new ExplotionParticle(l));
         });
         link.stream()
                 .filter(l -> link.distance(l) < calculatedExposionRadius)

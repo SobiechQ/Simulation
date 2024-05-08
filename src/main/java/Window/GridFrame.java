@@ -2,7 +2,6 @@ package Window;
 
 import Elements.Solid.Air;
 import Elements.Api.Core.Element;
-import Elements.Solid.Wood;
 import Map.Chunk;
 import Map.GridManager;
 import Map.Link;
@@ -13,11 +12,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.function.ToIntFunction;
 
 public class GridFrame extends JFrame {
     private final int gridChunkWidth = 20;
@@ -89,7 +86,7 @@ public class GridFrame extends JFrame {
                         .filter(link -> link.distance(x, y) < GridFrame.this.menu.getCommandSize())
                         .forEach(l -> {
                             try {
-                                l.set(constructor.getParameterCount() == 0 ? constructor.newInstance() : constructor.newInstance(l));
+                                l.setElement(constructor.getParameterCount() == 0 ? constructor.newInstance() : constructor.newInstance(l));
                             } catch (InvocationTargetException | InstantiationException | IllegalAccessException _) {
                                 throw new RuntimeException();
                             }
@@ -122,7 +119,7 @@ public class GridFrame extends JFrame {
                             .stream()
                             .filter(e -> e.getValue().size() != 1)
                             .peek(System.out::println)
-                            .forEach(e -> e.getValue().forEach(l -> l.set(new Air())));
+                            .forEach(e -> e.getValue().forEach(l -> l.setElement(new Air())));
                 }, 1000, 1000, TimeUnit.MILLISECONDS
         );
     }
