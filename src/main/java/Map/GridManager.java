@@ -1,7 +1,6 @@
 package Map;
 
 
-
 import Elements.Fluid.Water;
 import Elements.Loose.Sand;
 import Elements.Solid.PerlinTest;
@@ -20,21 +19,21 @@ public class GridManager {
 
     private final ScheduledExecutorService chunkThreads;
 
-    public GridManager(int xChunkCount, int yChunkCount) {
-        this.chunks = new Chunk[yChunkCount][xChunkCount];
+    public GridManager(int chunksWidth, int chunksHeight) {
+        this.chunks = new Chunk[chunksHeight][chunksWidth];
         this.randomOrderLinks = new TreeSet<>(Comparator.comparingDouble((Link o) -> o.getRandomOrderSeed()));
-        this.randomOrderChunks = new TreeSet<>(Comparator.comparingDouble((ToDoubleFunction<Chunk>) value -> value.getLinkLocal(0,0).get().getRandomOrderSeed()));
-        for (int y = 0; y < yChunkCount; y++) {
-            for (int x = 0; x < xChunkCount; x++) {
-                final var newChunk = new Chunk(this, x, y);;
+        this.randomOrderChunks = new TreeSet<>(Comparator.comparingDouble((ToDoubleFunction<Chunk>) value -> value.getLinkLocal(0, 0).get().getRandomOrderSeed()));
+        for (int y = 0; y < chunksHeight; y++) {
+            for (int x = 0; x < chunksWidth; x++) {
+                final var newChunk = new Chunk(this, x, y);
                 this.chunks[y][x] = newChunk;
                 newChunk.streamLocal().forEach(this.randomOrderLinks::add);
                 this.randomOrderChunks.add(newChunk);
             }
         }
-        this.chunkThreads = new ScheduledThreadPoolExecutor(16);
-        this.chunkStream().forEach(c-> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
-        randomOrderLinks.forEach(l->l.setElement(new Water()));
+        this.chunkThreads = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+        this.chunkStream().forEach(c -> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
+//        randomOrderLinks.forEach(l->l.setElement(new Water()));
     }
 
     public Optional<Link> getLink(int x, int y) {
@@ -46,6 +45,7 @@ public class GridManager {
             return Optional.empty();
         return this.chunks[chunkY][chunkX].getLinkLocal(localX, localY);
     }
+
     public Optional<Chunk> getChunk(int chunkX, int chunkY) {
         if (chunkY < 0 || chunkY >= this.chunks.length || chunkX < 0 || chunkX >= this.chunks[chunkY].length)
             return Optional.empty();
@@ -55,13 +55,16 @@ public class GridManager {
     public Stream<Link> linkStream() {
         return this.randomOrderLinks.stream();
     }
-    public Stream<Chunk> chunkStream(){
+
+    public Stream<Chunk> chunkStream() {
         return this.randomOrderChunks.stream();
     }
-    public int getXReal(Link link){
+
+    public int getXReal(Link link) {
         return link.getChunk().getChunkX() * Chunk.CHUNK_SIZE + link.getXLocal();
     }
-    public int getYReal(Link link){
+
+    public int getYReal(Link link) {
         return link.getChunk().getChunkY() * Chunk.CHUNK_SIZE + link.getYLocal();
     }
 

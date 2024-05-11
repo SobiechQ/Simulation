@@ -76,10 +76,12 @@ public class Chunk implements Runnable{
     @Override
     public void run() {
         this.isWorking = true;
-//        try {
-//            Thread.sleep((long) (50+Math.random()*300));
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
+//        if (this.streamLocal().anyMatch(l-> !(l.getElement() instanceof Air))) {
+//            try {
+//                Thread.sleep((long) (50 + Math.random() * 300));
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
 //        }
         if (this.chunkX == 0 && this.chunkY == 0) {
             final long endTime = System.nanoTime();

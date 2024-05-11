@@ -75,8 +75,8 @@ public class Wood extends Solid implements Flameable {
     }
 
     @Override
-    public void setOnFire(boolean isOnFire) {
-        this.isOnFire = isOnFire;
+    public void setOnFire() {
+        this.isOnFire = true;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class Wood extends Solid implements Flameable {
         if (Math.random() > 0.99)
             link.surroundingLink(1).forEach(l->{
                 if (Math.random() > Wood.PERLIN_1.getValue(l) && l.getElement() instanceof Flameable flameable)
-                    flameable.setOnFire(true);
+                    flameable.setOnFire();
             });
         this.particleGenerator.refresh(link);
         if (this.timeToLive-- <= 0)

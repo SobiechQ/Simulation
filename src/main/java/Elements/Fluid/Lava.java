@@ -33,7 +33,7 @@ public class Lava extends Fluid implements Refreshable {
         this.generator = new ParticleGenerator() {
             @Override
             public double getParticleIntensity() {
-                return 1;
+                return 0.03;
             }
 
             @Override
@@ -61,13 +61,11 @@ public class Lava extends Fluid implements Refreshable {
     @Override
     public void refresh(@NonNull Link link) {
         super.refresh(link);
-        if (Math.random() > 0.95)
-            generator.refresh(link);
         this.generator.refresh(link);
         link.surroundingLink(1)
                 .forEach(l->{
                     if (l.getElement() instanceof Flameable flameable)
-                        flameable.setOnFire(true);
+                        flameable.setOnFire();
                     if (l.getElement() instanceof Water) {
                         l.setElement(new Stone(l));
                         link.setElement(new Stone(link));

@@ -5,6 +5,7 @@ import Elements.Api.Moveable;
 import Map.Link;
 import Map.Utils.Vector;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 
 import static Map.Utils.Direction.*;
 

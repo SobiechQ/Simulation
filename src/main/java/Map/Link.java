@@ -3,8 +3,10 @@ package Map;
 import Elements.Solid.Air;
 import Elements.Api.Core.Element;
 import Map.Utils.Direction;
+import lombok.NonNull;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Stream;
@@ -56,6 +58,23 @@ public class Link {
             case NONE -> Optional.of(this);
         };
     }
+    public void synchronizedWriteOperation(@NonNull Runnable runnable) {
+        this.lock.writeLock().lock();
+        try {
+            runnable.run();
+        } finally {
+            this.lock.writeLock().unlock();
+        }
+    }
+    public <T> T synchronizedWriteCallable(@NonNull Callable<T> callable) throws Exception {
+        this.lock.writeLock().lock();
+        try {
+            return callable.call();
+        } finally {
+            this.lock.writeLock().unlock();
+        }
+
+    }
 
     public Set<Link> surroundingLink(int squareSize) {
         if (squareSize < 0)
@@ -70,6 +89,7 @@ public class Link {
         }
         return links;
     }
+
     public Set<Link> elementClump() {
         final var clazz = this.element.getClass();
         final Set<Link> links = new HashSet<>();
@@ -78,15 +98,15 @@ public class Link {
         do {
             links.addAll(toAdd);
             toAdd.clear();
-            links.forEach(l->{
-                l.surroundingLink(1)
-                        .stream()
-                        .filter(l2->l2.isInstanceOf(clazz) && !links.contains(l2))
-                        .forEach(toAdd::add);
-            });
+            links.forEach(l -> l.surroundingLink(1)
+                    .stream()
+                    .filter(l2 -> l2.isInstanceOf(clazz) && !links.contains(l2))
+                    .forEach(toAdd::add)
+            );
         } while (!toAdd.isEmpty());
         return links;
     }
+
 
     public boolean isInstanceOf(Class<?> clazz, Direction... direction) {
         return this.get(direction)
@@ -134,16 +154,10 @@ public class Link {
 
         if (linkPointer.isEmpty())
             return this;
+
         final var moveElement = this.getElement();
-
-        if (linkPointer.get().isInstanceOf(Air.class)) //todo for removal
-            this.clear();
-        else
-            this.setElement(linkPointer.get().getElement());
-
+        this.setElement(linkPointer.get().getElement());
         linkPointer.get().setElement(moveElement);
-
-
 
 
         return linkPointer.get();

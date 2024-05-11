@@ -10,3 +10,6 @@ magic sand może używać perlina
 
 this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
 
+zmien xReal na xAbsolute
+
+clear na linku z airem ma znowu dawać tego samego aira bez zmian

@@ -10,11 +10,15 @@ import java.awt.*;
 
 public class PerlinTest extends Solid {
     private final static Perlin PERLIN = new Perlin(16, 1, 1, 4);
+
     public PerlinTest(Link link) {
-        link.stream().forEach(l->{
-            if (l.getElement() instanceof Lava || l.getElement() instanceof Water)
-                l.clear();
+        link.stream().forEach(l -> {
+            l.synchronizedWriteOperation(() -> {
+                if (l.getElement() instanceof Lava || l.getElement() instanceof Water)
+                    l.clear();
+            });
+
         });
-        this.setColor(new Color((int) (255* PERLIN.getValue(link)), 0, 0));
+        this.setColor(new Color((int) (255 * PERLIN.getValue(link)), 0, 0));
     }
 }

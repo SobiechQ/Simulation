@@ -11,7 +11,7 @@ import java.awt.Color;
  * They are not aware of their position in the grid, nor about their neighbors, chunks or any other elements.
  * They have no behavior, thus only permited subtypes of Element can be instantiated.
  * To perform action with position awareness, use {@link Map.Link} and its methods.
- * To instantiate a static element without any behaviour extend {@link Solid}
+ * To instantiate an element without any predefined behaviour extend {@link Solid}
  *
  * @see Map.Link
  * @see Solid
@@ -22,11 +22,12 @@ import java.awt.Color;
 
 public abstract sealed class Element permits Loose, Fluid, Solid, Particle {
     private final static Color DEFAULT_COLOR = Color.MAGENTA;
-    private Color color = Element.DEFAULT_COLOR;
+    protected Color color = Element.DEFAULT_COLOR;
 
     /**
      * Position agnostic constructor. Used for elements that do not require any position awareness on creation.
-     * For elements that require position awareness use {@link Element#Element(Link)}
+     * This constructor is invoked by reflection only if the element subclass does not have {@link Element#Element(Link) position aware constructor}.
+     * At least one public constructor (position agnostic or aware) is required for each element subclass.
      */
     public Element() {
 
@@ -35,7 +36,8 @@ public abstract sealed class Element permits Loose, Fluid, Solid, Particle {
     /**
      * Position aware constructor. Used for elements that require position awareness on creation.
      * This is default constructor invoked by reflection when creating elements from the map with mouse click.
-     * If this constructor is not present in the element subclass reflection will create element with {@link Element#Element() position agnostic constructor}.
+     * If this constructor is not present in the element subclass reflection will create element with {@link Element#Element() position agnostic constructor} instead.
+     * At least one public constructor (position agnostic or aware) is required for each element subclass.
      *
      * @param link the link that the element is created on
      * @see Map.Link

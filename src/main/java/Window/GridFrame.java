@@ -35,10 +35,10 @@ public class GridFrame extends JFrame {
 //                    .forEach(chunk -> {
 //                        g.setColor(new Color(255, 0, 255, 204));
 //                        g.drawRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
-////                        if (chunk.isWorking){
-////                            g.setColor(new Color(255, 0, 255, 51));
-////                            g.fillRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
-////                        }
+//                        if (chunk.isWorking){
+//                            g.setColor(new Color(255, 0, 255, 51));
+//                            g.fillRect(chunk.getChunkX() * Chunk.CHUNK_SIZE * elementSize, chunk.getChunkY() * Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize, Chunk.CHUNK_SIZE * elementSize);
+//                        }
 //                    });
 //            for (int i = 0; i < Wood.noice.vectors.length; i++) {
 //                for (int j = 0; j < Wood.noice.vectors[i].length; j++) {
@@ -107,6 +107,7 @@ public class GridFrame extends JFrame {
 
             }
         }).start();
+
         new ScheduledThreadPoolExecutor(1).scheduleAtFixedRate(() -> {
                     var count = new HashMap<Element, Set<Link>>();
                     GridFrame.this.gridManager.linkStream()

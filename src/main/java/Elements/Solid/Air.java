@@ -6,7 +6,12 @@ import Map.Link;
 
 import java.awt.*;
 import java.util.Set;
-
+/**
+ * Air is an element that is used to fill empty spaces in the simulation.
+ * It is the default element set for every {@link Link link} on the map.
+ * Clearing link from its element will set it to air.
+ * @see Link#clear()
+ */
 public class Air extends Solid {
 
     private final static Set<Color> COLORS = Set.of(
