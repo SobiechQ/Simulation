@@ -17,6 +17,11 @@ import java.util.Set;
 
 import static Map.Utils.Direction.UP;
 
+/**
+ * Lava element. Generates fire and smoke particles.
+ * Sets flammable elements on fire.
+ * Creates stone when in contact with water.
+ */
 public class Lava extends Fluid implements Refreshable {
     private final ParticleGenerator generator;
     private final static Set<Color> COLORS = Set.of(
@@ -58,6 +63,10 @@ public class Lava extends Fluid implements Refreshable {
         return 1;
     }
 
+    /**
+     * Sets flammable elements on fire, and creates stone when in contact with water. Refreshes generator.
+     * {@inheritDoc}
+     */
     @Override
     public void refresh(@NonNull Link link) {
         super.refresh(link);

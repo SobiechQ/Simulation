@@ -24,7 +24,7 @@ public class LinkTest {
     }
 
     @Test
-    public void givenLinkAirElement_whenClearing_thenThisElementSetToNewAir() {
+    public void givenLinkAirElement_whenClearing_thenThisElementSetToNewAir() { //todo to chyba zle
         //--given--
         final var link = new Link(0, 0, new Chunk(new GridManager(1, 1), 0, 0), new Air());
         final var oldAir = link.getElement();

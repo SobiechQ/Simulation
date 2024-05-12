@@ -5,7 +5,10 @@ import Map.Link;
 
 import java.awt.*;
 import java.util.Set;
-
+/**
+ * Stone element.
+ * @see Solid
+ */
 public class Stone extends Solid {
     private final static Set<Color> COLORS = Set.of(
             new Color(104,104,104),

@@ -8,6 +8,12 @@ import lombok.NonNull;
 import java.awt.*;
 import java.util.Set;
 
+/**
+ * FireParticle element. It is generated when {@link Elements.Solid.Wood} is on fire.
+ * It has a chance to set surrounding elements on fire.
+ * @see Particle
+ * @see Flameable
+ */
 public class FireParticle extends Particle {
     private final static Set<Color> COLORS = Set.of(
             new Color(245, 149, 71),
@@ -26,6 +32,10 @@ public class FireParticle extends Particle {
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
     }
 
+    /**
+     * Sets surrounding elements on fire with a 1% chance.
+     * @param link link that the element is on.
+     */
     @Override
     public void refresh(@NonNull Link link) {
         link.surroundingLink(1)

@@ -8,6 +8,9 @@ import lombok.NonNull;
 import java.awt.*;
 import java.util.Set;
 
+/**
+ * Water element. Extinguishes fire particles.
+ */
 public class Water extends Fluid {
     private final static Set<Color> COLORS = Set.of(
             new Color(59, 111, 249),
@@ -28,12 +31,17 @@ public class Water extends Fluid {
         return 1;
     }
 
+    /**
+     * Extinguishes surrounding elements.
+     * @param link link that the element is on
+     */
     @Override
     public void refresh(@NonNull Link link) {
+        super.refresh(link);
         link.surroundingLink(1).forEach(l->{
             if (l.getElement() instanceof Flameable flameable)
                 flameable.extinguish(l);
         });
-        super.refresh(link);
+
     }
 }

@@ -15,19 +15,11 @@ import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Wood element. It can be set on fire and will generate {@link FireParticle} and {@link SmokeParticle} elements.
+ * Its initial color is determined by {@link Perlin Perlin noise algorithm}.
+ */
 public class Wood extends Solid implements Flameable {
-    private final static Set<Color> ON_FIRE_COLORS = Set.of(
-            new Color(245, 149, 71),
-            new Color(253, 235, 179),
-            new Color(220, 159, 75),
-            new Color(255, 127, 92),
-            new Color(239, 189, 88),
-            new Color(203, 130, 0),
-            new Color(250, 102, 57)
-    );
-    private boolean isOnFire;
-    private int timeToLive = (int) (350 + Math.random() * 100);
-    private final Color initialColor;
     private final ParticleGenerator particleGenerator = new ParticleGenerator() {
         @Override
         public double getParticleIntensity() {
@@ -44,20 +36,32 @@ public class Wood extends Solid implements Flameable {
             return Math.random() > 0.05 ? new FireParticle() : new SmokeParticle();
         }
     };
-
+    private final static Set<Color> ON_FIRE_COLORS = Set.of(
+            new Color(245, 149, 71),
+            new Color(253, 235, 179),
+            new Color(220, 159, 75),
+            new Color(255, 127, 92),
+            new Color(239, 189, 88),
+            new Color(203, 130, 0),
+            new Color(250, 102, 57)
+    );
     private final static List<Color> COLORS = List.of(
             new Color(108, 87, 54),
             new Color(187, 146, 90),
             new Color(31, 26, 15)
     );
-
     public final static Perlin PERLIN_1 = new Perlin(8, 4, -2, 4);
     public final static Perlin PERLIN_2 = new Perlin(8, 4, -1, 4);
     public final static Perlin PERLIN_3 = new Perlin(8, 4, -1, 4);
+    private final Color initialColor;
+    private int timeToLive = (int) (350 + Math.random() * 100);
+    private boolean isOnFire;
+
+
     public Wood(Link link) {
-        final var color1 = this.blend(COLORS.get(0), COLORS.get(1), PERLIN_1.getValue(link.getXReal(), link.getYReal()));
-        final var color2 = this.blend(COLORS.get(1), COLORS.get(2), PERLIN_2.getValue(link.getXReal(), link.getYReal())); //todo getter by link
-        final var color3 = this.blend(color1, color2, PERLIN_3.getValue(link.getXReal(), link.getYReal()));
+        final var color1 = this.colorBlend(COLORS.get(0), COLORS.get(1), PERLIN_1.getValue(link.getXReal(), link.getYReal()));
+        final var color2 = this.colorBlend(COLORS.get(1), COLORS.get(2), PERLIN_2.getValue(link.getXReal(), link.getYReal()));
+        final var color3 = this.colorBlend(color1, color2, PERLIN_3.getValue(link.getXReal(), link.getYReal()));
         this.setColor(color3);
         this.initialColor = color3;
 
@@ -65,7 +69,7 @@ public class Wood extends Solid implements Flameable {
         this.timeToLive += (int) (50 * PERLIN_1.getValue(link.getXReal(), link.getYReal()));
         this.isOnFire = false;
     }
-    private Color blend(Color c1, Color c2, double ratio) {
+    private Color colorBlend(Color c1, Color c2, double ratio) {
         final double ir = 1.0 - ratio;
         return new Color(
                 (int) (c1.getRed() * ratio + c2.getRed() * ir),
@@ -84,6 +88,10 @@ public class Wood extends Solid implements Flameable {
         return this.isOnFire;
     }
 
+    /**
+     * Extinguishes this element and its neighbors.
+     * @param link the link of the element to be extinguished.
+     */
     @Override
     public void extinguish(Link link) {
         if (!this.isOnFire)
@@ -97,6 +105,10 @@ public class Wood extends Solid implements Flameable {
         this.setColor(this.initialColor);
     }
 
+    /**
+     * If the element is on fire, it has a chance to change its color, set surrounding elements on fire and generate {@link Particle particles}.
+     * @param link the link that the element is on.
+     */
     @Override
     public void refresh(@NonNull Link link) {
         if (!this.isOnFire())

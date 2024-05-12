@@ -7,6 +7,10 @@ import lombok.NonNull;
 import java.awt.*;
 import java.util.Set;
 
+/**
+ * Sand element.
+ * @see Loose
+ */
 public class Sand extends Loose {
     private final static Set<Color> COLORS = Set.of(
             new Color(212, 203, 147),

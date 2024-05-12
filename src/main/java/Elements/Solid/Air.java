@@ -1,9 +1,6 @@
 package Elements.Solid;
-
-import Elements.Api.Core.Element;
 import Elements.Api.Core.Solid;
 import Map.Link;
-
 import java.awt.*;
 import java.util.Set;
 /**

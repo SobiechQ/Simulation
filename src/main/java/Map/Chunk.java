@@ -6,7 +6,7 @@ import Elements.Api.Refreshable;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class Chunk implements Runnable{
+public class Chunk implements Runnable {
     public final static int CHUNK_SIZE = 16;
     private final Link[][] grid;
     private final List<Link> linkRandomOrder;
@@ -20,15 +20,9 @@ public class Chunk implements Runnable{
         this.chunkY = chunkY;
         this.gridManager = gridManager;
         this.grid = new Link[CHUNK_SIZE][CHUNK_SIZE];
-        for (int i = 0; i < CHUNK_SIZE; i++) {
-            for (int j = 0; j < CHUNK_SIZE; j++) {
-//                if ((chunkX % 2 == 0 && chunkY % 2 == 1) ||  (chunkX % 4 == 1 && chunkY % 4 == 0)){
-//                    this.grid[i][j] = new Link(j, i, this, new Stone());
-//                    continue;
-//                }
+        for (int i = 0; i < CHUNK_SIZE; i++)
+            for (int j = 0; j < CHUNK_SIZE; j++)
                 this.grid[i][j] = new Link(j, i, this);
-            }
-        }
         this.linkRandomOrder = Arrays.stream(this.grid)
                 .flatMap(Arrays::stream)
                 .sorted(Comparator.comparingDouble(value -> value.getRandomOrderSeed()))

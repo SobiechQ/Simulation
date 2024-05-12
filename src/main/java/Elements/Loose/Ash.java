@@ -6,6 +6,10 @@ import Map.Link;
 import java.awt.*;
 import java.util.Set;
 
+/**
+ * Ash element. It is generated when {@link Elements.Solid.Wood} is burned.
+ * @see Loose
+ */
 public class Ash extends Loose {
     private final static Set<Color> COLORS = Set.of(
             new Color(54, 54, 54, 90),

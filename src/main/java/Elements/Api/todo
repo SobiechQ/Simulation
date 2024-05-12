@@ -13,3 +13,5 @@ this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFi
 zmien xReal na xAbsolute
 
 clear na linku z airem ma znowu dawać tego samego aira bez zmian
+
+Podgrzanie wody powowuje parowanie, któe się skrapla

@@ -60,15 +60,23 @@ public class Perlin {
         final var dotBottomRight = bottomRight.dotProduct(pointVectorBottomRight);
 
 
-        return this.mapResultToRange(this.linearInterpolation(this.linearInterpolation(dotBottomLeft, dotTopLeft, this.easeCurve(1 - (double) localY / resolution)), this.linearInterpolation(dotBottomRight, dotTopRight, this.easeCurve(1 - (double) localY / resolution)), this.easeCurve((double) localX / resolution)) + this.delta);
-
+        return this.mapResultToRange(
+                this.linearInterpolation(
+                        this.linearInterpolation(
+                                dotBottomLeft, dotTopLeft, this.easeCurve(1 - (double) localY / resolution)
+                        ),
+                        this.linearInterpolation(
+                                dotBottomRight, dotTopRight, this.easeCurve(1 - (double) localY / resolution)
+                        ),
+                        this.easeCurve((double) localX / resolution)
+                ) + this.delta
+        );
     }
 
     private double mapResultToRange(double x) {
         final var result = (Math.atan(this.mapingIndex * x) / Math.PI) + 0.5;
         return result < -1 ? -1 : result > 1 ? 1 : result;
     }
-    //todo unmaped getter?
 
     private double linearInterpolation(double a1, double a2, double t) {
         if (t < 0 || t > 1) throw new IllegalArgumentException("t must be in range <0; 1>");

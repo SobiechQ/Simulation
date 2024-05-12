@@ -3,7 +3,7 @@ package Noice;
 import Map.Utils.Vector;
 
 class PermutationTable {
-    private final static int INITIAL_SIZE = 10;
+    private final static int DEFAULT_INITIAL_SIZE = 10;
     private final static double EXPAND_INDEX = 1.5;
     private Vector[][] permutations;
     public PermutationTable(int initialSize) {
@@ -13,7 +13,7 @@ class PermutationTable {
                 this.permutations[i][j] = Vector.getRandomVector();
     }
     public PermutationTable() {
-        this(INITIAL_SIZE);
+        this(PermutationTable.DEFAULT_INITIAL_SIZE);
     }
     public Vector getPermutation(int x, int y) {
         if (isOutOfBound(x, y))

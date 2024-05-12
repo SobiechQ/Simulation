@@ -6,6 +6,10 @@ import Map.Link;
 import java.awt.*;
 import java.util.Set;
 
+/**
+ * SmokeParticle element.
+ * @see Particle
+ */
 public class SmokeParticle extends Particle {
     private final static Set<Color> COLORS = Set.of(
             new Color(183, 183, 183, 255),

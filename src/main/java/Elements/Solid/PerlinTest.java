@@ -7,7 +7,7 @@ import Map.Link;
 import Noice.Perlin;
 
 import java.awt.*;
-
+@Deprecated(forRemoval = true)
 public class PerlinTest extends Solid {
     private final static Perlin PERLIN = new Perlin(16, 1, 1, 4);
 

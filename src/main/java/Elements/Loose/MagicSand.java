@@ -6,6 +6,10 @@ import lombok.NonNull;
 
 import java.awt.*;
 
+/**
+ * MagicSand element.
+ * @see Loose
+ */
 public class MagicSand extends Loose {
     private static float hsvValue = 0;
     public MagicSand(Link link){

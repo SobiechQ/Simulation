@@ -16,7 +16,7 @@ import static Map.Utils.Direction.*;
  * It represents objects that on every refresh can move in the grid.
  * Particles are elements that tend to move up and fill the space.
  * They have predefined time to live, after which they disappear.
- * On creation their initial velocity is randomized, based on the constructor parameters.
+ * On creation their initial velocity is randomized, based on the constraints given in the constructor.
  * They are lighter than {@link Solid}, {@link Loose}, {@link Fluid} elements, and cant pass through them.
  *
  * @see Moveable

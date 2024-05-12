@@ -54,7 +54,11 @@ public interface ParticleGenerator extends Refreshable {
                 l.setElement(this.getParticle());
         });
     }
-
+    /**
+     * Checks if the link is sourrounded from every direction wih non-air elements.
+     * @param link the link to check.
+     * @return true if the link the link is sourrounded.
+     */
     default boolean isBlocked(@NonNull Link link) {
         return link.surroundingLink(1).stream().filter(l -> !l.isInstanceOf(Air.class)).count() >= 9;
 
