@@ -3,10 +3,13 @@ package Map;
 import Elements.Solid.Air;
 import Elements.Api.Core.Element;
 import Map.Utils.Direction;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -16,9 +19,12 @@ import java.util.stream.Stream;
 public class Link {
     private final int xLocal;
     private final int yLocal;
+    @Getter
     private final Chunk chunk;
     private Element element;
+    @Getter
     private final double randomOrderSeed;
+    @Getter
     private final ReadWriteLock lock = new ReentrantReadWriteLock(true);
 
     public Link(int xLocal, int yLocal, Chunk chunk) {
@@ -33,10 +39,6 @@ public class Link {
         this.randomOrderSeed = Math.random();
     }
 
-    public double getRandomOrderSeed() {
-        return this.randomOrderSeed;
-    }
-
     public Optional<Link> get(Direction... directions) {
         return this.get(new ArrayDeque<>(List.of(directions)));
     }
@@ -44,10 +46,10 @@ public class Link {
     private Optional<Link> get(Queue<Direction> directions) {
         if (directions.isEmpty())
             return Optional.of(this);
-        var get = this.get(directions.poll());
-        if (get.isEmpty())
+        var pointer = this.get(directions.poll());
+        if (pointer.isEmpty())
             return Optional.empty();
-        return get.get().get(directions);
+        return pointer.get().get(directions);
     }
 
     public Optional<Link> get(Direction direction) {
@@ -168,7 +170,9 @@ public class Link {
         } finally {
             this.lock.writeLock().unlock();
         }
-
+    }
+    public Color getColor(){
+        return this.element.getColor();
     }
 
     public double distance(Link link) {
@@ -193,7 +197,7 @@ public class Link {
     }
 
     public int getXLocal() {
-        return xLocal;
+        return this.xLocal;
     }
 
     public int getXReal() {
@@ -201,16 +205,13 @@ public class Link {
     }
 
     public int getYLocal() {
-        return yLocal;
+        return this.yLocal;
     }
 
     public int getYReal() {
         return this.chunk.getGridManager().getYAbsolute(this);
     }
 
-    public Chunk getChunk() {
-        return chunk;
-    }
     @Deprecated(forRemoval = true)
     public Stream<Link> stream() {
         return this.chunk.getGridManager().linkStream();
@@ -220,7 +221,4 @@ public class Link {
         return this.stream().filter(l -> l.distance(this) <= radius);
     }
 
-    public ReadWriteLock getLock() {
-        return this.lock;
-    }
 }

@@ -1,6 +1,7 @@
 package Map;
 
 
+import java.awt.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.ToDoubleFunction;
@@ -61,6 +62,9 @@ public class GridManager {
 
     public int getYAbsolute(Link link) {
         return link.getChunk().getChunkY() * Chunk.CHUNK_SIZE + link.getYLocal();
+    }
+    public Dimension getDimensionInElements() {
+        return new Dimension(this.chunks[0].length * Chunk.CHUNK_SIZE, this.chunks.length * Chunk.CHUNK_SIZE);
     }
 
 

@@ -80,7 +80,7 @@ public class Chunk implements Runnable {
         if (this.chunkX == 0 && this.chunkY == 0) {
             final long endTime = System.nanoTime();
             double difference = (endTime - this.startTime) / 1e6;
-            System.out.println(difference);
+//            System.out.println(difference);
             this.startTime = System.nanoTime();
 //            System.out.println("Elements: " + this.gridManager.linkStream()
 //                    .filter(l -> !(l.getElement() instanceof Air))
