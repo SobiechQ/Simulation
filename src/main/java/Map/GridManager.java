@@ -1,11 +1,6 @@
 package Map;
 
 
-import Elements.Fluid.Water;
-import Elements.Loose.Sand;
-import Elements.Solid.PerlinTest;
-import Elements.Solid.Wood;
-
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.ToDoubleFunction;
@@ -60,11 +55,11 @@ public class GridManager {
         return this.randomOrderChunks.stream();
     }
 
-    public int getXReal(Link link) {
+    public int getXAbsolute(Link link) {
         return link.getChunk().getChunkX() * Chunk.CHUNK_SIZE + link.getXLocal();
     }
 
-    public int getYReal(Link link) {
+    public int getYAbsolute(Link link) {
         return link.getChunk().getChunkY() * Chunk.CHUNK_SIZE + link.getYLocal();
     }
 

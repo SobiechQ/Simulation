@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -29,7 +30,7 @@ public class GridFrame extends JFrame {
             gridManager.linkStream()
                     .forEach(link -> {
                         g.setColor(link.getElement().getColor());
-                        g.fillRect(gridManager.getXReal(link) * elementSize, gridManager.getYReal(link) * elementSize, elementSize, elementSize);
+                        g.fillRect(gridManager.getXAbsolute(link) * elementSize, gridManager.getYAbsolute(link) * elementSize, elementSize, elementSize);
                     });
 //            gridManager.chunkStream()
 //                    .forEach(chunk -> {
@@ -95,33 +96,36 @@ public class GridFrame extends JFrame {
         });
 
 
-        new Thread(() -> {
-            while (true) {
-                panel.repaint();
+//        new Thread(() -> {
+//            while (true) {
+//                panel.repaint();
+//
+//                try {
+//                    Thread.sleep(1);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }).start();
+        final var drawAsync = Executors.newSingleThreadScheduledExecutor();
+        drawAsync.scheduleAtFixedRate(this.panel::repaint, 0, 1, TimeUnit.MILLISECONDS);
 
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
-            }
-        }).start();
+        final var errorCheckingAsync = Executors.newSingleThreadScheduledExecutor();
+        errorCheckingAsync.scheduleAtFixedRate( () -> {
+            var count = new HashMap<Element, Set<Link>>();
+            GridFrame.this.gridManager.linkStream()
+                    .forEach(l -> {
+                        final var element = l.getElement();
+                        count.putIfAbsent(element, new HashSet<>());
+                        count.get(element).add(l);
+                    });
+            count.entrySet()
+                    .stream()
+                    .filter(e -> e.getValue().size() != 1)
+                    .forEach(System.out::println);
+        }, 1000, 1000, TimeUnit.MILLISECONDS);
 
-        new ScheduledThreadPoolExecutor(1).scheduleAtFixedRate(() -> {
-                    var count = new HashMap<Element, Set<Link>>();
-                    GridFrame.this.gridManager.linkStream()
-                            .forEach(l -> {
-                                final var element = l.getElement();
-                                count.putIfAbsent(element, new HashSet<>());
-                                count.get(element).add(l);
-                            });
-                    count.entrySet()
-                            .stream()
-                            .filter(e -> e.getValue().size() != 1)
-                            .peek(System.out::println)
-                            .forEach(e -> e.getValue().forEach(l -> l.setElement(new Air())));
-                }, 1000, 1000, TimeUnit.MILLISECONDS
-        );
     }
 }

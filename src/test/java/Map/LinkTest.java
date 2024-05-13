@@ -24,7 +24,7 @@ public class LinkTest {
     }
 
     @Test
-    public void givenLinkAirElement_whenClearing_thenThisElementSetToNewAir() { //todo to chyba zle
+    public void givenLinkAirElement_whenClearing_thenThisElementDoesNotClear() {
         //--given--
         final var link = new Link(0, 0, new Chunk(new GridManager(1, 1), 0, 0), new Air());
         final var oldAir = link.getElement();
@@ -36,7 +36,7 @@ public class LinkTest {
         final var afterClearElementResult = link.getElement();
         Assertions.assertInstanceOf(Air.class, oldAir);
         Assertions.assertInstanceOf(Air.class, afterClearElementResult);
-        Assertions.assertNotSame(oldAir, afterClearElementResult);
+        Assertions.assertSame(oldAir, afterClearElementResult);
     }
 
     @Test

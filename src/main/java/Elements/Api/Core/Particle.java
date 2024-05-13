@@ -4,7 +4,9 @@ import Elements.Solid.Air;
 import Elements.Api.Moveable;
 import Map.Link;
 import Map.Utils.Vector;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.SneakyThrows;
 
 import java.awt.*;
@@ -25,6 +27,8 @@ import static Map.Utils.Direction.*;
 public abstract non-sealed class Particle extends Element implements Moveable {
     private final Vector velocity;
     private final int maxTimeToLive;
+    @Getter
+    @Setter
     private int timeToLive;
 
     /**

@@ -4,9 +4,11 @@ import Elements.Solid.Air;
 import Elements.Api.Core.Element;
 import Map.Utils.Direction;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Stream;
@@ -51,43 +53,31 @@ public class Link {
     public Optional<Link> get(Direction direction) {
         final var gridManager = this.chunk.getGridManager();
         return switch (direction) {
-            case UP -> gridManager.getLink(gridManager.getXReal(this), gridManager.getYReal(this) - 1);
-            case DOWN -> gridManager.getLink(gridManager.getXReal(this), gridManager.getYReal(this) + 1);
-            case LEFT -> gridManager.getLink(gridManager.getXReal(this) - 1, gridManager.getYReal(this));
-            case RIGHT -> gridManager.getLink(gridManager.getXReal(this) + 1, gridManager.getYReal(this));
+            case UP -> gridManager.getLink(gridManager.getXAbsolute(this), gridManager.getYAbsolute(this) - 1);
+            case DOWN -> gridManager.getLink(gridManager.getXAbsolute(this), gridManager.getYAbsolute(this) + 1);
+            case LEFT -> gridManager.getLink(gridManager.getXAbsolute(this) - 1, gridManager.getYAbsolute(this));
+            case RIGHT -> gridManager.getLink(gridManager.getXAbsolute(this) + 1, gridManager.getYAbsolute(this));
             case NONE -> Optional.of(this);
         };
     }
-    public void synchronizedWriteOperation(@NonNull Runnable runnable) {
-        this.lock.writeLock().lock();
-        try {
-            runnable.run();
-        } finally {
-            this.lock.writeLock().unlock();
-        }
-    }
-    public <T> T synchronizedWriteCallable(@NonNull Callable<T> callable) throws Exception {
-        this.lock.writeLock().lock();
-        try {
-            return callable.call();
-        } finally {
-            this.lock.writeLock().unlock();
-        }
-
-    }
 
     public Set<Link> surroundingLink(int squareSize) {
-        if (squareSize < 0)
-            throw new IllegalArgumentException("Square size cant be less then 0");
-        final Set<Link> links = new HashSet<>();
-        for (int i = -squareSize; i <= squareSize; i++) {
-            for (int j = -squareSize; j <= squareSize; j++) {
-                this.chunk.getGridManager()
-                        .getLink(this.getXReal() + j, this.getYReal() + i)
-                        .ifPresent(links::add);
+        this.lock.readLock().lock();
+        try {
+            if (squareSize < 0)
+                throw new IllegalArgumentException("Square size cant be less then 0");
+            final Set<Link> links = new HashSet<>();
+            for (int i = -squareSize; i <= squareSize; i++) {
+                for (int j = -squareSize; j <= squareSize; j++) {
+                    this.chunk.getGridManager()
+                            .getLink(this.getXReal() + j, this.getYReal() + i)
+                            .ifPresent(links::add);
+                }
             }
+            return links;
+        } finally {
+            this.lock.readLock().unlock();
         }
-        return links;
     }
 
     public Set<Link> elementClump() {
@@ -124,16 +114,22 @@ public class Link {
     }
 
     public void clear() {
-        this.setElement(new Air());
+        lock.writeLock().lock();
+        try {
+            if (!this.isInstanceOf(Air.class))
+                this.setElement(new Air());
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     public void setElement(Element element) {
         lock.writeLock().lock();
         try {
-            if (element instanceof Air) {
-                this.element = new Air();
-                return;
-            }
+//            if (element instanceof Air) { //todo test
+//                this.element = new Air();
+//                return;
+//            }
             this.element = element;
         } finally {
             lock.writeLock().unlock();
@@ -150,17 +146,29 @@ public class Link {
     }
 
     public Link swap(Direction... directions) {
-        final var linkPointer = this.get(directions);
+        this.lock.writeLock().lock();
+        try {
+            final var linkPointer = this.get(directions);
+            if (linkPointer.isEmpty())
+                return this;
+            final var linkPointerWriteLock = linkPointer.get().getLock().writeLock();
 
-        if (linkPointer.isEmpty())
+            if (linkPointerWriteLock.tryLock()) {
+                try {
+                    final var moveElement = this.getElement();
+                    this.setElement(linkPointer.get().getElement());
+                    linkPointer.get().setElement(moveElement);
+                    return linkPointer.get();
+                } finally {
+                    linkPointerWriteLock.unlock();
+                }
+            }
+            System.out.println(linkPointer);
             return this;
+        } finally {
+            this.lock.writeLock().unlock();
+        }
 
-        final var moveElement = this.getElement();
-        this.setElement(linkPointer.get().getElement());
-        linkPointer.get().setElement(moveElement);
-
-
-        return linkPointer.get();
     }
 
     public double distance(Link link) {
@@ -189,7 +197,7 @@ public class Link {
     }
 
     public int getXReal() {
-        return this.chunk.getGridManager().getXReal(this);
+        return this.chunk.getGridManager().getXAbsolute(this);
     }
 
     public int getYLocal() {
@@ -197,18 +205,22 @@ public class Link {
     }
 
     public int getYReal() {
-        return this.chunk.getGridManager().getYReal(this);
+        return this.chunk.getGridManager().getYAbsolute(this);
     }
 
     public Chunk getChunk() {
         return chunk;
     }
-
+    @Deprecated(forRemoval = true)
     public Stream<Link> stream() {
         return this.chunk.getGridManager().linkStream();
     }
-
+    @Deprecated(forRemoval = true)
     public Stream<Link> stream(double radius) {
         return this.stream().filter(l -> l.distance(this) <= radius);
+    }
+
+    public ReadWriteLock getLock() {
+        return this.lock;
     }
 }

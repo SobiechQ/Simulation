@@ -13,10 +13,8 @@ public class PerlinTest extends Solid {
 
     public PerlinTest(Link link) {
         link.stream().forEach(l -> {
-            l.synchronizedWriteOperation(() -> {
-                if (l.getElement() instanceof Lava || l.getElement() instanceof Water)
-                    l.clear();
-            });
+            if (l.getElement() instanceof Lava || l.getElement() instanceof Water)
+                l.clear();
 
         });
         this.setColor(new Color((int) (255 * PERLIN.getValue(link)), 0, 0));
