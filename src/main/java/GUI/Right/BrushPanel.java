@@ -99,25 +99,25 @@ public class BrushPanel extends JPanel {
         final var root = new DefaultMutableTreeNode("Element Types");
         final var tree = new JTree(root);
         tree.addTreeSelectionListener(e -> {
-            System.out.println(e);
+//            System.out.println(e);
 
             final var selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             if (Objects.isNull(selectedNode)) {
                 return;
             }
             final var selectedElement = selectedNode.getUserObject();
-            System.out.println(selectedElement.getClass());
+            System.out.println(selectedElement.getClass().getName());
             if (selectedElement instanceof ComboBoxRecord record) {
+                System.out.println("GABI BELKA");
                 System.out.println(record);
                 this.brushProperties.setElementClass(record.elementClazz());
             }
         });
 
-// Iterate over the map and create tree nodes
         packageToElementMap.forEach((packageName, comboBoxRecords) -> {
             DefaultMutableTreeNode packageNode = new DefaultMutableTreeNode(packageName);
             comboBoxRecords.forEach(record -> {
-                DefaultMutableTreeNode elementNode = new DefaultMutableTreeNode(record.toString());
+                DefaultMutableTreeNode elementNode = new DefaultMutableTreeNode(record);
                 packageNode.add(elementNode);
             });
             root.add(packageNode);
@@ -125,7 +125,6 @@ public class BrushPanel extends JPanel {
 
 
         panel.setBorder(BorderFactory.createTitledBorder("Element Type"));
-//        tree.setPreferredSize(new Dimension(250, 200));
 
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setPreferredSize(new Dimension(250, 200));
@@ -134,6 +133,7 @@ public class BrushPanel extends JPanel {
 
         return panel;
     }
+
 
 
 }
@@ -148,4 +148,5 @@ record ComboBoxRecord(Class<? extends Element> elementClazz) {
         System.out.println(this.elementClazz);
         return this.elementClazz;
     }
+
 }

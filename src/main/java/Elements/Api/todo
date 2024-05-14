@@ -20,3 +20,5 @@ ice - skrapla się
 ogólnie temperatura może być wyabstraktowana
 
 GUI - FILL/REPLACE
+
+Wszędzie tam gdzie jest @Setter dać @NonNull

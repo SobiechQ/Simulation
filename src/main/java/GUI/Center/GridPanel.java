@@ -1,6 +1,7 @@
 package GUI.Center;
 
 import Elements.Api.Core.Element;
+import Elements.Solid.Air;
 import GUI.Right.BrushPanel;
 import Map.Chunk;
 import Map.GridManager;
@@ -18,7 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class GridPanel extends JPanel {
-    private final int gridChunkWidth = 20;
+    private final int gridChunkWidth = 19;
     private final int gridChunkHeight = 12;
     private final int elementSize = 5;
     private final GridManager gridManager;
@@ -35,20 +36,18 @@ public class GridPanel extends JPanel {
 
                 final int x = (e.getX() / elementSize);
                 final int y = (e.getY() / elementSize);
+                final var constructor = brushPanel.getBrushProperties().getElementConstructor();
 
-                @SuppressWarnings("unchecked")
-                final Constructor<? extends Element> constructor =
-                        Arrays.stream(GridPanel.this.brushPanel.getBrushProperties().getElementClass().getConstructors())
-                                .map(c -> (Constructor<? extends Element>) c)
-                                .filter(c -> Arrays.equals(c.getParameterTypes(), new Class[]{Link.class}) || Arrays.equals(c.getParameterTypes(), new Class[]{}))
-                                .max(Comparator.comparingInt(Constructor::getParameterCount))
-                                .orElseThrow(() -> new RuntimeException("No constructor found"));
 
                 gridManager.linkStream()
                         .filter(link -> link.distance(x, y) < GridPanel.this.brushPanel.getBrushProperties().getBrushSize())
                         .forEach(l -> {
                             try {
-                                l.setElement(constructor.getParameterCount() == 0 ? constructor.newInstance() : constructor.newInstance(l));
+                                if (brushPanel.getBrushProperties().isReplace()){
+                                    l.setElement(constructor.getParameterCount() == 0 ? constructor.newInstance() : constructor.newInstance(l));
+                                    return;
+                                }
+                                l.setElement((element)->element instanceof Air, constructor.getParameterCount() == 0 ? constructor.newInstance() : constructor.newInstance(l));
                             } catch (InvocationTargetException | InstantiationException | IllegalAccessException _) {
                                 throw new RuntimeException();
                             }

@@ -14,6 +14,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class Link {
@@ -137,6 +138,15 @@ public class Link {
             lock.writeLock().unlock();
         }
     }
+    public void setElement(Predicate<Element> predicate, Element element){
+        lock.writeLock().lock();
+        try {
+            if (predicate.test(this.element))
+                this.setElement(element);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
 
     /**
      * @return true if modified link on given directions
@@ -165,7 +175,6 @@ public class Link {
                     linkPointerWriteLock.unlock();
                 }
             }
-            System.out.println(linkPointer);
             return this;
         } finally {
             this.lock.writeLock().unlock();
