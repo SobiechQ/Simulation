@@ -5,7 +5,6 @@ import Elements.Api.Moveable;
 import Map.Link;
 import Map.Utils.Vector;
 import lombok.NonNull;
-import lombok.SneakyThrows;
 
 import static Map.Utils.Direction.*;
 
@@ -21,7 +20,7 @@ import static Map.Utils.Direction.*;
  * @see Elements.Fluid.Water
  */
 public abstract non-sealed class Fluid extends Element implements Moveable {
-    private final Vector velocity = new Vector();
+    private final Vector velocity;
 
     /**
      * Inherited constructor from {@link Element#Element()}
@@ -30,6 +29,7 @@ public abstract non-sealed class Fluid extends Element implements Moveable {
      */
     public Fluid() {
         super();
+        this.velocity = new Vector();
     }
 
     /**
@@ -39,28 +39,25 @@ public abstract non-sealed class Fluid extends Element implements Moveable {
      */
     public Fluid(@NonNull Link link) {
         super(link);
+        this.velocity = new Vector();
     }
-    //todo test czy faktycznie 0 no stickness i 1 full stickness
 
     /**
      * Represents final value that is added to the velocity of the fluid in the y direction on every refresh
      * Allowing every implementation to speed up differently
      *
-     * @return final gravity value. It is suggested to always return same parameter.
+     * @return final gravity value.
      */
     protected abstract double getGravity();
 
-
-    //todo tu jest nieprawda, bo nie musi być [0,1]
-
     /**
      * Represents final value that determines how fast the fluid flows and fills the space.
-     * Returned value has to be in range [0, 1], where 0 means no stickness and 1 means full stickness.
+     * It is added to the velocity of the fluid in the x direction on every refresh.
      * This allows to create implementations of fluids that are more or less sticky.
      *
-     * @return final stickness value. It is required to always return same parameter.
+     * @return final stickness value.
      */
-    protected abstract double getStickness();
+    protected abstract double getFillSpeed();
 
 
     /**
@@ -88,17 +85,17 @@ public abstract non-sealed class Fluid extends Element implements Moveable {
                     boolean left = stepVelocity.x < 0;
                     if (stepVelocity.x == 0)
                         left = Math.random() >= 0.5;
-                    this.velocity.x = (left ? -1 : 1) * this.getStickness();
+                    this.velocity.x = (left ? -1 : 1) * this.getFillSpeed();
                     stepVelocity.y = 0;
                     yield link;
                 }
                 if (link.isInstanceOf(Air.class, LEFT)) {
-                    this.velocity.x = -this.getStickness();
+                    this.velocity.x = -this.getFillSpeed();
                     stepVelocity.y = 0;
                     yield link;
                 }
                 if (link.isInstanceOf(Air.class, RIGHT)) {
-                    this.velocity.x = this.getStickness();
+                    this.velocity.x = this.getFillSpeed();
                     stepVelocity.y = 0;
                     yield link;
                 }

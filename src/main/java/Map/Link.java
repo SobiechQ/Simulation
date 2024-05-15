@@ -17,6 +17,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+/**
+ * Link is a position aware container for {@link Element elements}. Every link represents a single unmoving point on the map,
+ * that can store a single element. It is used to store elements in a {@link GridManager grid-like structure}.
+ * It has public access to its {@link Element element} and can be modified by setting a new element or swapping elements with another link.
+ * Operations performed on Link are protected by a {@link ReadWriteLock read write lock} to prevent concurrent modification.
+ */
 public class Link {
     private final int xLocal;
     private final int yLocal;
@@ -28,10 +34,23 @@ public class Link {
     @Getter
     private final ReadWriteLock lock = new ReentrantReadWriteLock(true);
 
+    /**
+     * For a given chunk creates a link at given local coordinates with default {@link Air} element.
+     * @param xLocal x coordinate of the link in the chunk
+     * @param yLocal y coordinate of the link in the chunk
+     * @param chunk chunk that the link is in
+     */
     public Link(int xLocal, int yLocal, Chunk chunk) {
         this(xLocal, yLocal, chunk, new Air());
     }
 
+    /**
+     * For a given chunk creates a link at given local coordinates with given element.
+     * @param xLocal x coordinate of the link in the chunk
+     * @param yLocal y coordinate of the link in the chunk
+     * @param chunk chunk that the link is in
+     * @param element element that the link will store
+     */
     public Link(int xLocal, int yLocal, Chunk chunk, Element element) {
         this.xLocal = xLocal;
         this.yLocal = yLocal;
@@ -40,10 +59,19 @@ public class Link {
         this.randomOrderSeed = Math.random();
     }
 
+    /**
+     * Returns a link in a given directions from the current link. Directions are executed in the order they are given.
+     * @param directions directions to follow
+     * @return Optional containing link in the given directions or empty if the link would be out of bounds
+     */
     public Optional<Link> get(Direction... directions) {
         return this.get(new ArrayDeque<>(List.of(directions)));
     }
-
+    /**
+     * Returns a link in a given direction from the current link. Directions are executed in the order they are given.
+     * @param directions directions to follow
+     * @return Optional containing link in the given directions or empty if the link would be out of bounds
+     */
     private Optional<Link> get(Queue<Direction> directions) {
         if (directions.isEmpty())
             return Optional.of(this);
@@ -53,18 +81,23 @@ public class Link {
         return pointer.get().get(directions);
     }
 
+    /**
+     * Returns a link in a given direction from the current link.
+     * @param direction direction to follow
+     * @return Optional containing link in the given direction or empty if the link would be out of bounds
+     */
     public Optional<Link> get(Direction direction) {
-        final var gridManager = this.chunk.getGridManager();
+        final var gm = this.chunk.getGridManager();
         return switch (direction) {
-            case UP -> gridManager.getLink(gridManager.getXAbsolute(this), gridManager.getYAbsolute(this) - 1);
-            case DOWN -> gridManager.getLink(gridManager.getXAbsolute(this), gridManager.getYAbsolute(this) + 1);
-            case LEFT -> gridManager.getLink(gridManager.getXAbsolute(this) - 1, gridManager.getYAbsolute(this));
-            case RIGHT -> gridManager.getLink(gridManager.getXAbsolute(this) + 1, gridManager.getYAbsolute(this));
+            case UP -> gm.getLink(gm.getXAbsolute(this), gm.getYAbsolute(this) - 1);
+            case DOWN -> gm.getLink(gm.getXAbsolute(this), gm.getYAbsolute(this) + 1);
+            case LEFT -> gm.getLink(gm.getXAbsolute(this) - 1, gm.getYAbsolute(this));
+            case RIGHT -> gm.getLink(gm.getXAbsolute(this) + 1, gm.getYAbsolute(this));
             case NONE -> Optional.of(this);
         };
     }
 
-    public Set<Link> surroundingLink(int squareSize) {
+    public Set<Link> surroundingLink(int squareSize) { //todo Funkcyjnie niech zwraca stream
         this.lock.readLock().lock();
         try {
             if (squareSize < 0)
@@ -82,24 +115,6 @@ public class Link {
             this.lock.readLock().unlock();
         }
     }
-
-    public Set<Link> elementClump() {
-        final var clazz = this.element.getClass();
-        final Set<Link> links = new HashSet<>();
-        links.add(this);
-        final Set<Link> toAdd = new HashSet<>();
-        do {
-            links.addAll(toAdd);
-            toAdd.clear();
-            links.forEach(l -> l.surroundingLink(1)
-                    .stream()
-                    .filter(l2 -> l2.isInstanceOf(clazz) && !links.contains(l2))
-                    .forEach(toAdd::add)
-            );
-        } while (!toAdd.isEmpty());
-        return links;
-    }
-
 
     public boolean isInstanceOf(Class<?> clazz, Direction... direction) {
         return this.get(direction)
@@ -129,10 +144,6 @@ public class Link {
     public void setElement(Element element) {
         lock.writeLock().lock();
         try {
-//            if (element instanceof Air) { //todo test
-//                this.element = new Air();
-//                return;
-//            }
             this.element = element;
         } finally {
             lock.writeLock().unlock();

@@ -32,7 +32,7 @@ public class Lava extends Fluid implements Refreshable {
             new Color(209, 72, 11),
             new Color(227, 128, 40)
     );
-    public Lava(Link link){
+    public Lava(@NonNull Link link){
         super(link);
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
         this.generator = new ParticleGenerator() {
@@ -59,7 +59,7 @@ public class Lava extends Fluid implements Refreshable {
     }
 
     @Override
-    protected double getStickness() {
+    protected double getFillSpeed() {
         return 1;
     }
 

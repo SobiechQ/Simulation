@@ -109,4 +109,8 @@ public class GridPanel extends JPanel {
     private int getTotalHeight() {
         return this.gridManager.getDimensionInElements().height * elementSize;
     }
+
+    public GridManager getGridManager() {
+        return gridManager;
+    }
 }

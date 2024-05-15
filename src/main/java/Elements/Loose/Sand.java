@@ -22,7 +22,7 @@ public class Sand extends Loose {
             new Color(231, 219, 177)
     );
 
-    public Sand(Link link) {
+    public Sand(@NonNull Link link) {
         this();
     }
     public Sand(){

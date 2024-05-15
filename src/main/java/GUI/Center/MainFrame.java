@@ -24,7 +24,7 @@ public class MainFrame extends JFrame {
         }
         this.layout = new BorderLayout();
         this.menuBar = new MyJMenuBar();
-        this.brushPanel = new BrushPanel();
+        this.brushPanel = new BrushPanel(this);
         this.gridPanel = new GridPanel(this.brushPanel);
 
 
@@ -41,5 +41,8 @@ public class MainFrame extends JFrame {
         this.setJMenuBar(this.menuBar);
 
         this.pack();
+    }
+    public void save(){
+        this.gridPanel.getGridManager().save();
     }
 }

@@ -58,7 +58,7 @@ public class Wood extends Solid implements Flameable {
     private boolean isOnFire;
 
 
-    public Wood(Link link) {
+    public Wood(@NonNull Link link) {
         final var color1 = this.colorBlend(COLORS.get(0), COLORS.get(1), PERLIN_1.getValue(link.getXReal(), link.getYReal()));
         final var color2 = this.colorBlend(COLORS.get(1), COLORS.get(2), PERLIN_2.getValue(link.getXReal(), link.getYReal()));
         final var color3 = this.colorBlend(color1, color2, PERLIN_3.getValue(link.getXReal(), link.getYReal()));
@@ -69,7 +69,7 @@ public class Wood extends Solid implements Flameable {
         this.timeToLive += (int) (50 * PERLIN_1.getValue(link.getXReal(), link.getYReal()));
         this.isOnFire = false;
     }
-    private Color colorBlend(Color c1, Color c2, double ratio) {
+    private Color colorBlend(@NonNull Color c1, @NonNull Color c2, double ratio) {
         final double ir = 1.0 - ratio;
         return new Color(
                 (int) (c1.getRed() * ratio + c2.getRed() * ir),
@@ -93,7 +93,7 @@ public class Wood extends Solid implements Flameable {
      * @param link the link of the element to be extinguished.
      */
     @Override
-    public void extinguish(Link link) {
+    public void extinguish(@NonNull Link link) {
         if (!this.isOnFire)
             return;
         this.isOnFire = false;

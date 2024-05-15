@@ -27,7 +27,7 @@ public class Water extends Fluid {
     }
 
     @Override
-    protected double getStickness() {
+    protected double getFillSpeed() {
         return 1;
     }
 

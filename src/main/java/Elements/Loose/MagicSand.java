@@ -12,7 +12,7 @@ import java.awt.*;
  */
 public class MagicSand extends Loose {
     private static float hsvValue = 0;
-    public MagicSand(Link link){
+    public MagicSand(@NonNull Link link){
         this();
     }
     public MagicSand(){

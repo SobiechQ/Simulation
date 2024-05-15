@@ -25,7 +25,7 @@ import static Map.Utils.Direction.*;
  * @see Elements.Loose.Sand
  */
 public abstract non-sealed class Loose extends Element implements Moveable {
-    private final Vector velocity = new Vector();
+    private final Vector velocity;
 
     /**
      * Inherited constructor from {@link Element#Element()}
@@ -33,7 +33,8 @@ public abstract non-sealed class Loose extends Element implements Moveable {
      * @see Element
      */
     public Loose() {
-
+        super();
+        this.velocity = new Vector();
     }
 
     /**
@@ -43,13 +44,14 @@ public abstract non-sealed class Loose extends Element implements Moveable {
      */
     public Loose(@NonNull Link link) {
         super(link);
+        this.velocity = new Vector();
     }
 
     /**
      * Represents final value that is added to the velocity of the fluid in the y direction on every refresh
      * Allowing every implementation to speed up differently
      *
-     * @return final gravity value. It is suggested to always return same parameter.
+     * @return final gravity value.
      */
     protected abstract double getGravity();
 
@@ -58,7 +60,7 @@ public abstract non-sealed class Loose extends Element implements Moveable {
      * Returned value has to be in range [0, 1], where 0 means no stickness and 1 means full stickness.
      * This allows to create implementations of fluids that are more or less sticky.
      *
-     * @return final stickness value. It is required to always return same parameter.
+     * @return final stickness value.
      */
     protected abstract double getStickness();
 

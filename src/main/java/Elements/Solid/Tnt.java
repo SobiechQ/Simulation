@@ -23,7 +23,7 @@ public class Tnt extends Solid implements Refreshable {
     private final static List<Color> COLORS = List.of(Color.RED, Color.ORANGE);
     private int refreshCount = 0;
 
-    public Tnt(Link link) {
+    public Tnt(@NonNull Link link) {
         this();
     }
 

@@ -1,6 +1,7 @@
 package Elements.Api;
 
 import Map.Link;
+import lombok.NonNull;
 
 /**
  * Flameble elements can be set on fire and extinguished.
@@ -22,7 +23,7 @@ public interface Flameable extends Refreshable {
      * Extinguishes the element. By making it position aware, flameble elements can extinguish other flameble elements.
      * @param link the link of the element to be extinguished.
      */
-    void extinguish(Link link);
+    void extinguish(@NonNull Link link);
 
 }
 

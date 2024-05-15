@@ -2,6 +2,7 @@ package Elements.Particles;
 
 import Elements.Api.Core.Particle;
 import Map.Link;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class SmokeParticle extends Particle {
             new Color(148, 148, 148, 179),
             new Color(58, 58, 58, 255)
     );
-    public SmokeParticle(Link link){
+    public SmokeParticle(@NonNull Link link){
         this();
     }
     public SmokeParticle() {

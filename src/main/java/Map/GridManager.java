@@ -1,6 +1,8 @@
 package Map;
 
 
+import com.google.gson.Gson;
+
 import java.awt.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -65,6 +67,11 @@ public class GridManager {
     }
     public Dimension getDimensionInElements() {
         return new Dimension(this.chunks[0].length * Chunk.CHUNK_SIZE, this.chunks.length * Chunk.CHUNK_SIZE);
+    }
+    public void save() {
+        var a = new Gson().toJson(chunks);
+        System.out.println(a);
+
     }
 
 

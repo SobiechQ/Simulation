@@ -2,6 +2,7 @@ package Elements.Solid;
 
 import Elements.Api.Core.Solid;
 import Map.Link;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.util.Set;
@@ -18,7 +19,7 @@ public class Stone extends Solid {
     public Stone(){
         this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
     }
-    public Stone(Link link){
+    public Stone(@NonNull Link link){
         this();
     }
 }

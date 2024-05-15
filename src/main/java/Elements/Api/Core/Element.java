@@ -2,6 +2,7 @@ package Elements.Api.Core;
 
 import Map.Link;
 import lombok.NonNull;
+import lombok.val;
 
 import java.awt.Color;
 
@@ -22,7 +23,7 @@ import java.awt.Color;
 
 public abstract sealed class Element permits Loose, Fluid, Solid, Particle {
     private final static Color DEFAULT_COLOR = Color.MAGENTA;
-    protected Color color = Element.DEFAULT_COLOR;
+    protected Color color;
 
     /**
      * Position agnostic constructor. Used for elements that do not require any position awareness on creation.
@@ -30,7 +31,7 @@ public abstract sealed class Element permits Loose, Fluid, Solid, Particle {
      * At least one public constructor (position agnostic or aware) is required for each element subclass.
      */
     public Element() {
-
+        this.color = DEFAULT_COLOR;
     }
 
     /**
@@ -43,7 +44,7 @@ public abstract sealed class Element permits Loose, Fluid, Solid, Particle {
      * @see Map.Link
      */
     public Element(@NonNull Link link) {
-
+        this.color = DEFAULT_COLOR;
     }
 
     /**
@@ -63,6 +64,7 @@ public abstract sealed class Element permits Loose, Fluid, Solid, Particle {
     public void setColor(@NonNull Color color) {
         this.color = color;
     }
+
 
 
 }

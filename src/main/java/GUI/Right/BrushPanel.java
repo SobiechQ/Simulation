@@ -1,6 +1,10 @@
 package GUI.Right;
 
 import Elements.Api.Core.Element;
+import GUI.Center.GridPanel;
+import GUI.Center.MainFrame;
+import Map.GridManager;
+import com.sun.tools.javac.Main;
 import lombok.Getter;
 import org.jooq.lambda.Seq;
 import org.reflections.Reflections;
@@ -17,9 +21,10 @@ import java.util.function.Function;
 @Getter
 public class BrushPanel extends JPanel {
     private final BrushProperties brushProperties = new BrushProperties();
+    private final MainFrame mf;
 
-
-    public BrushPanel() {
+    public BrushPanel(MainFrame mf) {
+        this.mf = mf;
         this.add(this.getNewBrushSizePanel());
         this.add(this.getNewBrushPropertiesPanel());
         this.add(this.getNewBrushElementTypePanel());
@@ -77,7 +82,12 @@ public class BrushPanel extends JPanel {
 
         panel.setBorder(BorderFactory.createTitledBorder("Brush Properties"));
         final var replace = new JToggleButton("Replace");
-        final var positionAware = new JToggleButton("Position Aware", true);
+        final var positionAware = new JButton("Position Aware");
+        positionAware.addActionListener(e->{
+            this.mf.save();
+        });
+
+
         panel.add(replace);
         panel.add(positionAware);
         replace.addActionListener(e -> this.brushProperties.setReplace(replace.isSelected()));
@@ -106,10 +116,7 @@ public class BrushPanel extends JPanel {
                 return;
             }
             final var selectedElement = selectedNode.getUserObject();
-            System.out.println(selectedElement.getClass().getName());
             if (selectedElement instanceof ComboBoxRecord record) {
-                System.out.println("GABI BELKA");
-                System.out.println(record);
                 this.brushProperties.setElementClass(record.elementClazz());
             }
         });

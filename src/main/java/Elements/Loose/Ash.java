@@ -2,6 +2,7 @@ package Elements.Loose;
 
 import Elements.Api.Core.Loose;
 import Map.Link;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class Ash extends Loose {
             new Color(128, 128, 128),
             new Color(63, 63, 63)
     );
-    public Ash(Link link){
+    public Ash(@NonNull Link link){
         this();
     }
     public Ash(){

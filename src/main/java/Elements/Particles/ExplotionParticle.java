@@ -24,7 +24,7 @@ public class ExplotionParticle extends Particle {
             new Color(203, 130, 0),
             new Color(245, 26, 68)
     );
-    public ExplotionParticle(Link link){
+    public ExplotionParticle(@NonNull Link link){
         this();
     }
     public ExplotionParticle(){

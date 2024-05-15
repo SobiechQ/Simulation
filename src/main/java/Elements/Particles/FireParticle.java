@@ -24,7 +24,7 @@ public class FireParticle extends Particle {
             new Color(203, 130, 0),
             new Color(250, 102, 57)
     );
-    public FireParticle(Link link){
+    public FireParticle(@NonNull Link link){
         this();
     }
     public FireParticle() {

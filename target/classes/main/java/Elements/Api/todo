@@ -1,22 +1,10 @@
 
-refleksja powinna wołać konstruktor z link domyślnie a jak go nie ma to pusty
-REFRESHABLE powinno dodawać do seta do refreshowania
-więcej fluidów które reagują ze sobą
 (water and lava can create steam)
-
-linki i chunki bardziej pasują do kolejnki niż do listy
-
-magic sand może używać perlina
-
-this.setColor(COLORS.stream().skip((int) (COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor));
-
-zmien xReal na xAbsolute
-
-clear na linku z airem ma znowu dawać tego samego aira bez zmian
 
 Podgrzanie wody powowuje parowanie, któe się skrapla
 
 ice - skrapla się
 ogólnie temperatura może być wyabstraktowana
 
-GUI - FILL/REPLACE
+
+Wszędzie tam gdzie jest @Setter dać @NonNull

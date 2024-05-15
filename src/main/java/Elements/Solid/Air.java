@@ -1,6 +1,8 @@
 package Elements.Solid;
 import Elements.Api.Core.Solid;
 import Map.Link;
+import lombok.NonNull;
+
 import java.awt.*;
 import java.util.Set;
 /**
@@ -19,7 +21,7 @@ public class Air extends Solid {
             new Color(9, 9, 9)
     );
 
-    public Air(Link link){
+    public Air(@NonNull Link link){
         this();
     }
     public Air(){
