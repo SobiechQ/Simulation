@@ -241,7 +241,7 @@ public class Link {
         return this.chunk.getGridManager().linkStream();
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated(forRemoval = true) //todo unpotpmal. Use chunk calculations
     public Stream<Link> stream(double radius) {
         return this.stream().filter(l -> l.distance(this) <= radius);
     }
