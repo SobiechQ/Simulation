@@ -60,7 +60,7 @@ public interface ParticleGenerator extends Refreshable {
      * @return true if the link the link is sourrounded.
      */
     default boolean isBlocked(@NonNull Link link) {
-        return link.surroundingLink(1).stream().filter(l -> !l.isInstanceOf(Air.class)).count() >= 9;
+        return link.surroundingLink(1).filter(l -> !l.isInstanceOf(Air.class)).count() >= 9;
 
     }
 }

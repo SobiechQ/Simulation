@@ -6,6 +6,7 @@ import Map.Utils.Direction;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.jooq.lambda.Seq;
 
 import java.awt.*;
 import java.util.*;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -36,9 +38,10 @@ public class Link {
 
     /**
      * For a given chunk creates a link at given local coordinates with default {@link Air} element.
+     *
      * @param xLocal x coordinate of the link in the chunk
      * @param yLocal y coordinate of the link in the chunk
-     * @param chunk chunk that the link is in
+     * @param chunk  chunk that the link is in
      */
     public Link(int xLocal, int yLocal, Chunk chunk) {
         this(xLocal, yLocal, chunk, new Air());
@@ -46,9 +49,10 @@ public class Link {
 
     /**
      * For a given chunk creates a link at given local coordinates with given element.
-     * @param xLocal x coordinate of the link in the chunk
-     * @param yLocal y coordinate of the link in the chunk
-     * @param chunk chunk that the link is in
+     *
+     * @param xLocal  x coordinate of the link in the chunk
+     * @param yLocal  y coordinate of the link in the chunk
+     * @param chunk   chunk that the link is in
      * @param element element that the link will store
      */
     public Link(int xLocal, int yLocal, Chunk chunk, Element element) {
@@ -61,14 +65,17 @@ public class Link {
 
     /**
      * Returns a link in a given directions from the current link. Directions are executed in the order they are given.
+     *
      * @param directions directions to follow
      * @return Optional containing link in the given directions or empty if the link would be out of bounds
      */
     public Optional<Link> get(Direction... directions) {
         return this.get(new ArrayDeque<>(List.of(directions)));
     }
+
     /**
      * Returns a link in a given direction from the current link. Directions are executed in the order they are given.
+     *
      * @param directions directions to follow
      * @return Optional containing link in the given directions or empty if the link would be out of bounds
      */
@@ -83,37 +90,32 @@ public class Link {
 
     /**
      * Returns a link in a given direction from the current link.
+     *
      * @param direction direction to follow
      * @return Optional containing link in the given direction or empty if the link would be out of bounds
      */
     public Optional<Link> get(Direction direction) {
-        final var gm = this.chunk.getGridManager();
         return switch (direction) {
-            case UP -> gm.getLink(gm.getXAbsolute(this), gm.getYAbsolute(this) - 1);
-            case DOWN -> gm.getLink(gm.getXAbsolute(this), gm.getYAbsolute(this) + 1);
-            case LEFT -> gm.getLink(gm.getXAbsolute(this) - 1, gm.getYAbsolute(this));
-            case RIGHT -> gm.getLink(gm.getXAbsolute(this) + 1, gm.getYAbsolute(this));
+            case UP -> this.getLink(0, -1); //todo refactor
+            case DOWN -> this.getLink(0, 1);
+            case LEFT -> this.getLink(-1, 0);
+            case RIGHT -> this.getLink(1, 0);
             case NONE -> Optional.of(this);
         };
     }
 
-    public Set<Link> surroundingLink(int squareSize) { //todo Funkcyjnie niech zwraca stream
-        this.lock.readLock().lock();
-        try {
-            if (squareSize < 0)
-                throw new IllegalArgumentException("Square size cant be less then 0");
-            final Set<Link> links = new HashSet<>();
-            for (int i = -squareSize; i <= squareSize; i++) {
-                for (int j = -squareSize; j <= squareSize; j++) {
-                    this.chunk.getGridManager()
-                            .getLink(this.getXReal() + j, this.getYReal() + i)
-                            .ifPresent(links::add);
-                }
-            }
-            return links;
-        } finally {
-            this.lock.readLock().unlock();
-        }
+    public Stream<Link> surroundingLink(int squareSize) { //todo test
+        if (squareSize < 0)
+            throw new IllegalArgumentException("Square size cant be less then 0");
+        return Seq.crossJoin(IntStream.rangeClosed(-squareSize, squareSize).boxed(), IntStream.rangeClosed(-squareSize, squareSize).boxed())
+                .map(tuple-> this.getLink(tuple.v1, tuple.v2))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .stream();
+    }
+    public Optional<Link> getLink(int relativeX, int relativeY){
+        final var gm = this.chunk.getGridManager();
+        return gm.getLink(gm.getXAbsolute(this) + relativeX, gm.getYAbsolute(this) + relativeY);
     }
 
     public boolean isInstanceOf(Class<?> clazz, Direction... direction) {
@@ -149,7 +151,8 @@ public class Link {
             lock.writeLock().unlock();
         }
     }
-    public void setElement(Predicate<Element> predicate, Element element){
+
+    public void setElement(Predicate<Element> predicate, Element element) {
         lock.writeLock().lock();
         try {
             if (predicate.test(this.element))
@@ -191,7 +194,8 @@ public class Link {
             this.lock.writeLock().unlock();
         }
     }
-    public Color getColor(){
+
+    public Color getColor() {
         return this.element.getColor();
     }
 
@@ -236,6 +240,7 @@ public class Link {
     public Stream<Link> stream() {
         return this.chunk.getGridManager().linkStream();
     }
+
     @Deprecated(forRemoval = true)
     public Stream<Link> stream(double radius) {
         return this.stream().filter(l -> l.distance(this) <= radius);
