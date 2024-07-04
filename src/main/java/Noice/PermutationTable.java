@@ -2,27 +2,39 @@ package Noice;
 
 import Map.Utils.Vector;
 
+import java.util.Arrays;
+import java.util.function.IntFunction;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 class PermutationTable {
     private final static int DEFAULT_INITIAL_SIZE = 10;
     private final static double EXPAND_INDEX = 1.5;
     private Vector[][] permutations;
+
     public PermutationTable(int initialSize) {
-        this.permutations = new Vector[initialSize][initialSize];
-        for (int i = 0; i < this.permutations.length; i++)
-            for (int j = 0; j < this.permutations[i].length; j++)
-                this.permutations[i][j] = Vector.getRandomVector();
+        this.permutations = Stream.generate(() -> Stream.generate(Vector::getRandomVector)
+                .limit(initialSize)
+                .toArray(Vector[]::new)
+        )
+                .limit(initialSize)
+                .toArray(Vector[][]::new);
     }
+
     public PermutationTable() {
         this(PermutationTable.DEFAULT_INITIAL_SIZE);
     }
+
     public Vector getPermutation(int x, int y) {
-        if (isOutOfBound(x, y))
-            expandArray(x, y);
+        if (this.isOutOfBound(x, y))
+            this.expandArray(x, y);
         return this.permutations[y][x];
     }
+
     private boolean isOutOfBound(int x, int y) {
         return x < 0 || y < 0 || y >= this.permutations.length || x >= this.permutations[y].length;
     }
+
     private void expandArray(int width, int hight) {
         final int deltaWidth = width - this.permutations[0].length + 1;
         final int deltaHight = hight - this.permutations.length + 1;

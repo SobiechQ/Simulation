@@ -2,6 +2,7 @@ package Map;
 
 import Elements.Solid.Air;
 import Elements.Api.Refreshable;
+import lombok.Getter;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -10,9 +11,15 @@ public class Chunk implements Runnable {
     public final static int CHUNK_SIZE = 16;
     private final Link[][] grid;
     private final List<Link> linkRandomOrder;
+    @Getter
     private final int chunkX;
+    @Getter
     private final int chunkY;
+    @Getter
     private final GridManager gridManager;
+    private double lastSystemTimeOnRun = 0;
+    @Getter
+    private double lastSystemTimeDifference = 0;
 
 
     public Chunk(GridManager gridManager, int chunkX, int chunkY) {
@@ -27,18 +34,6 @@ public class Chunk implements Runnable {
                 .flatMap(Arrays::stream)
                 .sorted(Comparator.comparingDouble(value -> value.getRandomOrderSeed()))
                 .toList();
-    }
-
-    public GridManager getGridManager() {
-        return this.gridManager;
-    }
-
-    public int getChunkX() {
-        return chunkX;
-    }
-
-    public int getChunkY() {
-        return chunkY;
     }
 
     public Optional<Link> getLinkLocal(int localX, int localY) {
@@ -64,35 +59,17 @@ public class Chunk implements Runnable {
         }
         return chunks;
     }
-    private long startTime = System.nanoTime();
 
-    public boolean isWorking = false;
     @Override
     public void run() {
-        this.isWorking = true;
-//        if (this.streamLocal().anyMatch(l-> !(l.getElement() instanceof Air))) {
-//            try {
-//                Thread.sleep((long) (50 + Math.random() * 300));
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-        if (this.chunkX == 0 && this.chunkY == 0) {
-            final long endTime = System.nanoTime();
-            double difference = (endTime - this.startTime) / 1e6;
-//            System.out.println(difference);
-            this.startTime = System.nanoTime();
-//            System.out.println("Elements: " + this.gridManager.linkStream()
-//                    .filter(l -> !(l.getElement() instanceof Air))
-//                    .count());
-        }
+        this.lastSystemTimeDifference = (System.nanoTime() - this.lastSystemTimeOnRun) / 1e6;
+        this.lastSystemTimeOnRun = System.nanoTime();
 
         this.streamLocal()
                 .forEach(l -> {
                     if (l.getElement() instanceof Refreshable refreshable)
                         refreshable.refresh(l);
                 });
-        this.isWorking = false;
     }
 
 

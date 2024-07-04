@@ -23,9 +23,9 @@ public class MainFrame extends JFrame {
             System.out.println("Failed to set look and feel");
         }
         this.layout = new BorderLayout();
-        this.menuBar = new MyJMenuBar();
         this.brushPanel = new BrushPanel(this);
         this.gridPanel = new GridPanel(this.brushPanel);
+        this.menuBar = new MyJMenuBar(this.gridPanel.getGridManager());
 
 
 

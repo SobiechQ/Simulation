@@ -32,6 +32,7 @@ public class GridManager {
         this.chunkThreads = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
         this.chunkStream().forEach(c -> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
 //        randomOrderLinks.forEach(l->l.setElement(new Water()));
+
     }
 
     public Optional<Link> getLink(int x, int y) {
@@ -53,9 +54,18 @@ public class GridManager {
     public Stream<Link> linkStream() {
         return this.randomOrderLinks.stream();
     }
+//    public Stream<Link> linkStream(int x, int y, int radius) {
+//        final var chunkRadius = radius / Chunk.CHUNK_SIZE + 1;
+//
+//    }
 
     public Stream<Chunk> chunkStream() {
         return this.randomOrderChunks.stream();
+    }
+    public Stream<Chunk> chunkStream(int x, int y, int radius) {
+        final var chunkRadius = radius / Chunk.CHUNK_SIZE + 1;
+        return this.randomOrderChunks.stream()
+                .filter(c -> Math.abs(c.getChunkX() - x) < chunkRadius && Math.abs(c.getChunkY() - y) < chunkRadius);
     }
 
     public int getXAbsolute(Link link) {

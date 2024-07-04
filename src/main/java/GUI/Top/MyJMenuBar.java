@@ -1,9 +1,14 @@
 package GUI.Top;
 
+import GUI.InfoFrame.InfoFrame;
+import Map.GridManager;
+
 import javax.swing.*;
 
 public class MyJMenuBar extends JMenuBar {
-    public MyJMenuBar() {
+    private final GridManager gridManager;
+    public MyJMenuBar(GridManager gridManager) {
+        this.gridManager = gridManager;
         this.add(this.getNewFileMenu());
         this.add(this.getNewViewMenu());
         this.add(this.getNewInfoMenu());
@@ -26,6 +31,9 @@ public class MyJMenuBar extends JMenuBar {
     private JMenu getNewViewMenu() {
         final var viewMenu = new JMenu("View");
         final var debugPopupWindow = new JMenuItem("Show debug popup window");
+        debugPopupWindow.addActionListener(e -> {
+            new InfoFrame(this.gridManager);
+        });
         viewMenu.add(debugPopupWindow);
         return viewMenu;
     }

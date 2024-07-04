@@ -117,7 +117,9 @@ public class Wood extends Solid implements Flameable {
             this.setColor(ON_FIRE_COLORS.stream().skip((int) (ON_FIRE_COLORS.size() * Math.random())).findFirst().get());
         if (Math.random() > 0.99)
             link.surroundingLink(1).forEach(l->{
-                if (Math.random() > Wood.PERLIN_1.getValue(l) && l.getElement() instanceof Flameable flameable)
+                if (Math.random() > Wood.PERLIN_1.getValue(l) &&
+
+                        l.getElement() instanceof Flameable flameable)
                     flameable.setOnFire();
             });
         this.particleGenerator.refresh(link);
