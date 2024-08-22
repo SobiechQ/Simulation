@@ -83,10 +83,6 @@ public class BrushPanel extends JPanel {
         panel.setBorder(BorderFactory.createTitledBorder("Brush Properties"));
         final var replace = new JToggleButton("Replace");
         final var positionAware = new JButton("Position Aware");
-        positionAware.addActionListener(e->{
-            this.mf.save();
-        });
-
 
         panel.add(replace);
         panel.add(positionAware);

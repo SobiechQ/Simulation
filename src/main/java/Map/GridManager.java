@@ -1,6 +1,8 @@
 package Map;
 
 
+import Elements.Fluid.Water;
+import Elements.Solid.PerlinTest;
 import com.google.gson.Gson;
 
 import java.awt.*;
@@ -31,7 +33,7 @@ public class GridManager {
         }
         this.chunkThreads = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
         this.chunkStream().forEach(c -> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
-//        randomOrderLinks.forEach(l->l.setElement(new Water()));
+        randomOrderLinks.forEach(l->l.setElement(new PerlinTest(l)));
 
     }
 
@@ -77,11 +79,6 @@ public class GridManager {
     }
     public Dimension getDimensionInElements() {
         return new Dimension(this.chunks[0].length * Chunk.CHUNK_SIZE, this.chunks.length * Chunk.CHUNK_SIZE);
-    }
-    public void save() {
-        var a = new Gson().toJson(chunks);
-        System.out.println(a);
-
     }
 
 

@@ -15,19 +15,21 @@ public class Perlin {
     private final double amplitute;
     @Nullable
     private final Perlin octave;
+    private final double proportions;
 
+    @Deprecated(forRemoval = true) //todo builder pattern
     public Perlin(int resolution, double mapingIndex, double delta, int octaves){
-        this(resolution, mapingIndex, delta, octaves, 1);
+        this(resolution, mapingIndex, delta, octaves, 1, 1);
     }
-    private Perlin(int resolution, double mapingIndex, double delta, int octaves, double amplitude) {
+    public Perlin(int resolution, double mapingIndex, double delta, int octaves, double amplitude, double proportions){
         this.delta = delta;
         this.mapingIndex = mapingIndex;
         this.resolution = resolution;
         this.permutationTable = new PermutationTable();
         this.amplitute = amplitude;
+        this.proportions = proportions;
 
-        if (octaves > 1) this.octave = new Perlin(resolution/2, mapingIndex, delta, octaves - 1, amplitude / 2);
-        else this.octave = null;
+        this.octave = octaves > 1 ? new Perlin(resolution/2, mapingIndex, delta, octaves - 1, amplitude / 2, proportions) : null;
     }
 
     public double getValue(@NonNull Link link) {
@@ -35,7 +37,12 @@ public class Perlin {
     }
 
     public double getValue(int x, int y) {
-        if (this.octave == null) return this.calculateGrid(x, y) * this.amplitute;
+
+        y = (int) (y * this.proportions);
+
+
+        if (this.octave == null)
+            return this.calculateGrid(x, y) * this.amplitute;
         return (this.calculateGrid(x, y) * this.amplitute +
                 this.octave.getValue(x, y) * this.octave.amplitute) /
                 (this.amplitute + this.octave.amplitute);

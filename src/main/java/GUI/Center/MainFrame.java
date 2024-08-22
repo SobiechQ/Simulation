@@ -42,7 +42,4 @@ public class MainFrame extends JFrame {
 
         this.pack();
     }
-    public void save(){
-        this.gridPanel.getGridManager().save();
-    }
 }
