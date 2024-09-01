@@ -5,31 +5,36 @@ import Map.Utils.Vector;
 import lombok.NonNull;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class Perlin {
+    private final int blockWidth;
+    private final int blockHeight;
+    private final Vector topLeft;
+    private final Vector topRight;
+    private final Vector bottomLeft;
+    private final Vector bottomRight;
 
-    private final PermutationTable permutationTable;
-    private final int resolution;
-    private final double mapingIndex;
-    private final double delta;
-    private final double amplitute;
     @Nullable
-    private final Perlin octave;
-    private final double proportions;
+    private Perlin bottomPerlin = null;
+    @Nullable
+    private Perlin rightPerlin = null;
 
-    @Deprecated(forRemoval = true) //todo builder pattern
-    public Perlin(int resolution, double mapingIndex, double delta, int octaves){
-        this(resolution, mapingIndex, delta, octaves, 1, 1);
+    public Perlin() {
+        this(60, 10);
     }
-    public Perlin(int resolution, double mapingIndex, double delta, int octaves, double amplitude, double proportions){
-        this.delta = delta;
-        this.mapingIndex = mapingIndex;
-        this.resolution = resolution;
-        this.permutationTable = new PermutationTable();
-        this.amplitute = amplitude;
-        this.proportions = proportions;
 
-        this.octave = octaves > 1 ? new Perlin(resolution/2, mapingIndex, delta, octaves - 1, amplitude / 2, proportions) : null;
+    public Perlin(int blockWidth, int blockHeight) {
+        this(blockWidth, blockHeight, Vector.getRandomVector(1), Vector.getRandomVector(1), Vector.getRandomVector(1), Vector.getRandomVector(1));
+    }
+
+    private Perlin(int blockWidth, int blockHeight, Vector topLeft, Vector bottomLeft, Vector topRight, Vector bottomRight) {
+        this.blockWidth = blockWidth;
+        this.blockHeight = blockHeight;
+        this.topLeft = topLeft;
+        this.bottomLeft = bottomLeft;
+        this.topRight = topRight;
+        this.bottomRight = bottomRight;
     }
 
     public double getValue(@NonNull Link link) {
@@ -37,52 +42,46 @@ public class Perlin {
     }
 
     public double getValue(int x, int y) {
+        if (x > this.blockWidth || y > this.blockHeight) {
+            if (y > this.blockHeight) {
 
-        y = (int) (y * this.proportions);
 
 
-        if (this.octave == null)
-            return this.calculateGrid(x, y) * this.amplitute;
-        return (this.calculateGrid(x, y) * this.amplitute +
-                this.octave.getValue(x, y) * this.octave.amplitute) /
-                (this.amplitute + this.octave.amplitute);
+                if (this.bottomPerlin == null)
+                    this.bottomPerlin = new Perlin(this.blockWidth, this.blockHeight, this.bottomLeft, Vector.getRandomVector(1), this.bottomRight, Vector.getRandomVector(1));
+//                this.bottomPerlin = new Perlin(this.blockWidth, this.blockHeight, this.topLeft, this.bottomLeft, this.topRight, this.bottomRight);
+                return this.bottomPerlin.getValue(x, y - this.blockHeight);
+            }
+            if (this.rightPerlin == null)
+                this.rightPerlin = new Perlin(this.blockWidth, this.blockHeight, topRight, bottomRight, Vector.getRandomVector(1), Vector.getRandomVector(1));
+            return this.rightPerlin.getValue(x - this.blockWidth, y);
+
+        }
+
+
+        final var dotTopLeft = this.topLeft.dotProduct(new Vector(x, -y));
+        final var dotTopRight = this.topRight.dotProduct(new Vector(x - this.blockWidth, -y));
+        final var dotBottomLeft = this.bottomLeft.dotProduct(new Vector(x, -y + this.blockHeight));
+        final var dotBottomRight = this.bottomRight.dotProduct(new Vector(x - this.blockWidth, -y + this.blockHeight));
+
+        System.out.println("dotTopLeft: " + dotTopLeft);
+        System.out.println("dotTopRight: " + dotTopRight);
+        System.out.println("dotBottomLeft: " + dotBottomLeft);
+        System.out.println("dotBottomRight: " + dotBottomRight);
+
+        final var xRatio = (double) x / this.blockWidth;
+        final var yRatio = (double) y / this.blockHeight;
+
+        final var topInterpolation = this.linearInterpolation(dotTopLeft, dotTopRight, easeCurve(xRatio));
+        final var bottomInterpolation = this.linearInterpolation(dotBottomLeft, dotBottomRight, easeCurve(xRatio));
+        final var finalInterpolation = this.linearInterpolation(topInterpolation, bottomInterpolation, easeCurve(yRatio));
+        return this.arcTanEase(finalInterpolation, 0.2);
     }
 
-    private double calculateGrid(int x, int y) {
-        return this.calculateGrid(this.permutationTable.getPermutation(x / resolution, y / resolution), this.permutationTable.getPermutation(x / resolution + 1, y / resolution), this.permutationTable.getPermutation(x / resolution, y / resolution + 1), this.permutationTable.getPermutation(x / resolution + 1, y / resolution + 1), x % resolution, y % resolution);
-    }
 
-    private double calculateGrid(Vector topLeft, Vector topRight, Vector bottomLeft, Vector bottomRight, int localX, int localY) {
-        if (localX >= resolution || localY >= resolution)
-            throw new IllegalArgumentException("localX and localY must be in range <0; RESOLUTION)");
-
-        final var pointVectorTopLeft = new Vector(localX, -localY);
-        final var pointVectorTopRight = new Vector(localX - resolution, -localY);
-        final var pointVectorBottomLeft = new Vector(localX, -localY + resolution);
-        final var pointVectorBottomRight = new Vector(localX - resolution, -localY + resolution);
-
-        final var dotTopLeft = topLeft.dotProduct(pointVectorTopLeft);
-        final var dotTopRight = topRight.dotProduct(pointVectorTopRight);
-        final var dotBottomLeft = bottomLeft.dotProduct(pointVectorBottomLeft);
-        final var dotBottomRight = bottomRight.dotProduct(pointVectorBottomRight);
-
-
-        return this.mapResultToRange(
-                this.linearInterpolation(
-                        this.linearInterpolation(
-                                dotBottomLeft, dotTopLeft, this.easeCurve(1 - (double) localY / resolution)
-                        ),
-                        this.linearInterpolation(
-                                dotBottomRight, dotTopRight, this.easeCurve(1 - (double) localY / resolution)
-                        ),
-                        this.easeCurve((double) localX / resolution)
-                ) + this.delta
-        );
-    }
-
-    private double mapResultToRange(double x) {
-        final var result = (Math.atan(this.mapingIndex * x) / Math.PI) + 0.5;
-        return result < -1 ? -1 : result > 1 ? 1 : result;
+    private double arcTanEase(double value, double flatness) {
+        final var ease = (Math.atan(value * flatness) / Math.PI) + 0.5;
+        return ease < -1 ? -1 : ease > 1 ? 1 : ease;
     }
 
     private double linearInterpolation(double a1, double a2, double t) {

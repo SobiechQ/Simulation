@@ -8,14 +8,11 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 class PermutationTable {
-    private final static int DEFAULT_HEIGHT = 10;
-    private final static int DEFAULT_WIDTH = 10;
+    private final static int DEFAULT_INITIAL_SIZE = 10;
     private final static double EXPAND_INDEX = 1.5;
+    private Vector[][] permutations;
 
-    /**
-     * @param proportions ratio of Width / Height
-     */
-    public PermutationTable(double proportions) {
+    public PermutationTable(int initialSize) {
         this.permutations = Stream.generate(() -> Stream.generate(Vector::getRandomVector)
                 .limit(initialSize)
                 .toArray(Vector[]::new)
@@ -31,7 +28,6 @@ class PermutationTable {
     public Vector getPermutation(int x, int y) {
         if (this.isOutOfBound(x, y))
             this.expandArray(x, y);
-
         return this.permutations[y][x];
     }
 

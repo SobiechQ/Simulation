@@ -9,7 +9,7 @@ import Noice.Perlin;
 import java.awt.*;
 @Deprecated(forRemoval = true)
 public class PerlinTest extends Solid {
-    private final static Perlin PERLIN = new Perlin(16, 1, 1, 1, 1, 0.1);
+    private final static Perlin PERLIN = new Perlin();
     public PerlinTest(Link link) {
 //        link.stream().forEach(l -> {
 //            if (l.getElement() instanceof Lava || l.getElement() instanceof Water)

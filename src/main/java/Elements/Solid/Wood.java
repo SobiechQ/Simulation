@@ -50,9 +50,9 @@ public class Wood extends Solid implements Flameable {
             new Color(187, 146, 90),
             new Color(31, 26, 15)
     );
-    public final static Perlin PERLIN_1 = new Perlin(8, 4, -2, 4);
-    public final static Perlin PERLIN_2 = new Perlin(8, 4, -1, 4);
-    public final static Perlin PERLIN_3 = new Perlin(8, 4, -1, 4);
+    public final static Perlin PERLIN_1 = new Perlin();
+    public final static Perlin PERLIN_2 = new Perlin();
+    public final static Perlin PERLIN_3 = new Perlin();
     private final Color initialColor;
     private int timeToLive = (int) (350 + Math.random() * 100);
     private boolean isOnFire;
