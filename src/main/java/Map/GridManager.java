@@ -3,6 +3,7 @@ package Map;
 
 import Elements.Fluid.Water;
 import Elements.Solid.PerlinTest;
+import Elements.Solid.Wood;
 import com.google.gson.Gson;
 
 import java.awt.*;
@@ -33,7 +34,7 @@ public class GridManager {
         }
         this.chunkThreads = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
         this.chunkStream().forEach(c -> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
-        randomOrderLinks.forEach(l->l.setElement(new PerlinTest(l)));
+        randomOrderLinks.forEach(l->l.setElement(new Wood(l)));
 
     }
 

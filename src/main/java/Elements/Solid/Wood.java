@@ -9,6 +9,7 @@ import Elements.Particles.FireParticle;
 import Elements.Particles.SmokeParticle;
 import Map.Link;
 import Noice.Perlin;
+import Noice.PerlinBuilder;
 import lombok.NonNull;
 
 import java.awt.*;
@@ -50,9 +51,26 @@ public class Wood extends Solid implements Flameable {
             new Color(187, 146, 90),
             new Color(31, 26, 15)
     );
-    public final static Perlin PERLIN_1 = new Perlin();
-    public final static Perlin PERLIN_2 = new Perlin();
-    public final static Perlin PERLIN_3 = new Perlin();
+    public final static Perlin PERLIN_1 = new PerlinBuilder()
+            .setBlockHeight(70)
+            .setOctaveCount(4)
+            .setFlatness(0.6)
+            .setDelta(-10)
+            .build();
+    public final static Perlin PERLIN_2 = new PerlinBuilder()
+            .setBlockHeight(15)
+            .setBlockHeight(40)
+            .setOctaveCount(2)
+            .setDelta(-5)
+            .setFlatness(0.4)
+            .build();
+    public final static Perlin PERLIN_3 = new PerlinBuilder()
+            .setBlockWidth(10)
+            .setBlockHeight(30)
+            .setFlatness(0.8)
+            .setDelta(1)
+            .setOctaveCount(4)
+            .build();
     private final Color initialColor;
     private int timeToLive = (int) (350 + Math.random() * 100);
     private boolean isOnFire;
