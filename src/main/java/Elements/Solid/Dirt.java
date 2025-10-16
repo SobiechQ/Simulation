@@ -25,13 +25,15 @@ public class Dirt extends Solid implements Refreshable {
             new Color(0, 107, 12),
             new Color(4, 142, 19));
     private boolean isGrass;
-    private final Color color;
-    public Dirt(){
+    private final Color originalDirtColor;
+
+    public Dirt() {
         this.isGrass = false;
-        this.color = DIRT_COLORS.stream().skip((int) (DIRT_COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor);
-        this.setColor(this.color);
+        this.originalDirtColor = DIRT_COLORS.stream().skip((int) (DIRT_COLORS.size() * Math.random())).findFirst().orElseGet(this::getColor);
+        this.setColor(this.originalDirtColor);
     }
-    public Dirt(@NonNull Link link){
+
+    public Dirt(@NonNull Link link) {
         this();
     }
 
@@ -42,10 +44,15 @@ public class Dirt extends Solid implements Refreshable {
             this.isGrass = true;
             return;
         }
-        if (this.isGrass && !link.isInstanceOf(Air.class, Direction.UP)){
-            this.setColor(this.color);
-            this.isGrass = false;
-        }
+
+        link.get(Direction.UP)
+                .map(Link::getElement)
+                .filter(e -> !(e instanceof Air))
+                .ifPresent(_ -> {
+                    this.setColor(this.originalDirtColor);
+                    this.isGrass = false;
+                });
+
 
     }
 }

@@ -235,6 +235,9 @@ public class Link {
     public int getYReal() {
         return this.chunk.getGridManager().getYAbsolute(this);
     }
+    public GridManager getGridManager() {
+        return this.chunk.getGridManager();
+    }
 
     @Deprecated(forRemoval = true)
     public Stream<Link> stream() {

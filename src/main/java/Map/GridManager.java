@@ -1,10 +1,8 @@
 package Map;
 
 
-import Elements.Fluid.Water;
-import Elements.Solid.PerlinTest;
-import Elements.Solid.Wood;
-import com.google.gson.Gson;
+import Elements.Api.MultiBlockCore.MultiBlockRegistry;
+import lombok.Getter;
 
 import java.awt.*;
 import java.util.*;
@@ -17,6 +15,8 @@ public class GridManager {
     private final Chunk[][] chunks;
     private final Set<Link> randomOrderLinks;
     private final Set<Chunk> randomOrderChunks;
+    @Getter
+    private final MultiBlockRegistry multiBlockRegistry;
 
     private final ScheduledExecutorService chunkThreads;
 
@@ -32,9 +32,11 @@ public class GridManager {
                 this.randomOrderChunks.add(newChunk);
             }
         }
+        this.multiBlockRegistry = new MultiBlockRegistry();
         this.chunkThreads = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
         this.chunkStream().forEach(c -> this.chunkThreads.scheduleAtFixedRate(c, 0L, 40, TimeUnit.MILLISECONDS));
-        randomOrderLinks.forEach(l->l.setElement(new Wood(l)));
+        this.chunkThreads.scheduleAtFixedRate(multiBlockRegistry::refresh, 0L, 40, TimeUnit.MILLISECONDS);
+//        randomOrderLinks.forEach(l->l.setElement(new Wood(l)));
 
     }
 

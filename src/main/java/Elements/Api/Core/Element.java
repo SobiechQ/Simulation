@@ -1,10 +1,12 @@
 package Elements.Api.Core;
 
+import Elements.Api.MultiBlockCore.MultiBlockCore;
 import Map.Link;
 import lombok.NonNull;
 import lombok.val;
 
 import java.awt.Color;
+import java.util.Optional;
 
 /**
  * Element is the base class for all elements in the simulation. It represens all objects visible on the screen.
@@ -64,7 +66,5 @@ public abstract sealed class Element permits Loose, Fluid, Solid, Particle {
     public void setColor(@NonNull Color color) {
         this.color = color;
     }
-
-
 
 }
